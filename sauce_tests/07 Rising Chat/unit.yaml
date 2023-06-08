@@ -1,0 +1,38 @@
+assertions:
+  - id: post
+    children:
+      - id: body
+        contentType: application/json
+        content: >-
+          {
+              "token": "test_token",
+              "uuid": "test_uuid",
+              "history": [{
+                      "role": "system",
+                      "content": "You are a helpful assistant."
+                  },
+                  {
+                      "role": "user",
+                      "content": "Who won the world series in 2020?"
+                  },
+                  {
+                      "role": "assistant",
+                      "content": "The Los Angeles Dodgers won the World Series in 2020."
+                  }
+              ],
+              "user_input": "Where was it played?",
+              "model": "gpt-3.5-turbo"
+          }
+    url: ${protocol}${domain}${endpoint}
+    var: payload
+    mode: json
+  - id: assert-equals
+    expression: payload_response.headers['Content-Type']
+    value: application/json
+  - id: assert-exists
+    expression: payload
+  - id: assert-exists
+    expression: payload.message
+  - id: assert-exists
+    expression: payload.result
+configs: []

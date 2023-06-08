@@ -1,0 +1,24 @@
+assertions:
+  - id: post
+    children:
+      - id: body
+        contentType: application/json
+        content: >-
+          {
+              "image_name": "0ddffe51-3763-48d9-ab74-2086de529217",
+              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh", 
+              "uuid": "test-uuid"
+          }
+    url: ${protocol}${domain}${endpoint}
+    var: payload
+    mode: json
+  - id: assert-equals
+    expression: payload_response.headers['Content-Type']
+    value: application/json
+  - id: assert-exists
+    expression: payload
+  - id: assert-exists
+    expression: payload.message
+  - id: assert-exists
+    expression: payload.result
+configs: []

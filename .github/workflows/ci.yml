@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  
+env:
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC }}
+  REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+  PINECONE_ENV: ${{ secrets.PINECONE_ENV }}
+  PINECONE_KEY: ${{ secrets.PINECONE_KEY }}
+  GITHUB_TOKEN: ${{ github.token }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup
+        uses: actions/setup-python@v3
+      - name: install
+        run: pip install -r requirements.txt
+      - name: test
+        run: python -m pytest
+      - name: api test with saucectl
+        uses: saucelabs/saucectl-run-action@v3
+        with:
+          # Sauce Labs Credentials.
+          sauce-username: ${{ secrets.SAUCE_USERNAME }}
+          sauce-access-key: ${{ secrets.SAUCE_ACCESS_KEY }}

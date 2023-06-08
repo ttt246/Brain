@@ -1,0 +1,29 @@
+assertions:
+  - id: post
+    children:
+      - id: body
+        contentType: application/json
+        content: |-
+          {
+              "token": "test_token",
+              "uuid": "test-uuid",
+              "contacts": [{
+                  "contactId": "1",
+                  "displayName": "Thomas",
+                  "phoneNumbers": ["217 374 8105"],
+                  "status": "updated"
+              }]
+          }
+    url: ${protocol}${domain}${endpoint}
+    var: payload
+    mode: json
+  - id: assert-equals
+    expression: payload_response.headers['Content-Type']
+    value: application/json
+  - id: assert-exists
+    expression: payload
+  - id: assert-exists
+    expression: payload.message
+  - id: assert-exists
+    expression: payload.result
+configs: []

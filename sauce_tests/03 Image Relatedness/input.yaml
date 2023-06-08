@@ -1,0 +1,16 @@
+- id: global
+  children:
+    - id: variable
+      name: protocol
+      value: https://
+    - id: variable
+      name: domain
+      value: smartphone.herokuapp.com
+    - id: variable
+      name: endpoint
+      value: /image_relatedness
+- id: sets
+  children:
+    - id: set
+      children: []
+      name: default

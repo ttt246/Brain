@@ -1,0 +1,30 @@
+# The test below only differs from the previous one in the usage of the input variables (input.yaml file)
+# and then referencing those variables in the test, rather than having URLs and Tokens in the test itself.
+# That might help in adding some abstraction and use the same test against different API domains (e.g. staging vs production)
+assertions:
+  - id: post
+    children:
+      - id: body
+        contentType: application/json
+        content: >-
+          {
+              "image_name": "0ddffe51-3763-48d9-ab74-2086de529217",
+              "message": "This is the text about the image",
+              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh", 
+              "uuid": "test-uuid"
+          }
+    url: ${protocol}${domain}${endpoint}
+    var: payload
+    mode: json
+  - id: assert-equals
+    expression: payload_response.headers['Content-Type']
+    value: application/json
+  - id: assert-exists
+    expression: payload
+  - id: assert-exists
+    expression: payload.message
+  - id: assert-exists
+    expression: payload.result
+configs: []
+
+# See https://github.com/saucelabs/saucectl-apix-example/blob/main/docs/README.md#unit-unityaml for more details about the syntax used in this file.

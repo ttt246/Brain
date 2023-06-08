@@ -1,0 +1,35 @@
+apiVersion: v1alpha
+kind: apitest
+sauce:
+  region: us-west-1
+  metadata:
+    build: "risingland build"
+  # tunnel:
+  #   name: tunnelname
+  #   owner: tunnelowner
+
+rootDir: .
+
+suites:
+  # Remote Suite #1 will run in parallel all tests:
+  # - Published in project "saucectl-apitest-sauce_tests"
+  # - Having the "contract" tag
+  - name: "Remote Suite #1"
+    projectName: risingland
+    useRemoteTests: true
+    tags:
+      - basic
+
+  # Dynamic Suite #1 will run all tests found in rootDir ("."), and matching any of the "testMatch" values.
+  # Those tests will be attached to the project "saucectl-apitest-sauce_tests".
+  - name: "Dynamic Suite #1"
+    projectName: risingland
+    testMatch:
+      - 01 Send Notification
+      - 02 Upload Image
+#      - 03 Image Relatedness
+      - 04 Add Feedback
+      - 05 Get Feedback
+      - 06 Get Commands
+      - 07 Rising Chat
+      - 08 Train Contacts

@@ -1,0 +1,16 @@
+ assertions:
+  - id: get
+    children: []
+    url: ${protocol}${domain}${endpoint}
+    var: payload
+    mode: json
+  - id: assert-equals
+    expression: payload_response.headers['Content-Type']
+    value: application/json
+  - id: assert-exists
+    expression: payload
+  - id: assert-exists
+    expression: payload.message
+  - id: assert-exists
+    expression: payload.result
+configs: []
