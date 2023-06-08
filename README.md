@@ -15,8 +15,6 @@ license: other
 
 All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. In our OS, a AI will manage all apps via plugins, which can be prompted by the user. Our plugins can run as an openai plugin, or in our backend.
 
-[![CI/CD](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml/badge.svg)](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml)
-[![CI/CD Develop](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml)
 ## 1. Description
 
 #### 1.1 Achievement
