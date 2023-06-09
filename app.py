@@ -26,13 +26,5 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/send-post", methods=["POST"])
-def send_post():
-    data = json.loads(request.get_data())
-    url = "http://127.0.0.1:7860/sendNotification"
-    response = requests.post(url, json=data)
-    return response.text
-
-
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=7860)
