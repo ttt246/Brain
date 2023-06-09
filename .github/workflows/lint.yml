@@ -1,4 +1,7 @@
 name: Lint with black
+concurrency:
+  group: lint
+  cancel-in-progress: true
 on:
   push:
   pull_request:

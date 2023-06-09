@@ -1,4 +1,7 @@
 name: CI
+concurrency:
+  group: build-and-test
+  cancel-in-progress: true
 on:
   push:
   pull_request:
