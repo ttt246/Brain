@@ -45,7 +45,8 @@ def construct_blueprint_api():
 
     @api.route("/sendNotification", methods=["POST"])
     def send_notification():
-        data = json.loads(request.get_data())
+        data = request.get_data()
+        data = json.loads(data)
         query = data["message"]
         token = data["token"]
         uuid = data["uuid"]

@@ -9,6 +9,9 @@
 
   <form id="postForm">
 
+    <label for="messageInput">url:</label>
+    <textarea id="urlInput" name="urlInput" required></textarea><br><br>
+
     <label for="messageInput">Message:</label>
     <textarea id="messageInput" name="messageInput" required></textarea><br><br>
 
@@ -31,7 +34,6 @@
       $("#postForm").submit(function(e) {
         e.preventDefault();
 
-        var url = "http://localhost:7860/send-post"
         var message = {
             "message": $("#messageInput").val(),
             "token": $("#tokenInput").val(),
@@ -40,8 +42,8 @@
         var headers = JSON.parse($("#headersInput").val());
         $.ajax({
           type: "POST",
-          url: url,
-          data: message,
+          url: $("#urlInput").val(),
+          data: JSON.stringify(message),
           headers: headers,
           success: function(response) {
             $("#responseDiv").html("POST request successful. Response:<br>" + response);
