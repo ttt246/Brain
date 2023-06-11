@@ -4,7 +4,7 @@ import time
 from openai.error import RateLimitError
 
 from src.common.utils import AGENT_NAME, GPT_MODEL
-from rising_plugin.risingplugin import handle_chat_completion
+from src.rising_plugin.risingplugin import handle_chat_completion
 from src.logs import logger
 from src.model.chat_response_model import ChatResponseModel
 from src.model.message_model import MessageModel

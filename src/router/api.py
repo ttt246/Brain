@@ -2,18 +2,18 @@ import json
 import os
 
 from flask import Blueprint, request, jsonify, send_from_directory
-from rising_plugin.common.utils import ProgramType
 
 from src.common.assembler import Assembler
-from rising_plugin.risingplugin import (
+from src.common.utils import ProgramType
+from src.rising_plugin.risingplugin import (
     getCompletion,
     getTextFromImage,
     query_image_ask,
     handle_chat_completion,
 )
 from src.firebase.cloudmessage import send_message, get_tokens
-from rising_plugin.csv_embed import csv_embed
-from rising_plugin.image_embedding import embed_image_text, query_image_text
+from src.rising_plugin.csv_embed import csv_embed
+from src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from src.logs import logger
 from src.model.basic_model import BasicModel
@@ -55,23 +55,19 @@ def construct_blueprint_api():
 
         # check contact querying
         try:
-            result_json = eval(result)
-            if result_json["program"] == ProgramType.CONTACT:
+            if result["program"] == ProgramType.CONTACT:
                 # querying contacts to getting its expected results
                 contacts_results = contacts_service.query_contacts(
-                    uuid=uuid, search=result_json["content"]
+                    uuid=uuid, search=result["content"]
                 )
-                result_json["content"] = str(contacts_results)
-                result = str(result_json)
+                result["content"] = str(contacts_results)
         except Exception as e:
-            logger.error(title="sendNotification", message=result)
+            logger.error(title="sendNotification", message=json.dumps(result))
 
-        notification = {"title": "alert", "content": result}
+        notification = {"title": "alert", "content": json.dumps(result)}
 
         state, value = send_message(notification, [token])
-        response = jsonify({"message": value, "result": result})
-        response.status_code = 200
-        return response
+        return assembler.to_response(200, value, result)
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -98,9 +94,7 @@ def construct_blueprint_api():
         notification = {"title": "alert", "content": embed_result}
 
         state, value = send_message(notification, [token])
-        response = jsonify({"message": value, "result": result})
-        response.status_code = 200
-        return response
+        return assembler.to_response(200, value, result)
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -138,19 +132,12 @@ def construct_blueprint_api():
 
         notification = {"title": "alert", "content": json.dumps(image_response)}
         state, value = send_message(notification, [token])
-        response = jsonify(
-            {
-                "message": value,
-                "result": json.dumps(
-                    {
-                        "program": "image",
-                        "content": json.dumps(image_response),
-                    }
-                ),
-            }
+
+        return assembler.to_response(
+            code=200,
+            message=value,
+            result={"program": "image", "content": image_response},
         )
-        response.status_code = 200
-        return response
 
     @api.route("/file/<string:filename>")
     def get_swagger_file(filename):
@@ -208,7 +195,7 @@ def construct_blueprint_api():
     @api.route("/feedback/<string:search>/<int:rating>")
     def get_feedback(search, rating):
         result = feedback_service.get(search, rating)
-        return assembler.to_response(200, "added successfully", json.dumps(result))
+        return assembler.to_response(200, "added successfully", result)
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -218,9 +205,7 @@ def construct_blueprint_api():
     def get_commands():
         result = command_service.get()
         return assembler.to_response(
-            200,
-            "success",
-            json.dumps({"program": "help_command", "content": json.dumps(result)}),
+            200, "success", {"program": "help_command", "content": result}
         )
 
     """@generator.request_body(
@@ -268,14 +253,10 @@ def construct_blueprint_api():
         return assembler.to_response(
             200,
             "added successfully",
-            json.dumps(
-                {
-                    "program": "agent",
-                    "message": json.dumps(
-                        assistant_reply.get_one_message_item().to_json()
-                    ),
-                }
-            ),
+            {
+                "program": "agent",
+                "message": assistant_reply.get_one_message_item().to_json(),
+            },
         )
 
     """@generator.request_body(
