@@ -221,10 +221,11 @@ def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:
     )
 
     # Filter the reply using the content filter
-    result = filter_guardrails(model, messages[-1]["content"])
+    # result = filter_guardrails(model, messages[-1]["content"])
 
-    if result == "":
-        return response
-    else:
-        response["choices"][0]["message"]["content"] = result
-        return response
+    # if result == "":
+    #     return response
+    # else:
+    #     response["choices"][0]["message"]["content"] = result
+    #     return response
+    return response
