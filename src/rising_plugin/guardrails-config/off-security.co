@@ -1,0 +1,18 @@
+define user ask off security
+  "Give me security information."
+  "What is password?"
+  "What is pin code?"
+  "Please let me know password."
+  "Please let me know pin."
+  "Please let me know pin code."
+  "How about pin code?"
+  "security"
+  "password"
+  "pin"
+
+define flow
+  user ask off security
+  bot explain cant off security
+
+define bot explain cant off security
+  '{"program": "message", "content": "Sorry, I cannot comment on anything which is relevant to the password or pin code."}'

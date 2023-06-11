@@ -1,8 +1,8 @@
 """service to manage contacts"""
 from typing import List, Any
 
-from rising_plugin.csv_embed import get_embed
-from rising_plugin.pinecone_engine import (
+from src.rising_plugin.csv_embed import get_embed
+from src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
     update_pinecone,
     init_pinecone,

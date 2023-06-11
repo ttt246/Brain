@@ -30,7 +30,7 @@ AGENT_NAME = "RisingBrain Assistant"
 
 # indexes of relatedness of embedding
 COMMAND_SMS_INDEXS = [4, 5]
-
+COMMAND_BROWSER_OPEN = [10]
 
 # Twilio
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -46,3 +46,21 @@ def get_firebase_cred():
     else:
         cred = json.loads(FIREBASE_ENV)
         return credentials.Certificate(cred)
+
+
+class ProgramType:
+    BROWSER = "browser"
+    ALERT = "alert"
+    IMAGE = "image"
+    SMS = "sms"
+    CONTACT = "contact"
+    MESSAGE = "message"
+
+
+# validate json format
+def validateJSON(jsonData):
+    try:
+        json.loads(jsonData)
+    except ValueError as err:
+        return False
+    return True

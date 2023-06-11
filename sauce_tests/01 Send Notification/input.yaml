@@ -5,7 +5,7 @@
       value: https://
     - id: variable
       name: domain
-      value: smartphone.herokuapp.com
+      value: ttt246-brain.hf.space
     - id: variable
       name: endpoint
       value: /sendNotification
