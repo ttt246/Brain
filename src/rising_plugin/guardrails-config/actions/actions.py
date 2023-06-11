@@ -66,9 +66,10 @@ async def general_question(query, model, uuid, image_search):
         # check image query with only its text
         if result["program"] == "image":
             if image_search:
-                result["content"] = json.dumps(
-                    {"image_name": query_image_text(result["content"], "", uuid)}
-                )
+                result["content"] = {
+                    "image_name": query_image_text(result["content"], "", uuid)
+                }
+
             # else:
             #     return result
         return str(result)
