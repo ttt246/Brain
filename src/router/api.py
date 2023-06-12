@@ -5,6 +5,7 @@ from flask import Blueprint, request, jsonify, send_from_directory
 
 from src.common.assembler import Assembler
 from src.common.utils import ProgramType
+from src.model.image_model import ImageModel
 from src.rising_plugin.risingplugin import (
     getCompletion,
     getTextFromImage,
@@ -77,24 +78,28 @@ def construct_blueprint_api():
             "image_name": "this is test image path",
             "token": "test_token",
             "uuid": "test_uuid",
+            "status": "created | updated | deleted",
         }
     )"""
 
     @api.route("/uploadImage", methods=["POST"])
     def upload_image():
+        image_model = ImageModel()
         data = json.loads(request.get_data())
-        image_name = data["image_name"]
         token = data["token"]
-        uuid = data["uuid"]
 
-        result = getTextFromImage(image_name)
+        image_model.image_name = data["image_name"]
+        image_model.uuid = data["uuid"]
+        image_model.status = data["status"]
 
-        embed_result = embed_image_text(result, image_name, uuid)
+        image_model.image_text = getTextFromImage(image_model.image_name)
+
+        embed_result = embed_image_text(image_model)
 
         notification = {"title": "alert", "content": embed_result}
 
         state, value = send_message(notification, [token])
-        return assembler.to_response(200, value, result)
+        return assembler.to_response(200, value, image_model.to_json())
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}

@@ -25,7 +25,7 @@ def csv_embed():
 """getting embed"""
 
 
-def get_embed(data: str) -> str:
+def get_embed(data: str) -> list[float]:
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
     return embeddings.embed_query(data)
 

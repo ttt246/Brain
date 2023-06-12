@@ -6,3 +6,9 @@ class BasicModel:
 
     def to_json(self):
         return {"image_name": self.image_name, "message": self.message}
+
+
+class DataStatus:
+    CREATED = "created"
+    UPDATED = "updated"
+    DELETED = "deleted"
