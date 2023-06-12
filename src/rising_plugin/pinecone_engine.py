@@ -28,7 +28,7 @@ def init_pinecone(index_name, flag=True):
 """add item in pinecone"""
 
 
-def add_pinecone(namespace: str, key: str, value: str) -> Any:
+def add_pinecone(namespace: str, key: str, value: list[float]) -> Any:
     index = init_pinecone(PINECONE_INDEX_NAME)
 
     upsert_response = index.upsert(
@@ -41,7 +41,7 @@ def add_pinecone(namespace: str, key: str, value: str) -> Any:
 """update item in pinecone"""
 
 
-def update_pinecone(namespace: str, key: str, value: str) -> Any:
+def update_pinecone(namespace: str, key: str, value: list[float]) -> Any:
     index = init_pinecone(PINECONE_INDEX_NAME)
 
     upsert_response = index.update(
