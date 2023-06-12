@@ -3,7 +3,9 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from ..common.utils import OPENAI_API_KEY, PINECONE_NAMESPACE, PINECONE_INDEX_NAME
 from .pinecone_engine import (
     init_pinecone,
-    get_pinecone_index_namespace, delete_pinecone, update_pinecone,
+    get_pinecone_index_namespace,
+    delete_pinecone,
+    update_pinecone,
 )
 from ..model.basic_model import DataStatus
 from ..model.image_model import ImageModel
@@ -36,7 +38,9 @@ def embed_image_text(image: ImageModel) -> str:
         elif image.status == DataStatus.DELETED:
             delete_pinecone(namespace=pinecone_namespace, key=image.image_name)
         elif image.status == DataStatus.UPDATED:
-            update_pinecone(namespace=pinecone_namespace, key=image.image_name, value=embed_image)
+            update_pinecone(
+                namespace=pinecone_namespace, key=image.image_name, value=embed_image
+            )
     except Exception as e:
         return "fail to embed image text"
     return "success to embed image text"
