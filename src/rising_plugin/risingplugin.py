@@ -46,19 +46,22 @@ def processLargeText(app: any, chunks: any):
                 }
             ]
         )
-        response_text = ""
         try:
-            response_text += json.loads(message["content"])["content"]
+            result = json.loads(message["content"])
+            return result
         except Exception as e:
             # fmt: off
-            message["content"] = message["content"].replace("\'", '"')
+            message["content"] = message["content"].replace(" \'", ' "')
+            message["content"] = message["content"].replace("{\'", '{"')
+            message["content"] = message["content"].replace("',", '",')
+            message["content"] = message["content"].replace("':", '":')
+            message["content"] = message["content"].replace(message["content"][-2], '"')
             # fmt: on
-            response_text = json.loads(message["content"])
-        return response_text
+            result = json.loads(message["content"])
+            return result
     else:
-        response_text: str = ""
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
-        message = app.generate(messages=[{"role": "user", "content": first_query}])
+        app.generate(messages=[{"role": "user", "content": first_query}])
         for index, chunk in enumerate(chunks):
             # Process each chunk with ChatGPT
             if index + 1 != len(chunks):
@@ -81,7 +84,7 @@ def processLargeText(app: any, chunks: any):
                     + "]\n"
                     + "Remember not answering yet. Just acknowledge you received this part with the message 'Part 1/10 received' and wait for the next part."
                 )
-                message = app.generate(
+                app.generate(
                     messages=[
                         {
                             "role": "user",
@@ -106,15 +109,22 @@ def processLargeText(app: any, chunks: any):
                 message = app.generate(
                     messages=[{"role": "user", "content": last_query}]
                 )
+                response_text = ""
                 try:
-                    response_text += json.loads(message["content"])["content"]
+                    result = json.loads(message["content"])
+                    return result
                 except Exception as e:
                     # fmt: off
-                    message["content"] = message["content"].replace("\'", '"')
+                    message["content"] = message["content"].replace(" \'", ' "')
+                    message["content"] = message["content"].replace("{\'", '{"')
+                    message["content"] = message["content"].replace("',", '",')
+                    message["content"] = message["content"].replace("':", '":')
+                    message["content"] = message["content"].replace(message["content"][-2], '"')
                     # fmt: on
-                    response_text = json.loads(message["content"])["content"]
+                    response_text += json.loads(message["content"])["content"]
                 program = json.loads(message["content"])["program"]
-                return {"program": program, "content": response_text}
+                result = {"program": program, "content": response_text}
+                return result
         # out of for-loop
 
 
@@ -221,11 +231,11 @@ def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:
     )
 
     # Filter the reply using the content filter
-    # result = filter_guardrails(model, messages[-1]["content"])
+    result = filter_guardrails(model, messages[-1]["content"])
 
-    # if result == "":
-    #     return response
-    # else:
-    #     response["choices"][0]["message"]["content"] = result
-    #     return response
-    return response
+    if result == "":
+        return response
+    else:
+        response["choices"][0]["message"]["content"] = result
+        return response
+    # return response

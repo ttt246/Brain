@@ -13,7 +13,16 @@
     <textarea id="urlInput" name="urlInput" required></textarea><br><br>
 
     <label for="messageInput">Message:</label>
-    <textarea id="messageInput" name="messageInput" required></textarea><br><br>
+    <textarea id="messageInput" name="messageInput"></textarea><br><br>
+
+    <label for="historyInput">History:</label>
+    <textarea id="historyInput" name="historyInput"></textarea><br><br>
+
+    <label for="userInput">User Input:</label>
+    <textarea id="userInput" name="userInput"></textarea><br><br>
+
+      <label for="modelInput">Model:</label>
+    <textarea id="modelInput" name="modelInput"></textarea><br><br>
 
     <label for="tokenInput">token:</label>
     <textarea id="tokenInput" name="tokenInput" required></textarea><br><br>
@@ -37,6 +46,9 @@
         var message = {
             "message": $("#messageInput").val(),
             "token": $("#tokenInput").val(),
+            "history": JSON.parse($("#historyInput").val()),
+            "user_input": $("#userInput").val(),
+            "model": $("#modelInput").val(),
             "uuid": $("#uuidInput").val()
         }
         var headers = JSON.parse($("#headersInput").val());
