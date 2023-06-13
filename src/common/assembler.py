@@ -1,8 +1,6 @@
 # assembler to mapping data into another data type.
 from typing import Any, List
 
-from flask import jsonify
-
 from src.model.basic_model import BasicModel
 from src.model.contact_model import ContactModel
 from src.model.message_model import MessageModel
