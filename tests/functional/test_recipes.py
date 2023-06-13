@@ -1,5 +1,6 @@
 import re
 
+from src.firebase.firebase import initialize_app
 from src.rising_plugin.risingplugin import getCompletion, getTextFromImage
 from src.firebase.cloudmessage import send_message
 from src.firebase.cloudmessage import get_tokens
