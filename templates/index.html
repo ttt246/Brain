@@ -42,11 +42,11 @@
     $(document).ready(function() {
       $("#postForm").submit(function(e) {
         e.preventDefault();
-
+        var history =  $("#historyInput").val()
         var message = {
             "message": $("#messageInput").val(),
             "token": $("#tokenInput").val(),
-            "history": JSON.parse($("#historyInput").val()),
+            "history": history === '' ? '': JSON.parse(history),
             "user_input": $("#userInput").val(),
             "model": $("#modelInput").val(),
             "uuid": $("#uuidInput").val()

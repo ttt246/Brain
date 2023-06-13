@@ -46,19 +46,24 @@ def processLargeText(app: any, chunks: any):
                 }
             ]
         )
-        try:
-            result = json.loads(message["content"])
-            return result
-        except Exception as e:
-            # fmt: off
-            message["content"] = message["content"].replace(" \'", ' "')
-            message["content"] = message["content"].replace("{\'", '{"')
-            message["content"] = message["content"].replace("',", '",')
-            message["content"] = message["content"].replace("':", '":')
-            message["content"] = message["content"].replace(message["content"][-2], '"')
-            # fmt: on
-            result = json.loads(message["content"])
-            return result
+        result = json.dumps(message["content"])
+        result = result[1:-1]
+        # fmt: off
+        result = result.replace("\\'", "'")
+        result = result.replace("\\'", "'")
+        result = result.replace('\\"', "'")
+        result = result.replace('\\"', "'")
+        result = result.replace('"', "'")
+        result = result.replace("\'", "'")
+        result = result.replace(": '", ': "')
+        result = result.replace("{\'", '{"')
+        result = result.replace("',", '",')
+        result = result.replace(", '", ', "')
+        result = result.replace("':", '":')
+        result = result.replace("'}", '"}')
+        # fmt: on
+        result = json.loads(result)
+        return result
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
         app.generate(messages=[{"role": "user", "content": first_query}])
@@ -109,21 +114,23 @@ def processLargeText(app: any, chunks: any):
                 message = app.generate(
                     messages=[{"role": "user", "content": last_query}]
                 )
-                response_text = ""
-                try:
-                    result = json.loads(message["content"])
-                    return result
-                except Exception as e:
-                    # fmt: off
-                    message["content"] = message["content"].replace(" \'", ' "')
-                    message["content"] = message["content"].replace("{\'", '{"')
-                    message["content"] = message["content"].replace("',", '",')
-                    message["content"] = message["content"].replace("':", '":')
-                    message["content"] = message["content"].replace(message["content"][-2], '"')
-                    # fmt: on
-                    response_text += json.loads(message["content"])["content"]
-                program = json.loads(message["content"])["program"]
-                result = {"program": program, "content": response_text}
+                result = json.dumps(message["content"])
+                result = result[1:-1]
+                # fmt: off
+                result = result.replace("\\'", "'")
+                result = result.replace("\\'", "'")
+                result = result.replace('\\"', "'")
+                result = result.replace('\\"', "'")
+                result = result.replace('"', "'")
+                result = result.replace("\'", "'")
+                result = result.replace(": '", ': "')
+                result = result.replace("{\'", '{"')
+                result = result.replace("',", '",')
+                result = result.replace(", '", ', "')
+                result = result.replace("':", '":')
+                result = result.replace("'}", '"}')
+                # fmt: on
+                result = json.loads(result)
                 return result
         # out of for-loop
 
