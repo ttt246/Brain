@@ -12,6 +12,7 @@ license: other
 ---
 
 # RisingBrain
+WIP: This codebase is under active development and recently opened to the public. 
 
 All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. In our OS, a AI will manage all apps via plugins, which can be prompted by the user. Our plugins can run as an openai plugin, or in our backend.
 
