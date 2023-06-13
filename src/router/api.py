@@ -199,8 +199,8 @@ def construct_blueprint_api() -> APIRouter:
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @router.get("/feedback/<string:search>/<int:rating>")
-    def get_feedback(search, rating):
+    @router.get("/feedback/{search}/{rating}")
+    def get_feedback(search: str, rating: int):
         result = feedback_service.get(search, rating)
         return assembler.to_response(200, "added successfully", result)
 
