@@ -2,6 +2,10 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from src.firebase.firebase import initialize_app
+
+initialize_app()
+
 
 @pytest.fixture(scope="module")
 def test_client():

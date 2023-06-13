@@ -8,7 +8,6 @@ from src.rising_plugin.image_embedding import query_image_text
 
 TEST_IAMGE_NAME = "0ddffe51-3763-48d9-ab74-2086de529217"
 TEST_UUID = "TEST_UUID"
-initialize_app()
 
 
 def test_langchain():
