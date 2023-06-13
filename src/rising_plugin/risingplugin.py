@@ -49,18 +49,19 @@ def processLargeText(app: any, chunks: any):
         result = json.dumps(message["content"])
         result = result[1:-1]
         # fmt: off
-        result = result.replace("\\'", "'")
-        result = result.replace("\\'", "'")
-        result = result.replace('\\"', "'")
-        result = result.replace('\\"', "'")
-        result = result.replace('"', "'")
-        result = result.replace("\'", "'")
-        result = result.replace(": '", ': "')
-        result = result.replace("{\'", '{"')
-        result = result.replace("',", '",')
-        result = result.replace(", '", ', "')
-        result = result.replace("':", '":')
+        result = result.replace("{'", '{"')
         result = result.replace("'}", '"}')
+        result = result.replace("': '", '": "')
+        result = result.replace("': \\\"", '": \"')
+        result = result.replace("', '", '", "')
+
+        substring = '\\"}'
+        replacement = '\"}'
+
+        index = result.rfind(substring)
+
+        if index == len(result) - 3:
+            result = result[:index] + replacement + result[index + len(substring):]
         # fmt: on
         result = json.loads(result)
         return result
@@ -117,18 +118,19 @@ def processLargeText(app: any, chunks: any):
                 result = json.dumps(message["content"])
                 result = result[1:-1]
                 # fmt: off
-                result = result.replace("\\'", "'")
-                result = result.replace("\\'", "'")
-                result = result.replace('\\"', "'")
-                result = result.replace('\\"', "'")
-                result = result.replace('"', "'")
-                result = result.replace("\'", "'")
-                result = result.replace(": '", ': "')
-                result = result.replace("{\'", '{"')
-                result = result.replace("',", '",')
-                result = result.replace(", '", ', "')
-                result = result.replace("':", '":')
+                result = result.replace("{'", '{"')
                 result = result.replace("'}", '"}')
+                result = result.replace("': '", '": "')
+                result = result.replace("': \\\"", '": \"')
+                result = result.replace("', '", '", "')
+
+                substring = '\\"}'
+                replacement = '\"}'
+
+                index = result.rfind(substring)
+
+                if index == len(result) - 3:
+                    result = result[:index] + replacement + result[index + len(substring):]
                 # fmt: on
                 result = json.loads(result)
                 return result
