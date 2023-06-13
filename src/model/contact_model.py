@@ -7,6 +7,8 @@
 }"""
 from typing import Any
 
+from src.model.requests.request_model import TrainContacts
+
 
 class ContactModel:
     def __init__(self):
@@ -15,13 +17,13 @@ class ContactModel:
         self.phone_numbers = []
         self.status = ContactStatus.UPDATED
 
-    def get_contact_model(self, data: Any) -> None:
-        self.contact_id = data["contactId"]
-        self.display_name = data["displayName"]
+    def get_contact_model(self, data: TrainContacts.ContactReq) -> None:
+        self.contact_id = data.contactId
+        self.display_name = data.displayName
         self.phone_numbers = []
-        for phone in data["phoneNumbers"]:
+        for phone in data.phoneNumbers:
             self.phone_numbers.append(phone)
-        self.status = data["status"]
+        self.status = data.status
 
     def get_str_phones(self):
         return "".join(self.phone_numbers)

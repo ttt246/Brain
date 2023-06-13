@@ -6,6 +6,7 @@ from flask import jsonify
 from src.model.basic_model import BasicModel
 from src.model.contact_model import ContactModel
 from src.model.message_model import MessageModel
+from src.model.requests.request_model import ChatRising, SendSMS, TrainContacts
 from src.model.sms_model import SMSModel
 
 
@@ -19,8 +20,7 @@ class Assembler:
     """mapping to http response"""
 
     def to_response(self, code, message, result) -> Any:
-        response = jsonify({"message": message, "result": result})
-        response.status_code = code
+        response = {"message": message, "result": result, "status_code": code}
         return response
 
     """mapping data to a collection of MessageModel"""
@@ -33,19 +33,19 @@ class Assembler:
 
     """mapping data to a MessageModel"""
 
-    def to_message_model(self, data: Any) -> MessageModel:
-        return MessageModel(data["role"], data["content"])
+    def to_message_model(self, data: ChatRising.Format) -> MessageModel:
+        return MessageModel(data.role, data.content)
 
     """mapping data to a SMSModel"""
 
-    def to_sms_model(self, data: Any) -> SMSModel:
+    def to_sms_model(self, data: SendSMS.Body) -> SMSModel:
         sms_model = SMSModel()
         sms_model.get_sms_model(data)
         return sms_model
 
     """mapping data to a ContactModel"""
 
-    def to_contact_model(self, data: Any) -> ContactModel:
+    def to_contact_model(self, data: TrainContacts.ContactReq) -> ContactModel:
         contact_model = ContactModel()
         contact_model.get_contact_model(data)
         return contact_model

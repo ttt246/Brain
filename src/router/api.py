@@ -1,11 +1,19 @@
 import json
 import os
 
-from flask import Blueprint, request, jsonify, send_from_directory
-
 from src.common.assembler import Assembler
 from src.common.utils import ProgramType
 from src.model.image_model import ImageModel
+from src.model.requests.request_model import (
+    Notification,
+    UploadImage,
+    ImageRelatedness,
+    Feedback,
+    ChatRising,
+    SendSMS,
+    TrainContacts,
+    BasicReq,
+)
 from src.rising_plugin.risingplugin import (
     getCompletion,
     getTextFromImage,
@@ -25,10 +33,12 @@ from src.service.feedback_service import FeedbackService
 from src.service.llm.chat_service import ChatService
 from src.service.twilio_service import TwilioService
 
+from fastapi import APIRouter
 
-def construct_blueprint_api():
-    api = Blueprint("send_notification", __name__)
+router = APIRouter()
 
+
+def construct_blueprint_api() -> APIRouter:
     # Assembler
     assembler = Assembler()
 
@@ -44,13 +54,11 @@ def construct_blueprint_api():
         {"message": "this is test message", "token": "test_token", "uuid": "test_uuid"}
     )"""
 
-    @api.route("/sendNotification", methods=["POST"])
-    def send_notification():
-        data = request.get_data()
-        data = json.loads(data)
-        query = data["message"]
-        token = data["token"]
-        uuid = data["uuid"]
+    @router.post("/sendNotification")
+    def send_notification(data: Notification):
+        query = data.message
+        token = data.token
+        uuid = data.uuid
 
         result = getCompletion(query=query, uuid=uuid)
 
@@ -82,15 +90,14 @@ def construct_blueprint_api():
         }
     )"""
 
-    @api.route("/uploadImage", methods=["POST"])
-    def upload_image():
+    @router.post("/uploadImage")
+    def upload_image(data: UploadImage):
         image_model = ImageModel()
-        data = json.loads(request.get_data())
-        token = data["token"]
+        token = data.token
 
-        image_model.image_name = data["image_name"]
-        image_model.uuid = data["uuid"]
-        image_model.status = data["status"]
+        image_model.image_name = data.image_name
+        image_model.uuid = data.uuid
+        image_model.status = data.status
 
         image_model.image_text = getTextFromImage(image_model.image_name)
 
@@ -113,13 +120,12 @@ def construct_blueprint_api():
         }
     )"""
 
-    @api.route("/image_relatedness", methods=["POST"])
-    def image_relatedness():
-        data = json.loads(request.get_data())
-        image_name = data["image_name"]
-        message = data["message"]
-        token = data["token"]
-        uuid = data["uuid"]
+    @router.post("/image_relatedness")
+    def image_relatedness(data: ImageRelatedness):
+        image_name = data.image_name
+        message = data.message
+        token = data.token
+        uuid = data.uuid
 
         image_content = getTextFromImage(image_name)
         # check message type
@@ -144,18 +150,11 @@ def construct_blueprint_api():
             result={"program": "image", "content": image_response},
         )
 
-    @api.route("/file/<string:filename>")
-    def get_swagger_file(filename):
-        print(os.getcwd() + "/src/static/")
-        return send_from_directory(
-            os.getcwd() + "/src/static/", path=filename, as_attachment=False
-        )
-
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/training")
+    @router.get("/training")
     def csv_training():
         csv_embed()
 
@@ -174,17 +173,20 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/feedback", methods=["POST"])
-    def add_feedback():
+    @router.post("/feedback")
+    def add_feedback(data: Feedback):
         try:
-            data = json.loads(request.get_data())
-            token = data["token"]
-            uuid = data["uuid"]
+            token = data.token
+            uuid = data.uuid
 
             # parsing feedback payload
-            prompt = assembler.to_basic_model(data["prompt"])
-            completion = assembler.to_basic_model(data["completion"])
-            rating = data["rating"]
+            prompt = BasicModel(
+                image_name=data.prompt.image_name, message=data.prompt.message
+            )
+            completion = BasicModel(
+                image_name=data.completion.image_name, message=data.completion.message
+            )
+            rating = data.rating
             feedback = FeedbackModel(uuid, prompt, completion, rating)
 
             # add the feedback
@@ -197,7 +199,7 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/feedback/<string:search>/<int:rating>")
+    @router.get("/feedback/<string:search>/<int:rating>")
     def get_feedback(search, rating):
         result = feedback_service.get(search, rating)
         return assembler.to_response(200, "added successfully", result)
@@ -206,7 +208,7 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/commands")
+    @router.get("/commands")
     def get_commands():
         result = command_service.get()
         return assembler.to_response(
@@ -233,15 +235,14 @@ def construct_blueprint_api():
         },
     )"""
 
-    @api.route("/chat_rising", methods=["POST"])
-    def message_agent():
+    @router.post("/chat_rising")
+    def message_agent(data: ChatRising):
         try:
-            data = json.loads(request.get_data())
-            token = data["token"]
-            uuid = data["uuid"]
-            histories = assembler.to_array_message_model(data["history"])  # json array
-            user_input = data["user_input"]
-            model = data["model"]
+            token = data.token
+            uuid = data.uuid
+            histories = assembler.to_array_message_model(data.history)  # json array
+            user_input = data.user_input
+            model = data.model
             """init chat service with model"""
             chat_service = ChatService(ai_name=uuid, llm_model=model)
             # getting chat response from rising ai
@@ -269,7 +270,7 @@ def construct_blueprint_api():
             "token": "test_token",
             "uuid": "test_uuid",
             "data": {
-                "from": "+15005550006",
+                "_from": "+15005550006",
                 "to": "+12173748105",
                 "body": "All in the game, yo",
             },
@@ -279,15 +280,14 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/send_sms", methods=["POST"])
-    def send_sms():
+    @router.post("/send_sms")
+    def send_sms(data: SendSMS):
         try:
-            data = json.loads(request.get_data())
-            token = data["token"]
-            uuid = data["uuid"]
+            token = data.token
+            uuid = data.uuid
 
             # parsing feedback payload
-            sms_model = assembler.to_sms_model(data["data"])
+            sms_model = assembler.to_sms_model(data.data)
             # send sms via twilio
             twilio_service = TwilioService()
             twilio_resp = twilio_service.send_sms(sms_model)
@@ -313,16 +313,15 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/train/contacts", methods=["POST"])
-    def train_contacts():
+    @router.post("/train/contacts")
+    def train_contacts(data: TrainContacts):
         try:
-            data = json.loads(request.get_data())
-            token = data["token"]
-            uuid = data["uuid"]
+            token = data.token
+            uuid = data.uuid
 
             # parsing contacts
             contacts = []
-            for contact in data["contacts"]:
+            for contact in data.contacts:
                 contacts.append(assembler.to_contact_model(contact))
             # train contact
             contacts_service.train(uuid, contacts)
@@ -340,12 +339,11 @@ def construct_blueprint_api():
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @api.route("/train/contacts/delete", methods=["POST"])
-    def delete_all_contacts():
+    @router.post("/train/contacts/delete")
+    def delete_all_contacts(data: BasicReq):
         try:
-            data = json.loads(request.get_data())
-            token = data["token"]
-            uuid = data["uuid"]
+            token = data.token
+            uuid = data.uuid
 
             # parsing contacts
             # train contact
@@ -356,4 +354,4 @@ def construct_blueprint_api():
             200, "Deleted all contacts from pinecone successfully", ""
         )
 
-    return api
+    return router
