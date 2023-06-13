@@ -11,7 +11,7 @@ initialize_app()
 def test_client():
     app = FastAPI()
     client = TestClient(app)
-    # Create a test client using the Flask application configured for testing
+    # Create a test client using the FastApi application configured for testing
     with client as testing_client:
         # Establish an application context
         with client.app:

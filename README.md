@@ -43,7 +43,7 @@ Install the latest version of rising-plugin package to use / custom something on
 pip install rising-plugin
 ```
 #### 2.1 how to run on local
-It's a standard flask application so no configuration is needed beyond the included Procfile
+It's a standard fastapi application so no configuration is needed beyond the included Procfile
 #### 2.2 Create firebase project
 Create firebase project and take its credentials named .json from Google Cloude IAM. 
 #### 2.3 Get Heroku Api key
