@@ -35,6 +35,8 @@ COMMAND_BROWSER_OPEN = [10]
 # Twilio
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+# HuggingFace
+HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
 def get_firebase_cred():

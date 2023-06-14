@@ -1,6 +1,7 @@
 # assembler to mapping data into another data type.
 from typing import Any, List
 
+from src.common.http_response_codes import responses
 from src.model.basic_model import BasicModel
 from src.model.contact_model import ContactModel
 from src.model.message_model import MessageModel
@@ -18,7 +19,7 @@ class Assembler:
     """mapping to http response"""
 
     def to_response(self, code, message, result) -> Any:
-        response = {"message": message, "result": result, "status_code": code}
+        response = {"message": responses[code], "result": result, "status_code": code}
         return response
 
     """mapping data to a collection of MessageModel"""
