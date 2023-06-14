@@ -388,4 +388,16 @@ def construct_blueprint_api() -> APIRouter:
             return assembler.to_response(400, "failed to add", "")
         return assembler.to_response(200, "added successfully", "")
 
+    """@generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )"""
+
+    @router.get("/document")
+    def get_all_documents():
+        try:
+            result = document_service.getAll()
+        except Exception as e:
+            return assembler.to_response(400, "failed to get all documents", "")
+        return assembler.to_response(200, "Get all documents list successfully", result)
+
     return router
