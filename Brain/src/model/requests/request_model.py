@@ -130,6 +130,14 @@ class TrainContacts(BasicReq):
     contacts: list[ContactReq]
 
 
+"""endpoint: /document"""
+
+
+class Document(BasicReq):
+    page_content: str
+
+
+
 """endpoint /browser/item"""
 
 

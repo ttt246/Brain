@@ -16,6 +16,7 @@ from Brain.src.model.requests.request_model import (
     BasicReq,
     ClientInfo,
     get_client_info,
+    Document,
 )
 from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
@@ -35,6 +36,7 @@ from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
+from Brain.src.service.document_service import DocumentService
 
 from fastapi import APIRouter, Request, Depends
 
@@ -49,6 +51,7 @@ def construct_blueprint_api() -> APIRouter:
     feedback_service = FeedbackService()
     command_service = CommandService()
     contacts_service = ContactsService()
+    document_service = DocumentService()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -365,5 +368,24 @@ def construct_blueprint_api() -> APIRouter:
         return assembler.to_response(
             200, "Deleted all contacts from pinecone successfully", ""
         )
+
+    """@generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "page_content": "string",
+        }
+    )
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )"""
+
+    @router.post("/document")
+    def add_prompt(data: Document):
+        try:
+            document_service.add(data.page_content)
+        except Exception as e:
+            return assembler.to_response(400, "failed to add", "")
+        return assembler.to_response(200, "added successfully", "")
 
     return router
