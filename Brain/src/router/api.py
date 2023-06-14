@@ -381,7 +381,7 @@ def construct_blueprint_api() -> APIRouter:
     )"""
 
     @router.post("/document")
-    def add_prompt(data: Document):
+    def add_document(data: Document):
         try:
             document_service.add(data.page_content)
         except Exception as e:
