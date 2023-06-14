@@ -13,6 +13,8 @@ from src.model.requests.request_model import (
     SendSMS,
     TrainContacts,
     BasicReq,
+    ClientInfo,
+    get_client_info,
 )
 from src.rising_plugin.risingplugin import (
     getCompletion,
@@ -33,7 +35,7 @@ from src.service.feedback_service import FeedbackService
 from src.service.llm.chat_service import ChatService
 from src.service.twilio_service import TwilioService
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Depends
 
 router = APIRouter()
 
@@ -55,10 +57,15 @@ def construct_blueprint_api() -> APIRouter:
     )"""
 
     @router.post("/sendNotification")
-    def send_notification(data: Notification):
+    def send_notification(
+        data: Notification, client_info: ClientInfo = Depends(get_client_info)
+    ):
         query = data.message
         token = data.token
         uuid = data.uuid
+        # check browser endpoint
+        if client_info.is_browser():
+            query = f"{query} in a web browser"
 
         result = getCompletion(query=query, uuid=uuid)
 

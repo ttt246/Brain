@@ -1,4 +1,44 @@
+from typing import Optional
+
 from pydantic import BaseModel
+from fastapi import Depends, Request, HTTPException
+from user_agents import parse
+
+
+class ClientInfo:
+    def __init__(self, browser, os, device_type):
+        self.browser = browser
+        self.os = os
+        self.device_type = device_type
+
+    def is_browser(self) -> bool:
+        return self.browser != "Other"
+
+
+def parse_user_agent(user_agent: str) -> Optional[ClientInfo]:
+    if not user_agent:
+        return None
+
+    ua = parse(user_agent)
+
+    device_type = "desktop" if ua.is_pc else "mobile" if ua.is_mobile else "tablet"
+    client_info = ClientInfo(
+        browser=ua.browser.family, os=ua.os.family, device_type=device_type
+    )
+
+    return client_info
+
+
+def get_client_info(request: Request):
+    user_agent = request.headers.get("user-agent", "")
+
+    if not user_agent:
+        raise HTTPException(
+            status_code=400,
+            detail="User-Agent header is required",
+        )
+
+    return parse_user_agent(user_agent)
 
 
 class BasicReq(BaseModel):
@@ -78,3 +118,15 @@ class TrainContacts(BasicReq):
         status: str
 
     contacts: list[ContactReq]
+
+
+"""endpoint /browser/item"""
+
+
+class BrowserItem(BasicReq):
+    class ItemReq(BaseModel):
+        title: str
+        link: str
+
+    items: list[ItemReq]
+    prompt: str

@@ -7,6 +7,7 @@ import textwrap
 
 from typing import Any
 
+from langchain.chains.question_answering import load_qa_chain
 from nemoguardrails.rails import LLMRails, RailsConfig
 
 from langchain.chat_models import ChatOpenAI
@@ -150,6 +151,17 @@ def getCompletion(
 
     app = LLMRails(config, llm)
     return processLargeText(app, chunks)
+
+
+def getCompletionOnly(
+    query: str,
+    model: str = "gpt-4",
+) -> str:
+    llm = ChatOpenAI(model_name=model, temperature=1.7, openai_api_key=OPENAI_API_KEY)
+    chain = load_qa_chain(llm, chain_type="stuff")
+    test_question = """Please return the link of best relatedness of item which the title is "Android Studio in browser" from the below data. [{"title": "Android Studio", "link": "https://android.com"} , {"title": "What's this?", "link": "https://test.com"} , {"title": "How are you?", "link": "https://d.com"}]"""
+    chain_data = chain.run(input_documents=[], question=test_question)
+    return chain_data
 
 
 def query_image_ask(image_content, message, uuid):
