@@ -17,6 +17,7 @@ from firebase_admin import storage
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
+    parseJsonFromCompletion,
 )
 from .image_embedding import (
     query_image_text,
@@ -48,24 +49,8 @@ def processLargeText(app: any, chunks: any):
             ]
         )
         result = json.dumps(message["content"])
-        result = result[1:-1]
-        # fmt: off
-        result = result.replace("{'", '{"')
-        result = result.replace("'}", '"}')
-        result = result.replace("': '", '": "')
-        result = result.replace("': \\\"", '": \"')
-        result = result.replace("', '", '", "')
 
-        substring = '\\"}'
-        replacement = '\"}'
-
-        index = result.rfind(substring)
-
-        if index == len(result) - 3:
-            result = result[:index] + replacement + result[index + len(substring):]
-        # fmt: on
-        result = json.loads(result)
-        return result
+        return parseJsonFromCompletion(result)
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
         app.generate(messages=[{"role": "user", "content": first_query}])
@@ -117,24 +102,7 @@ def processLargeText(app: any, chunks: any):
                     messages=[{"role": "user", "content": last_query}]
                 )
                 result = json.dumps(message["content"])
-                result = result[1:-1]
-                # fmt: off
-                result = result.replace("{'", '{"')
-                result = result.replace("'}", '"}')
-                result = result.replace("': '", '": "')
-                result = result.replace("': \\\"", '": \"')
-                result = result.replace("', '", '", "')
-
-                substring = '\\"}'
-                replacement = '\"}'
-
-                index = result.rfind(substring)
-
-                if index == len(result) - 3:
-                    result = result[:index] + replacement + result[index + len(substring):]
-                # fmt: on
-                result = json.loads(result)
-                return result
+                return parseJsonFromCompletion(result)
         # out of for-loop
 
 
