@@ -2,6 +2,7 @@ import json
 import os
 
 from src.common.assembler import Assembler
+from src.common.brain_exception import BrainException
 from src.common.utils import ProgramType
 from src.model.image_model import ImageModel
 from src.model.requests.request_model import (
@@ -59,24 +60,27 @@ def construct_blueprint_api() -> APIRouter:
         query = data.message
         token = data.token
         uuid = data.uuid
-
-        result = getCompletion(query=query, uuid=uuid)
-
-        # check contact querying
         try:
+            result = getCompletion(query=query, uuid=uuid, model=data.model)
+
+            # check contact querying
             if result["program"] == ProgramType.CONTACT:
                 # querying contacts to getting its expected results
                 contacts_results = contacts_service.query_contacts(
                     uuid=uuid, search=result["content"]
                 )
                 result["content"] = str(contacts_results)
+
+            notification = {"title": "alert", "content": json.dumps(result)}
+
+            state, value = send_message(notification, [token])
+            return assembler.to_response(200, value, result)
         except Exception as e:
-            logger.error(title="sendNotification", message=json.dumps(result))
-
-        notification = {"title": "alert", "content": json.dumps(result)}
-
-        state, value = send_message(notification, [token])
-        return assembler.to_response(200, value, result)
+            logger.error(
+                title="sendNotification", message="json parsing or get completion error"
+            )
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}

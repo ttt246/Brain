@@ -13,6 +13,7 @@ from langchain.chat_models import ChatOpenAI
 
 from firebase_admin import storage
 
+from .llm.llms import get_llm, GPT_4, FALCON_7B
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
@@ -143,12 +144,12 @@ def getCompletion(
     uuid="",
     image_search=True,
 ):
-    llm = ChatOpenAI(model_name=model, temperature=0, openai_api_key=OPENAI_API_KEY)
-
+    llm = get_llm(model=model).get_llm()
     # Break input text into chunks
     chunks = getChunks(query)
 
     app = LLMRails(config, llm)
+
     return processLargeText(app, chunks)
 
 

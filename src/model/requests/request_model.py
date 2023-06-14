@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class BasicReq(BaseModel):
     token: str
     uuid: str
+    model: str = "gpt-3.5-turbo"
 
 
 """endpoint: /sendNotification"""
