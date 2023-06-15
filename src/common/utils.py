@@ -23,7 +23,7 @@ PINECONE_NAMESPACE = "risinglangchain-namespace"
 PINECONE_INDEX_NAME = "risinglangchain-index"
 
 # open ai
-GPT_MODEL = "gpt-3.5-turbo"
+DEFAULT_GPT_MODEL = "gpt-4"
 
 # AI Agent name
 AGENT_NAME = "RisingBrain Assistant"
@@ -35,6 +35,8 @@ COMMAND_BROWSER_OPEN = [10]
 # Twilio
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+# HuggingFace
+HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
 def get_firebase_cred():

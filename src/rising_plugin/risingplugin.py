@@ -14,9 +14,11 @@ from langchain.chat_models import ChatOpenAI
 
 from firebase_admin import storage
 
+from .llm.llms import get_llm, GPT_4, FALCON_7B
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
+    DEFAULT_GPT_MODEL,
     parseJsonFromCompletion,
 )
 from .image_embedding import (
@@ -49,7 +51,6 @@ def processLargeText(app: any, chunks: any):
             ]
         )
         result = json.dumps(message["content"])
-
         return parseJsonFromCompletion(result)
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
@@ -108,16 +109,16 @@ def processLargeText(app: any, chunks: any):
 
 def getCompletion(
     query,
-    model="gpt-3.5-turbo",
+    model=DEFAULT_GPT_MODEL,
     uuid="",
     image_search=True,
 ):
-    llm = ChatOpenAI(model_name=model, temperature=0, openai_api_key=OPENAI_API_KEY)
-
+    llm = get_llm(model=DEFAULT_GPT_MODEL).get_llm()
     # Break input text into chunks
     chunks = getChunks(query)
 
     app = LLMRails(config, llm)
+
     return processLargeText(app, chunks)
 
 

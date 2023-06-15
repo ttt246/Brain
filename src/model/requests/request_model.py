@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from fastapi import Depends, Request, HTTPException
 from user_agents import parse
 
+"""user-agent management"""
+
 
 class ClientInfo:
     def __init__(self, browser, os, device_type):
@@ -51,6 +53,7 @@ def get_client_info(request: Request):
 class BasicReq(BaseModel):
     token: str
     uuid: str
+    model: str = "gpt-3.5-turbo"
 
 
 """endpoint: /sendNotification"""
