@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from fastapi import Depends, Request, HTTPException
 from user_agents import parse
 
+"""user-agent management"""
+
 
 class ClientInfo:
     def __init__(self, browser, os, device_type):
