@@ -52,6 +52,7 @@ def construct_blueprint_api() -> APIRouter:
     command_service = CommandService()
     contacts_service = ContactsService()
     document_service = DocumentService()
+    train_service = TrainService()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -170,8 +171,8 @@ def construct_blueprint_api() -> APIRouter:
     )"""
 
     @router.get("/training")
-    def csv_training():
-        csv_embed()
+    def training_documents():
+        train_service.train()
 
         return assembler.to_response(200, "trained successfully", "")
 

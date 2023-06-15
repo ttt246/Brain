@@ -31,5 +31,4 @@ class DocumentService:
         for item in docs:
             item_data = item.to_dict()
             result.append({"id": item.id, "data": item_data})
-        print(result)
         return result
