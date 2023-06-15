@@ -46,6 +46,7 @@ from src.rising_plugin.llm.llms import (
 
 @action()
 async def general_question(query, model, uuid, image_search):
+    """step1: handle with gpt-4"""
     file_path = os.path.dirname(os.path.abspath(__file__))
 
     with open(f"{file_path}/phone.json", "r") as infile:
@@ -68,13 +69,13 @@ async def general_question(query, model, uuid, image_search):
 
     chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
     # test
-    if model == GPT_3_5_TURBO or model == GPT_4 or model == GPT_4_32K:
-        gpt_llm = GptLLM(model=model)
-        chain_data = gpt_llm.get_chain().run(input_documents=docs, question=query)
-    elif model == FALCON_7B:
-        falcon_llm = FalconLLM()
-        chain_data = falcon_llm.get_chain().run(input_documents=docs, question=query)
-
+    # if model == GPT_3_5_TURBO or model == GPT_4 or model == GPT_4_32K:
+    #     gpt_llm = GptLLM(model=model)
+    #     chain_data = gpt_llm.get_chain().run(input_documents=docs, question=query)
+    # elif model == FALCON_7B:
+    #     falcon_llm = FalconLLM()
+    #     chain_data = falcon_llm.get_chain().run(question=query)
+    falcon_llm = FalconLLM()
     try:
         result = json.loads(chain_data)
         # check image query with only its text
@@ -86,6 +87,9 @@ async def general_question(query, model, uuid, image_search):
 
             # else:
             #     return result
+        """check program is message to handle it with falcon llm"""
+        if result["program"] == "message":
+            result["content"] = falcon_llm.query(question=query)
         return str(result)
     except ValueError as e:
         # Check sms and browser query
@@ -93,4 +97,4 @@ async def general_question(query, model, uuid, image_search):
             return str({"program": "sms", "content": chain_data})
         elif doc_list[0] in COMMAND_BROWSER_OPEN:
             return str({"program": "browser", "content": "https://google.com"})
-        return str({"program": "message", "content": chain_data})
+        return str({"program": "message", "content": falcon_llm.query(question=query)})

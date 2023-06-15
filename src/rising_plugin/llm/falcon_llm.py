@@ -27,3 +27,9 @@ class FalconLLM:
         prompt = PromptTemplate(template=template, input_variables=["question"])
         llm_chain = LLMChain(prompt=prompt, llm=self.llm, verbose=True)
         return llm_chain
+
+    """getting the output in query with falcon llm"""
+
+    def query(self, question: str) -> str:
+        chain = self.get_chain()
+        return chain.run(question=question)

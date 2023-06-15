@@ -23,7 +23,7 @@ PINECONE_NAMESPACE = "risinglangchain-namespace"
 PINECONE_INDEX_NAME = "risinglangchain-index"
 
 # open ai
-GPT_MODEL = "gpt-3.5-turbo"
+DEFAULT_GPT_MODEL = "gpt-4"
 
 # AI Agent name
 AGENT_NAME = "RisingBrain Assistant"

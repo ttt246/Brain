@@ -15,5 +15,5 @@ define bot inform capabilities
 define flow
   priority 0.9
   user ...
-  $result = execute general_question(query=$last_user_message, model="gpt-3.5-turbo", uuid="", image_search=True)
+  $result = execute general_question(query=$last_user_message, model="gpt-4", uuid="", image_search=True)
   bot $result
