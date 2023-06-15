@@ -7,6 +7,7 @@ import textwrap
 
 from typing import Any
 
+from langchain.chains.question_answering import load_qa_chain
 from nemoguardrails.rails import LLMRails, RailsConfig
 
 from langchain.chat_models import ChatOpenAI
@@ -17,6 +18,8 @@ from .llm.llms import get_llm, GPT_4, FALCON_7B
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
+    DEFAULT_GPT_MODEL,
+    parseJsonFromCompletion,
 )
 from .image_embedding import (
     query_image_text,
@@ -48,24 +51,7 @@ def processLargeText(app: any, chunks: any):
             ]
         )
         result = json.dumps(message["content"])
-        result = result[1:-1]
-        # fmt: off
-        result = result.replace("{'", '{"')
-        result = result.replace("'}", '"}')
-        result = result.replace("': '", '": "')
-        result = result.replace("': \\\"", '": \"')
-        result = result.replace("', '", '", "')
-
-        substring = '\\"}'
-        replacement = '\"}'
-
-        index = result.rfind(substring)
-
-        if index == len(result) - 3:
-            result = result[:index] + replacement + result[index + len(substring):]
-        # fmt: on
-        result = json.loads(result)
-        return result
+        return parseJsonFromCompletion(result)
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
         app.generate(messages=[{"role": "user", "content": first_query}])
@@ -117,40 +103,34 @@ def processLargeText(app: any, chunks: any):
                     messages=[{"role": "user", "content": last_query}]
                 )
                 result = json.dumps(message["content"])
-                result = result[1:-1]
-                # fmt: off
-                result = result.replace("{'", '{"')
-                result = result.replace("'}", '"}')
-                result = result.replace("': '", '": "')
-                result = result.replace("': \\\"", '": \"')
-                result = result.replace("', '", '", "')
-
-                substring = '\\"}'
-                replacement = '\"}'
-
-                index = result.rfind(substring)
-
-                if index == len(result) - 3:
-                    result = result[:index] + replacement + result[index + len(substring):]
-                # fmt: on
-                result = json.loads(result)
-                return result
+                return parseJsonFromCompletion(result)
         # out of for-loop
 
 
 def getCompletion(
     query,
-    model="gpt-3.5-turbo",
+    model=DEFAULT_GPT_MODEL,
     uuid="",
     image_search=True,
 ):
-    llm = get_llm(model=model).get_llm()
+    llm = get_llm(model=DEFAULT_GPT_MODEL).get_llm()
     # Break input text into chunks
     chunks = getChunks(query)
 
     app = LLMRails(config, llm)
 
     return processLargeText(app, chunks)
+
+
+def getCompletionOnly(
+    query: str,
+    model: str = "gpt-4",
+) -> str:
+    llm = ChatOpenAI(model_name=model, temperature=1.7, openai_api_key=OPENAI_API_KEY)
+    chain = load_qa_chain(llm, chain_type="stuff")
+    test_question = """Please return the link of best relatedness of item which the title is "Android Studio in browser" from the below data. [{"title": "Android Studio", "link": "https://android.com"} , {"title": "What's this?", "link": "https://test.com"} , {"title": "How are you?", "link": "https://d.com"}]"""
+    chain_data = chain.run(input_documents=[], question=test_question)
+    return chain_data
 
 
 def query_image_ask(image_content, message, uuid):
