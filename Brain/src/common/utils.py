@@ -86,8 +86,10 @@ def parseJsonFromCompletion(data: str) -> json:
     if index == len(result) - 3:
         result = result[:index] + replacement + result[index + len(substring):]
     # fmt: on
-    result = json.loads(result.replace("':", '":'))
-    return result
+    try:
+        return json.loads(result)
+    except Exception as e:
+        return result
 
 
 def parseUrlFromStr(text: str) -> str:
