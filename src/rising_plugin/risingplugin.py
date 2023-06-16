@@ -126,10 +126,9 @@ def getCompletionOnly(
     query: str,
     model: str = "gpt-4",
 ) -> str:
-    llm = ChatOpenAI(model_name=model, temperature=1.7, openai_api_key=OPENAI_API_KEY)
+    llm = ChatOpenAI(model_name=model, temperature=0.5, openai_api_key=OPENAI_API_KEY)
     chain = load_qa_chain(llm, chain_type="stuff")
-    test_question = """Please return the link of best relatedness of item which the title is "Android Studio in browser" from the below data. [{"title": "Android Studio", "link": "https://android.com"} , {"title": "What's this?", "link": "https://test.com"} , {"title": "How are you?", "link": "https://d.com"}]"""
-    chain_data = chain.run(input_documents=[], question=test_question)
+    chain_data = chain.run(input_documents=[], question=query)
     return chain_data
 
 
