@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Depends
 
 from src.common.assembler import Assembler
+from src.common.program_type import ProgramType
 from src.common.utils import parseUrlFromStr
 from src.model.requests.request_model import BrowserItem
 from src.service.browser_service import BrowserService
@@ -38,7 +39,12 @@ def construct_blueprint_browser_api() -> APIRouter:
         except Exception as e:
             return assembler.to_response(400, "Failed to get item in a browser", "")
         return assembler.to_response(
-            200, "Getting an item in a browser successfully", parseUrlFromStr(item_link)
+            200,
+            "Getting an item in a browser successfully",
+            assembler.to_result_format(
+                ProgramType.BrowserType.SELECT_ITEM,
+                parseUrlFromStr(item_link),
+            ),
         )
 
     return router

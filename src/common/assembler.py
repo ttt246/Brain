@@ -48,3 +48,13 @@ class Assembler:
         contact_model = ContactModel()
         contact_model.get_contact_model(data)
         return contact_model
+
+    """mapping result type into json
+    {
+        "program": sms | contacts | browser | select_item_detail_info, 
+        "content": string
+    }
+    """
+
+    def to_result_format(self, program: str, content: str) -> Any:
+        return {"program": program, "content": content}
