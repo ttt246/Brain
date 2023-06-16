@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 from firebase_admin import credentials
 
@@ -87,3 +88,13 @@ def parseJsonFromCompletion(data: str) -> json:
     # fmt: on
     result = json.loads(result.replace("':", '":'))
     return result
+
+
+def parseUrlFromStr(text: str) -> str:
+    # Search for the link using regex
+    link = re.search(r"(https?://\S+)", text)
+
+    if link:
+        return link.group(0)
+    else:
+        return ""
