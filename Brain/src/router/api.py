@@ -17,6 +17,7 @@ from src.model.requests.request_model import (
     ClientInfo,
     get_client_info,
     Document,
+    Training,
 )
 from src.rising_plugin.risingplugin import (
     getCompletion,
@@ -25,7 +26,7 @@ from src.rising_plugin.risingplugin import (
     handle_chat_completion,
 )
 from src.firebase.cloudmessage import send_message, get_tokens
-from src.service.train_service import TrainService
+from src.service.training_service import TrainingService
 from src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from src.logs import logger
@@ -52,7 +53,7 @@ def construct_blueprint_api() -> APIRouter:
     command_service = CommandService()
     contacts_service = ContactsService()
     document_service = DocumentService()
-    train_service = TrainService()
+    training_service = TrainingService()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -170,10 +171,28 @@ def construct_blueprint_api() -> APIRouter:
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @router.get("/training")
-    def training_documents():
-        train_service.train()
+    @router.get("/training-all-documents")
+    def training_all_documents():
+        training_service.trainingAllDocuments()
 
+        return assembler.to_response(200, "trained successfully", "")
+
+    """@generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "id": "test_id",
+            "data": {"page_content": "page_content", "timestamp": 0},
+            "status": "update",
+        }
+    )
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )"""
+
+    @router.post("/training-one-document")
+    def training_one_document(data: Training):
+        training_service.trainingOneDocument(data)
         return assembler.to_response(200, "trained successfully", "")
 
     """@generator.request_body(
