@@ -8,7 +8,7 @@ import datetime
 def to_json(page_content: str):
     return {
         "page_content": page_content,
-        "timestamp": datetime.datetime.now().timestamp()
+        "timestamp": datetime.datetime.now().timestamp(),
     }
 
 

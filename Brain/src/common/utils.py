@@ -30,8 +30,8 @@ DEFAULT_GPT_MODEL = "gpt-4"
 AGENT_NAME = "RisingBrain Assistant"
 
 # indexes of relatedness of embedding
-COMMAND_SMS_INDEXS = [4, 5]
-COMMAND_BROWSER_OPEN = [10]
+COMMAND_SMS_INDEXES = ["pWDrks5DO1bEPLlUtQ1f", "LEpAhmFi8tAOQUE7LHZZ"]  # 4, 5
+COMMAND_BROWSER_OPEN = ["taVNeDINonUqJWXBlESU"]  # 10
 
 # Twilio
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
