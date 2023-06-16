@@ -33,9 +33,7 @@ class TrainingService:
             value = f'{item["data"]["page_content"]}, {query_result}'
             # get vectoring data(embedding data)
             vectoring_values = get_embed(value)
-            add_pinecone(
-                namespace=pinecone_namespace, key=key, value=vectoring_values
-            )
+            add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
 
     def trainingOneDocument(self, document: TrainingModel) -> None:
         pinecone_namespace = self.get_pinecone_index_namespace()
@@ -48,9 +46,7 @@ class TrainingService:
         vectoring_values = get_embed(value)
         # create | update | delete pinecone
         if document.status == TrainingStatus.CREATED:
-            add_pinecone(
-                namespace=pinecone_namespace, key=key, value=vectoring_values
-            )
+            add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
         elif document.status == TrainingStatus.DELETED:
             delete_pinecone(namespace=pinecone_namespace, key=key)
         elif document.status == TrainingStatus.UPDATED:
