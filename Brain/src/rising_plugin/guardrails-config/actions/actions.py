@@ -13,16 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import json
-import numpy as np
 
-from langchain.chat_models import ChatOpenAI
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import utils
-from langchain.document_loaders.csv_loader import CSVLoader
 from src.service.document_service import DocumentService
-from langchain.chains.question_answering import load_qa_chain
 from langchain.docstore.document import Document
 
 from src.common.utils import (
@@ -38,7 +32,6 @@ from src.rising_plugin.image_embedding import (
 from nemoguardrails.actions import action
 
 from src.rising_plugin.llm.falcon_llm import FalconLLM
-from src.rising_plugin.llm.gpt_llm import GptLLM
 from src.rising_plugin.llm.llms import (
     get_llm_chain,
     GPT_3_5_TURBO,
@@ -49,11 +42,7 @@ from src.rising_plugin.llm.llms import (
 
 from src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
-    update_pinecone,
     init_pinecone,
-    delete_pinecone,
-    add_pinecone,
-    delete_all_pinecone,
 )
 
 
@@ -64,10 +53,6 @@ def get_pinecone_index_training_namespace(self) -> str:
 @action()
 async def general_question(query, model, uuid, image_search):
     """step1: handle with gpt-4"""
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    llm = ChatOpenAI(model_name=model, temperature=0, openai_api_key=OPENAI_API_KEY)
-    chain = load_qa_chain(llm, chain_type="stuff")
-
     index = init_pinecone(PINECONE_INDEX_NAME)
 
     embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
@@ -119,5 +104,7 @@ async def general_question(query, model, uuid, image_search):
         if documentId in COMMAND_SMS_INDEXES:
             return str({"program": "sms", "content": chain_data})
         elif documentId in COMMAND_BROWSER_OPEN:
-            return str({"program": "browser", "content": "https://google.com"})
+            return str(
+                {"program": "message", "content": falcon_llm.query(question=query)}
+            )
         return str({"program": "message", "content": chain_data})
