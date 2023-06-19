@@ -72,9 +72,7 @@ async def general_question(query, model, uuid, image_search):
     documents = document_service.read()
     for document in documents:
         if document["id"] == documentId:
-            docs.append(
-                Document(page_content=document["page_content"], metadata="")
-            )
+            docs.append(Document(page_content=document["page_content"], metadata=""))
 
     chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
     # test
