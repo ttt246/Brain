@@ -16,7 +16,7 @@
 import json
 
 from langchain.embeddings.openai import OpenAIEmbeddings
-from src.service.document_service import DocumentService
+from Brain.src.service.document_service import DocumentService
 from langchain.docstore.document import Document
 
 from Brain.src.common.utils import (
@@ -41,7 +41,7 @@ from Brain.src.rising_plugin.llm.llms import (
     FALCON_7B,
 )
 
-from src.rising_plugin.pinecone_engine import (
+from Brain.src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
     init_pinecone,
 )
@@ -101,9 +101,9 @@ async def general_question(query, model, uuid, image_search):
     except ValueError as e:
         # Check sms and browser query
         if documentId in COMMAND_SMS_INDEXES:
-            return str({"program": "sms", "content": chain_data})
+            return str({"program": "sms", "content": falcon_llm.query(question=query)})
         elif documentId in COMMAND_BROWSER_OPEN:
             return str(
                 {"program": "message", "content": falcon_llm.query(question=query)}
             )
-        return str({"program": "message", "content": chain_data})
+        return str({"program": "message", "content": falcon_llm.query(question=query)})

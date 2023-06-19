@@ -70,12 +70,6 @@ def delete_all_pinecone(namespace: str) -> Any:
     return delete_response
 
 
-def delete_one_pinecone(namespace: str, id: str) -> Any:
-    index = init_pinecone(PINECONE_INDEX_NAME)
-    delete_response = index.delete(ids=[id], namespace=namespace)
-    return delete_response
-
-
 """generate index name of pinecone"""
 
 

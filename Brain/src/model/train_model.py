@@ -5,13 +5,13 @@
     "status": "created | updated | deleted",
 }"""
 
-from src.model.requests.request_model import Train
+from Brain.src.model.requests.request_model import Train
 
 
 class TrainModel:
-    def __init__(self, TrainData: Train):
-        self.id = TrainData.id
-        self.data = TrainData.data
+    def __init__(self, train_data: Train):
+        self.id = train_data.id
+        self.data = train_data.data
         self.status = TrainStatus.UPDATED
 
 
