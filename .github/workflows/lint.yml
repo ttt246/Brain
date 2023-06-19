@@ -1,12 +1,17 @@
-name: Lint with black
+name: Brain Lint with black
 on:
   push:
   pull_request:
+    paths:
+      - "Brain/**"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Brain
     steps:
       - name: setup
         uses: actions/checkout@v3  
