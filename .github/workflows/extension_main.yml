@@ -38,6 +38,9 @@ jobs:
   lint:
     name: Code standards
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: Extension
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
@@ -59,7 +62,9 @@ jobs:
 
   build:
     runs-on: ubuntu-22.04
-
+    defaults:
+      run:
+        working-directory: Extension
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
