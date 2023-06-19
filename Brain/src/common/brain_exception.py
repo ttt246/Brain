@@ -1,7 +1,7 @@
 """Basic Exception in Brain"""
 from typing import Any
 
-from src.common.http_response_codes import responses
+from Brain.src.common.http_response_codes import responses
 
 
 class BrainException(Exception):

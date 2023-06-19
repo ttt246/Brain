@@ -22,20 +22,20 @@ from langchain.vectorstores import utils
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.docstore.document import Document
 
-from src.common.utils import (
+from Brain.src.common.utils import (
     OPENAI_API_KEY,
     COMMAND_SMS_INDEXS,
     COMMAND_BROWSER_OPEN,
 )
-from src.rising_plugin.image_embedding import (
+from Brain.src.rising_plugin.image_embedding import (
     query_image_text,
 )
 
 from nemoguardrails.actions import action
 
-from src.rising_plugin.llm.falcon_llm import FalconLLM
-from src.rising_plugin.llm.gpt_llm import GptLLM
-from src.rising_plugin.llm.llms import (
+from Brain.src.rising_plugin.llm.falcon_llm import FalconLLM
+from Brain.src.rising_plugin.llm.gpt_llm import GptLLM
+from Brain.src.rising_plugin.llm.llms import (
     get_llm_chain,
     GPT_3_5_TURBO,
     GPT_4_32K,

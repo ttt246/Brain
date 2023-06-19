@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Request, Depends
 
-from src.common.assembler import Assembler
-from src.common.program_type import ProgramType
-from src.common.utils import parseUrlFromStr
-from src.model.requests.request_model import BrowserItem
-from src.service.browser_service import BrowserService
+from Brain.src.common.assembler import Assembler
+from Brain.src.common.program_type import ProgramType
+from Brain.src.common.utils import parseUrlFromStr
+from Brain.src.model.requests.request_model import BrowserItem
+from Brain.src.service.browser_service import BrowserService
 
 router = APIRouter()
 

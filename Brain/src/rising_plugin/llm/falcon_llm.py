@@ -1,7 +1,7 @@
 """falcon llm"""
 from langchain import HuggingFaceHub, PromptTemplate, LLMChain
 
-from src.common.utils import HUGGINGFACEHUB_API_TOKEN
+from Brain.src.common.utils import HUGGINGFACEHUB_API_TOKEN
 
 repo_id = "tiiuae/falcon-7b-instruct"
 template = """

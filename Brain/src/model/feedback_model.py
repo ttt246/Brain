@@ -2,7 +2,7 @@ import datetime
 
 
 # feedback model to manage user's feedback (thumb up and down)
-from src.model.basic_model import BasicModel
+from Brain.src.model.basic_model import BasicModel
 
 
 class FeedbackModel:

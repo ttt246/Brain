@@ -1,8 +1,8 @@
 """service to manage contacts"""
 from typing import List, Any
 
-from src.rising_plugin.csv_embed import get_embed
-from src.rising_plugin.pinecone_engine import (
+from Brain.src.rising_plugin.csv_embed import get_embed
+from Brain.src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
     update_pinecone,
     init_pinecone,
@@ -11,8 +11,8 @@ from src.rising_plugin.pinecone_engine import (
     delete_all_pinecone,
 )
 
-from src.common.utils import PINECONE_INDEX_NAME
-from src.model.contact_model import ContactModel, ContactStatus
+from Brain.src.common.utils import PINECONE_INDEX_NAME
+from Brain.src.model.contact_model import ContactModel, ContactStatus
 
 
 class ContactsService:

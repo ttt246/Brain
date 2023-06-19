@@ -3,7 +3,7 @@ from os import remove
 from firebase_admin import firestore
 
 
-from src.model.feedback_model import FeedbackModel
+from Brain.src.model.feedback_model import FeedbackModel
 
 """service to manage feedback collection"""
 

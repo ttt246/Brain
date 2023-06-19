@@ -9,8 +9,8 @@ from typing import Any
 
 from colorama import Fore, Style
 
-from src.log_cycle.json_handler import JsonFormatter, JsonFileHandler
-from src.singletone import Singleton
+from Brain.src.log_cycle.json_handler import JsonFormatter, JsonFileHandler
+from Brain.src.singletone import Singleton
 
 
 class Logger(metaclass=Singleton):

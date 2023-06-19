@@ -3,11 +3,11 @@ import time
 
 from openai.error import RateLimitError
 
-from src.common.utils import AGENT_NAME, DEFAULT_GPT_MODEL
-from src.rising_plugin.risingplugin import handle_chat_completion
-from src.logs import logger
-from src.model.chat_response_model import ChatResponseModel
-from src.model.message_model import MessageModel
+from Brain.src.common.utils import AGENT_NAME, DEFAULT_GPT_MODEL
+from Brain.src.rising_plugin.risingplugin import handle_chat_completion
+from Brain.src.logs import logger
+from Brain.src.model.chat_response_model import ChatResponseModel
+from Brain.src.model.message_model import MessageModel
 
 
 class ChatService:

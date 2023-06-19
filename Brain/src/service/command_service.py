@@ -1,7 +1,7 @@
 """service to manage command"""
 from typing import Any
 
-from src.commands.command import CommandRegistry
+from Brain.src.commands.command import CommandRegistry
 
 
 class CommandService:

@@ -7,7 +7,7 @@
 }"""
 from typing import Any
 
-from src.model.requests.request_model import TrainContacts
+from Brain.src.model.requests.request_model import TrainContacts
 
 
 class ContactModel:

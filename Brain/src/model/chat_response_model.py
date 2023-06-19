@@ -1,7 +1,7 @@
 """chat response model"""
 from typing import Any
 
-from src.model.message_model import MessageModel
+from Brain.src.model.message_model import MessageModel
 
 
 class ChatResponseModel:
