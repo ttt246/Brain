@@ -15,9 +15,6 @@ jobs:
   test:
     name: Test application
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: Extension
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
@@ -29,17 +26,16 @@ jobs:
           node-version: 16
 
       - name: "🔧 install npm@latest"
+        working-directory: ./Extension
         run: npm i -g npm@latest
 
       - name: "🔍 run tests"
+        working-directory: ./Extension
         run: npm run test --if-present
 
   lint:
     name: Code standards
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: Extension
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
@@ -51,14 +47,12 @@ jobs:
           node-version: 16
 
       - name: "🔧 install npm@latest"
-        run: |
-          cd Extension
-          npm i -g npm@latest
+        working-directory: ./Extension
+        run: npm i -g npm@latest
 
       - name: "🔍 lint code"
-        run: |
-          cd Extension
-          npm run lint --if-present
+        working-directory: ./Extension
+        run: npm run lint --if-present
 
   build:
     runs-on: ubuntu-22.04
