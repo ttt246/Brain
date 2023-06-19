@@ -134,6 +134,7 @@ class TrainContacts(BasicReq):
 
 
 class Document(BasicReq):
+    id: str
     page_content: str
 
 
@@ -149,10 +150,10 @@ class BrowserItem(BasicReq):
     prompt: str
 
 
-"""endpoint /training-some-documents"""
+"""endpoint /train"""
 
 
-class Training(BasicReq):
+class Train(BasicReq):
     class TrainData(BaseModel):
         page_content: str
         timestamp: float

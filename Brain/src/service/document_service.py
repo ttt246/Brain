@@ -17,18 +17,34 @@ class DocumentService:
         self.db = firestore.client()
         self.documents_ref = self.db.collection("documents")
 
-    """add a new document"""
+    """read all documents"""
 
-    def add(self, page_content: str):
-        return self.documents_ref.document().set(to_json(page_content))
-
-    """get list of document"""
-
-    def getAll(self):
+    def read(self):
         query = self.documents_ref.order_by("timestamp")
         docs = query.stream()
         result = []
         for item in docs:
             item_data = item.to_dict()
-            result.append({"id": item.id, "data": item_data})
+            result.append({"id": item.id, "page_content": item_data["page_content"]})
         return result
+
+    """read one document"""
+
+    def readOneDocument(self, id: str):
+        doc = self.documents_ref.document(id).get()
+        return {"id": id, "page_content": doc.to_dict()["page_content"]}
+
+    """create a new document"""
+
+    def create(self, page_content: str):
+        return self.documents_ref.document().set(to_json(page_content))
+
+    """update a document by using id"""
+
+    def update(self, id: str, page_content: str):
+        return self.documents_ref.document(id).update(to_json(page_content))
+
+    """delete a document by using id"""
+
+    def delete(self, id: str):
+        return self.documents_ref.document(id).delete()
