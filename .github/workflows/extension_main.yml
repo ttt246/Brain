@@ -1,0 +1,64 @@
+name: Extension CI
+
+on:
+  pull_request:
+    paths:
+      - "Extension/**"
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+  workflow_call:
+
+jobs:
+  test:
+    name: Test application
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16
+
+      - name: "🔧 install npm@latest"
+        working-directory: ./Extension
+        run: npm i -g npm@latest
+
+      - name: "🔍 run tests"
+        working-directory: ./Extension
+        run: npm run test --if-present
+
+  lint:
+    name: Code standards
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: "☁️ checkout repository"
+        uses: actions/checkout@v2
+
+      - name: "🔧 setup node"
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16
+
+      - name: "🔧 install npm@latest"
+        working-directory: ./Extension
+        run: npm i -g npm@latest
+
+  build:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: Extension
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - run: npm run build

@@ -1,0 +1,93 @@
+{
+  "name": "Rising Browser",
+  "description": "Integrating GPT funtionality into your browser deeply, everything you need is here",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "icons": {
+    "16": "logo1.png",
+    "32": "logo1.png",
+    "48": "logo1.png",
+    "128": "logo1.png"
+  },
+  "host_permissions": [
+    "https://*.openai.com/",
+    "https://*.bing.com/",
+    "https://*.poe.com/"
+  ],
+  "permissions": [
+    "commands",
+    "cookies",
+    "storage",
+    "contextMenus",
+    "unlimitedStorage",
+    "tabs"
+  ],
+  "optional_permissions": [
+    "background"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_ui": {
+    "page": "popup.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*",
+        "file://*/*"
+      ],
+      "js": [
+        "shared.js",
+        "content-script.js"
+      ],
+      "css": [
+        "content-script.css"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "logo1.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "commands": {
+    "newChat": {
+      "suggested_key": {
+        "default": "Ctrl+B",
+        "mac": "MacCtrl+B"
+      },
+      "description": "Create a new chat"
+    },
+    "summarizePage": {
+      "suggested_key": {
+        "default": "Alt+B",
+        "mac": "Alt+B"
+      },
+      "description": "Summarize this page"
+    },
+    "openConversationPage": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+H",
+        "mac": "MacCtrl+Shift+H"
+      },
+      "description": "Open the independent conversation page"
+    },
+    "openConversationWindow": {
+      "description": "Open the independent conversation window"
+    },
+    "closeAllChats": {
+      "description": "Close all chats in this page"
+    }
+  }
+}

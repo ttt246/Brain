@@ -1,0 +1,82 @@
+2023-06-11 01:39:05,597 ERROR sendNotification 
+2023-06-11 03:49:04,950 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-11 03:49:04,950 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-11 03:49:04,950 DEBUG  System: You are a helpful assistant.
+2023-06-11 03:49:04,950 DEBUG  
+2023-06-11 03:49:04,950 DEBUG  User: Who won the world series in 2020?
+2023-06-11 03:49:04,950 DEBUG  
+2023-06-11 03:49:04,950 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-11 03:49:04,950 DEBUG  
+2023-06-11 03:49:04,950 DEBUG  User: Where was it played?
+2023-06-11 03:49:04,951 DEBUG  
+2023-06-11 03:49:04,951 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-11 03:49:14,350 WARNING API Rate Limit Reached. Waiting 10 seconds... Error: 
+2023-06-11 03:49:34,004 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-11 03:49:34,004 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-11 03:49:34,004 DEBUG  System: You are a helpful assistant.
+2023-06-11 03:49:34,004 DEBUG  
+2023-06-11 03:49:34,004 DEBUG  User: Who won the world series in 2020?
+2023-06-11 03:49:34,004 DEBUG  
+2023-06-11 03:49:34,004 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-11 03:49:34,004 DEBUG  
+2023-06-11 03:49:34,004 DEBUG  User: Where was it played?
+2023-06-11 03:49:34,004 DEBUG  
+2023-06-11 03:49:34,004 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-11 03:50:02,195 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-11 03:50:02,196 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-11 03:50:02,196 DEBUG  System: You are a helpful assistant.
+2023-06-11 03:50:02,196 DEBUG  
+2023-06-11 03:50:02,196 DEBUG  User: Who won the world series in 2020?
+2023-06-11 03:50:02,197 DEBUG  
+2023-06-11 03:50:02,197 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-11 03:50:02,197 DEBUG  
+2023-06-11 03:50:02,197 DEBUG  User: Where was it played?
+2023-06-11 03:50:02,197 DEBUG  
+2023-06-11 03:50:02,197 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-11 03:52:01,682 WARNING API Rate Limit Reached. Waiting 10 seconds... Error: 
+2023-06-11 03:52:04,881 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-11 03:52:04,882 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-11 03:52:04,882 DEBUG  System: You are a helpful assistant.
+2023-06-11 03:52:04,882 DEBUG  
+2023-06-11 03:52:04,882 DEBUG  User: Who won the world series in 2020?
+2023-06-11 03:52:04,883 DEBUG  
+2023-06-11 03:52:04,883 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-11 03:52:04,883 DEBUG  
+2023-06-11 03:52:04,884 DEBUG  User: Where was it played?
+2023-06-11 03:52:04,884 DEBUG  
+2023-06-11 03:52:04,884 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-11 03:59:41,875 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-11 03:59:41,876 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-11 03:59:41,876 DEBUG  System: You are a helpful assistant.
+2023-06-11 03:59:41,876 DEBUG  
+2023-06-11 03:59:41,876 DEBUG  User: Who won the world series in 2020?
+2023-06-11 03:59:41,876 DEBUG  
+2023-06-11 03:59:41,876 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-11 03:59:41,876 DEBUG  
+2023-06-11 03:59:41,876 DEBUG  User: Where was it played?
+2023-06-11 03:59:41,876 DEBUG  
+2023-06-11 03:59:41,876 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-12 17:08:50,779 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-12 17:08:50,780 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-12 17:08:50,780 DEBUG  System: You are a helpful assistant.
+2023-06-12 17:08:50,780 DEBUG  
+2023-06-12 17:08:50,780 DEBUG  User: Who won the world series in 2020?
+2023-06-12 17:08:50,780 DEBUG  
+2023-06-12 17:08:50,780 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-12 17:08:50,780 DEBUG  
+2023-06-12 17:08:50,780 DEBUG  User: Where was it played?
+2023-06-12 17:08:50,780 DEBUG  
+2023-06-12 17:08:50,780 DEBUG  ----------- END OF CONTEXT ----------------
+2023-06-16 14:22:55,555 ERROR sendNotification json parsing or get completion error
+2023-06-16 14:23:59,508 ERROR sendNotification json parsing or get completion error
+2023-06-16 15:58:51,640 DEBUG  Chat with AI on model : gpt-3.5-turbo
+2023-06-16 15:58:51,641 DEBUG  ------------ CONTEXT SENT TO AI ---------------
+2023-06-16 15:58:51,641 DEBUG  System: You are a helpful assistant.
+2023-06-16 15:58:51,642 DEBUG  
+2023-06-16 15:58:51,642 DEBUG  User: Who won the world series in 2020?
+2023-06-16 15:58:51,642 DEBUG  
+2023-06-16 15:58:51,642 DEBUG  Assistant: The Los Angeles Dodgers won the World Series in 2020.
+2023-06-16 15:58:51,642 DEBUG  
+2023-06-16 15:58:51,642 DEBUG  User: Where was it played?
+2023-06-16 15:58:51,642 DEBUG  
+2023-06-16 15:58:51,642 DEBUG  ----------- END OF CONTEXT ----------------
