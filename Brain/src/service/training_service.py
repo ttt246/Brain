@@ -47,6 +47,7 @@ class TrainService:
         # get vectoring data(embedding data)
         vectoring_values = get_embed(value)
 <<<<<<<< HEAD:Brain/src/service/training_service.py
+<<<<<<<< HEAD:Brain/src/service/training_service.py
         # create | update | delete pinecone
         if document.status == TrainingStatus.CREATED:
             add_pinecone(
@@ -58,6 +59,9 @@ class TrainService:
             update_pinecone(
                 namespace=pinecone_namespace, key=key, value=vectoring_values
             )
+========
+        add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
+>>>>>>>> ab931de (feature(#35): update some stuff in train_service.py actions.py file.):src/service/train_service.py
 ========
         add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
 >>>>>>>> ab931de (feature(#35): update some stuff in train_service.py actions.py file.):src/service/train_service.py
