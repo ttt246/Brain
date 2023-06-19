@@ -3,6 +3,8 @@ env:
   main_project_module: app
 on:
   push:
+    paths:
+      - "Android/**"
     tags:
       - '*'
   workflow_dispatch:
@@ -10,20 +12,18 @@ jobs:
   build:
     permissions: write-all
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: Android
     steps:
       - uses: actions/checkout@v3
       # Set Current Date As Env Variable
       - name: Set current date as env variable
-        run: |
-          cd Android
-          echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
       # Set Repository Name As Env Variable
       - name: Set repository name as env variable
-        run: |
-          cd Android
-          echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
       - name: set up JDK 11
         uses: actions/setup-java@v3
@@ -33,27 +33,19 @@ jobs:
           cache: gradle
 
       - name: Create file
-        run: |
-          cd Android
-          cat /home/runner/work/RisingPhone/RisingPhone/app/google-services.json | base64
+        run: cat /home/runner/work/RisingPhone/RisingPhone/app/google-services.json | base64
 
       - name: Putting data
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: |
-          cd Android
-          echo $DATA > /home/runner/work/RisingPhone/RisingPhone/app/google-services.json
+        run: echo $DATA > /home/runner/work/RisingPhone/RisingPhone/app/google-services.json
 
       - name: Grant execute permission for gradlew
-        run:  |
-          cd Android
-          chmod +x gradlew
+        run: chmod +x gradlew
 
       # Run Tests Build
       - name: Run gradle tests
-        run: |
-          cd Android
-          ./gradlew test
+        run: ./gradlew test
 
       - name: Build with Gradle
         run: |
