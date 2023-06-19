@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Request, Depends
 
-from src.common.assembler import Assembler
-from src.model.requests.request_model import (
+from Brain.src.common.assembler import Assembler
+from Brain.src.model.requests.request_model import (
     Document,
-    Train,
 )
-from src.service.document_service import DocumentService
-from src.service.train_service import TrainService
+from Brain.src.service.document_service import DocumentService
 
 router = APIRouter()
 
