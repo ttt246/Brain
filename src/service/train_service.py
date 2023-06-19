@@ -10,6 +10,7 @@ from Brain.src.rising_plugin.pinecone_engine import (
     delete_pinecone,
     add_pinecone,
     delete_all_pinecone,
+    delete_one_pinecone,
 )
 
 
@@ -48,6 +49,9 @@ class TrainService:
 
     def delete_all(self) -> Any:
         return delete_all_pinecone(self.get_pinecone_index_namespace())
+
+    def delete_one(self, id: str) -> Any:
+        return delete_one_pinecone(self.get_pinecone_index_namespace(), id)
 
     def get_pinecone_index_namespace(self) -> str:
         return get_pinecone_index_namespace(f"trains")
