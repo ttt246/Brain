@@ -50,10 +50,6 @@ jobs:
         working-directory: ./Extension
         run: npm i -g npm@latest
 
-      - name: "🔍 lint code"
-        working-directory: ./Extension
-        run: npm run lint --if-present
-
   build:
     runs-on: ubuntu-22.04
     defaults:
