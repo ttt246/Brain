@@ -5,6 +5,8 @@ from Brain.src.common.http_response_codes import responses
 
 
 class BrainException(Exception):
+    JSON_PARSING_ISSUE_MSG = "Exception occurred in json paring."
+
     def __init__(self, message: str = "Exception occurred in brain"):
         self.message = message
         super().__init__(self.message)

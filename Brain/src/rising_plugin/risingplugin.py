@@ -40,13 +40,20 @@ def getChunks(query: str):
     )
 
 
-def processLargeText(app: any, chunks: any):
+def processLargeText(
+    app: any, chunks: any, model: str, uuid: str = "", image_search: bool = True
+):
     if len(chunks) == 1:
         message = app.generate(
             messages=[
                 {
                     "role": "user",
-                    "content": chunks[0],
+                    "content": rails_input_with_args(
+                        query=chunks[0],
+                        model=model,
+                        uuid=uuid,
+                        image_search=image_search,
+                    ),
                 }
             ]
         )
@@ -81,7 +88,12 @@ def processLargeText(app: any, chunks: any):
                     messages=[
                         {
                             "role": "user",
-                            "content": chunk_query,
+                            "content": rails_input_with_args(
+                                query=chunk_query,
+                                model=model,
+                                uuid=uuid,
+                                image_search=image_search,
+                            ),
                         }
                     ]
                 )
@@ -100,7 +112,17 @@ def processLargeText(app: any, chunks: any):
                     + "ALL PART SENT. Now you can continue processing the request."
                 )
                 message = app.generate(
-                    messages=[{"role": "user", "content": last_query}]
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": rails_input_with_args(
+                                query=last_query,
+                                model=model,
+                                uuid=uuid,
+                                image_search=image_search,
+                            ),
+                        }
+                    ]
                 )
                 result = json.dumps(message["content"])
                 return parseJsonFromCompletion(result)
@@ -119,7 +141,9 @@ def getCompletion(
 
     app = LLMRails(config, llm)
 
-    return processLargeText(app, chunks)
+    return processLargeText(
+        app=app, chunks=chunks, model=model, uuid=uuid, image_search=image_search
+    )
 
 
 def getCompletionOnly(
@@ -198,7 +222,7 @@ def filter_guardrails(model: any, query: str):
     chunks = getChunks(query)
 
     # get message from guardrails
-    message = processLargeText(app, chunks)
+    message = processLargeText(app=app, chunks=chunks, model=model)
 
     if (
         message
@@ -211,6 +235,22 @@ def filter_guardrails(model: any, query: str):
         return ""
 
 
+"""
+compose json_string for rails input with its arguments 
+"""
+
+
+def rails_input_with_args(query: str, model: str, uuid: str, image_search: bool) -> str:
+    # convert json with params for rails.
+    json_query_with_params = {
+        "query": query,
+        "model": model,
+        "uuid": uuid,
+        "image_search": image_search,
+    }
+    return json.dumps(json_query_with_params)
+
+
 def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:
     openai.api_key = OPENAI_API_KEY
 
@@ -220,11 +260,11 @@ def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:
     )
 
     # Filter the reply using the content filter
-    result = filter_guardrails(model, messages[-1]["content"])
-
-    if result == "":
-        return response
-    else:
-        response["choices"][0]["message"]["content"] = result
-        return response
-    # return response
+    # result = filter_guardrails(model, messages[-1]["content"])
+    # comment logic issue with guardrails
+    # if result == "":
+    #     return response
+    # else:
+    #     response["choices"][0]["message"]["content"] = result
+    #     return response
+    return response
