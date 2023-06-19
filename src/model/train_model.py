@@ -5,20 +5,20 @@
     "status": "created | updated | deleted",
 }"""
 
-from src.model.requests.request_model import Training
+from src.model.requests.request_model import Train
 
 
-class TrainingModel:
-    def __init__(self, TrainingData: Training):
-        self.id = TrainingData.id
-        self.data = TrainingData.data
-        self.status = TrainingStatus.UPDATED
+class TrainModel:
+    def __init__(self, TrainData: Train):
+        self.id = TrainData.id
+        self.data = TrainData.data
+        self.status = TrainStatus.UPDATED
 
 
 """train status: created | updated | deleted"""
 
 
-class TrainingStatus:
+class TrainStatus:
     CREATED = "created"
     UPDATED = "updated"
     DELETED = "deleted"
