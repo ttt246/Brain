@@ -3,6 +3,8 @@ env:
   main_project_module: app
 on:
   push:
+    paths:
+      - "Android/**"
     tags:
       - '*'
   workflow_dispatch:

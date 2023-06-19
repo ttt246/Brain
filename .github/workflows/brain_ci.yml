@@ -3,6 +3,8 @@ on:
   push:
     branches: [main]
   pull_request:
+    paths:
+      - "Brain/**"
   workflow_dispatch:
   
 env:

@@ -2,6 +2,8 @@ name: Brain Lint with black
 on:
   push:
   pull_request:
+    paths:
+      - "Brain/**"
   workflow_dispatch:
 
 jobs:

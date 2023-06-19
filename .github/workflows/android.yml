@@ -4,6 +4,8 @@ on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
+    paths:
+      - "Android/**"
     branches: [ "main" ]
   workflow_dispatch:
 jobs:
