@@ -20,7 +20,7 @@ All complex software including operating systems will need to be rewritten from 
 
 #### 1.1 Achievement
 <p align='center'>
-  <img align='center' src='Brain/assets/img/desc.png' width='100%' />
+  <img align='center' src='assets/img/desc.png' width='100%' />
 </p>
 
 - 📱 Support for mobile devices to manage all apps via plugin as its launcher.
