@@ -1,0 +1,7 @@
+{
+  "name": "chatgptphone",
+  "description": "chatgptphone flask app using langchain",
+  "repository": "https://github.com/ttt246/risinglangchain",
+  "logo": "https://flask.palletsprojects.com/en/2.2.x/_static/flask-icon.png",
+  "keywords": ["python", "langchain", "chatgpt"]
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Arbitrary POST Request</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>Arbitrary POST Request</h1>
+
+  <form id="postForm">
+
+    <label for="messageInput">url:</label>
+    <textarea id="urlInput" name="urlInput" required></textarea><br><br>
+
+    <label for="messageInput">Message:</label>
+    <textarea id="messageInput" name="messageInput"></textarea><br><br>
+
+    <label for="historyInput">History:</label>
+    <textarea id="historyInput" name="historyInput"></textarea><br><br>
+
+    <label for="userInput">User Input:</label>
+    <textarea id="userInput" name="userInput"></textarea><br><br>
+
+      <label for="modelInput">Model:</label>
+    <textarea id="modelInput" name="modelInput"></textarea><br><br>
+
+    <label for="tokenInput">token:</label>
+    <textarea id="tokenInput" name="tokenInput" required></textarea><br><br>
+
+    <label for="uuidInput">uuid:</label>
+    <textarea id="uuidInput" name="uuidInput" required></textarea><br><br>
+
+    <label for="headersInput">Headers (JSON format):</label>
+    <textarea id="headersInput" name="headersInput"></textarea><br><br>
+
+    <input type="submit" value="Send POST Request">
+  </form>
+
+  <div id="responseDiv"></div>
+
+  <script>
+    $(document).ready(function() {
+      $("#postForm").submit(function(e) {
+        e.preventDefault();
+        var history =  $("#historyInput").val()
+        var message = {
+            "message": $("#messageInput").val(),
+            "token": $("#tokenInput").val(),
+            "history": history === '' ? '': JSON.parse(history),
+            "user_input": $("#userInput").val(),
+            "model": $("#modelInput").val(),
+            "uuid": $("#uuidInput").val()
+        }
+        var headers = JSON.parse($("#headersInput").val());
+        $.ajax({
+          type: "POST",
+          url: $("#urlInput").val(),
+          data: JSON.stringify(message),
+          headers: headers,
+          success: function(response) {
+            $("#responseDiv").html("POST request successful. Response:<br>" + response);
+          },
+          error: function(xhr, status, error) {
+            $("#responseDiv").html("POST request failed. Error: " + error);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

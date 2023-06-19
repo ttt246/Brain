@@ -1,0 +1,478 @@
+openapi: 3.0.1
+info:
+  title: Application
+  description: Generated at 05/06/2023 01:41:02. This is the swagger 
+    ui based on the open api 3.0 specification of the Application
+  version: 1.0.0 created by the flask swagger generator.
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+servers:
+  - url: '/'
+paths:
+  '/sendNotification':
+    post:
+      tags:
+      - send_notification
+      operationId: 'send_notification'
+      requestBody:
+        $ref: '#/components/requestBodies/send_notification_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/send_notification_response'
+  '/uploadImage':
+    post:
+      tags:
+      - send_notification
+      operationId: 'upload_image'
+      requestBody:
+        $ref: '#/components/requestBodies/upload_image_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/upload_image_response'
+  '/image_relatedness':
+    post:
+      tags:
+      - send_notification
+      operationId: 'image_relatedness'
+      requestBody:
+        $ref: '#/components/requestBodies/image_relatedness_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/image_relatedness_response'
+  '/file/{filename}':
+    get:
+      tags:
+      - send_notification
+      operationId: 'get_swagger_file'
+      parameters:
+      - in: path
+        name: filename
+        schema:
+          type: string
+        description: None
+        required: True
+  '/training':
+    get:
+      tags:
+      - send_notification
+      operationId: 'csv_training'
+      responses:
+        '200':
+          $ref: '#/components/responses/csv_training_response'
+  '/feedback':
+    post:
+      tags:
+      - send_notification
+      operationId: 'add_feedback'
+      requestBody:
+        $ref: '#/components/requestBodies/add_feedback_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/add_feedback_response'
+  '/feedback/{search}/{rating}':
+    get:
+      tags:
+      - send_notification
+      operationId: 'get_feedback'
+      parameters:
+      - in: path
+        name: search
+        schema:
+          type: string
+        description: None
+        required: True
+      - in: path
+        name: rating
+        schema:
+          type: integer
+        description: None
+        required: True
+      responses:
+        '200':
+          $ref: '#/components/responses/get_feedback_response'
+  '/commands':
+    get:
+      tags:
+      - send_notification
+      operationId: 'get_commands'
+      responses:
+        '200':
+          $ref: '#/components/responses/get_commands_response'
+  '/chat_rising':
+    post:
+      tags:
+      - send_notification
+      operationId: 'message_agent'
+      requestBody:
+        $ref: '#/components/requestBodies/message_agent_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/message_agent_response'
+  '/send_sms':
+    post:
+      tags:
+      - send_notification
+      operationId: 'send_sms'
+      requestBody:
+        $ref: '#/components/requestBodies/send_sms_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/send_sms_response'
+  '/train/contacts':
+    post:
+      tags:
+      - send_notification
+      operationId: 'train_contacts'
+      requestBody:
+        $ref: '#/components/requestBodies/train_contacts_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/train_contacts_response'
+components:
+  requestBodies:
+    send_notification_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/send_notification'
+    upload_image_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/upload_image'
+    image_relatedness_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/image_relatedness'
+    add_feedback_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/add_feedback'
+    message_agent_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/message_agent'
+    send_sms_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/send_sms'
+    train_contacts_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/train_contacts'
+  responses:
+    send_notification_response:
+      description: send_notification response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/send_notification_response_schema'
+    upload_image_response:
+      description: upload_image response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/upload_image_response_schema'
+    image_relatedness_response:
+      description: image_relatedness response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/image_relatedness_response_schema'
+    csv_training_response:
+      description: csv_training response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/csv_training_response_schema'
+    add_feedback_response:
+      description: add_feedback response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/add_feedback_response_schema'
+    get_feedback_response:
+      description: get_feedback response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/get_feedback_response_schema'
+    get_commands_response:
+      description: get_commands response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/get_commands_response_schema'
+    message_agent_response:
+      description: message_agent response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/message_agent_response_schema'
+    send_sms_response:
+      description: send_sms response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/send_sms_response_schema'
+    train_contacts_response:
+      description: train_contacts response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/train_contacts_response_schema'
+  schemas:
+    send_notification:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: this is test message  
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+    send_notification_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    upload_image:
+      type: object
+      properties:
+        image_name:
+          type: string  
+          example: this is test image path  
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+    upload_image_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    image_relatedness:
+      type: object
+      properties:
+        image_name:
+          type: string  
+          example: this is test image path  
+        message:
+          type: string  
+          example: this is a test message  
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+    image_relatedness_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    csv_training_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    add_feedback_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    add_feedback:
+      type: object
+      properties:
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+        prompt:
+          $ref: "#/components/schemas/prompt_add_feedback"  
+        completion:
+          $ref: "#/components/schemas/completion_add_feedback"  
+        rating:
+          type: integer  
+          example: 1  
+    prompt_add_feedback:
+      type: object
+      properties:
+        image_name:
+          type: string  
+          example: test_image  
+        message:
+          type: string  
+          example: test_message  
+    completion_add_feedback:
+      type: object
+      properties:
+        image_name:
+          type: string  
+          example: test_image  
+        message:
+          type: string  
+          example: test_message  
+    get_feedback_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    get_commands_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    message_agent_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          $ref: "#/components/schemas/result_message_agent_response_schema"  
+    result_message_agent_response_schema:
+      type: object
+      properties:
+        program:
+          type: string  
+          example: agent  
+        message:
+          $ref: "#/components/schemas/message_result_message_agent_response_schema"  
+    message_result_message_agent_response_schema:
+      type: object
+      properties:
+        role:
+          type: string  
+          example: assistant  
+        content:
+          type: string  
+          example: content  
+    message_agent:
+      type: object
+      properties:
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+        history:
+          type: array  
+          items:
+            type: object
+        user_input:
+          type: string  
+          example: user_message  
+        model:
+          type: string  
+          example: gpt-3.5-turbo  
+    send_sms_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    send_sms:
+      type: object
+      properties:
+        token:
+          type: string  
+          example: test_token  
+        uuid:
+          type: string  
+          example: test_uuid  
+        data:
+          $ref: "#/components/schemas/data_send_sms"  
+    data_send_sms:
+      type: object
+      properties:
+        from:
+          type: string  
+          example: +15005550006  
+        to:
+          type: string  
+          example: +12173748105  
+        body:
+          type: string  
+          example: All in the game, yo  
+    train_contacts_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    train_contacts:
+      type: object
+      properties:
+        token:
+          type: string  
+          example: String  
+        uuid:
+          type: string  
+          example: String  
+        contacts:
+          type: array  
+          items:
+            type: object

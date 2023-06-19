@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_receive_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/chat_message_item_layout_margin_top"
+    android:padding="@dimen/chat_message_item_layout_padding">
+
+    <LinearLayout
+        android:id="@+id/ll_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/chat_message_received_item_margin_start"
+        android:background="@drawable/background_received_message"
+        android:orientation="vertical"
+        android:padding="@dimen/chat_message_item_padding"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.75">
+
+        <ImageView
+            android:id="@+id/imgMessage"
+            android:layout_width="@dimen/chat_message_item_imageview_width"
+            android:layout_height="@dimen/chat_message_item_imageview_height"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="@dimen/chat_message_item_fontsize" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/chat_feedback_margin_top"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_feedback_layout"
+            android:orientation="horizontal"
+            android:padding="@dimen/chat_feedback_padding">
+
+            <ImageView
+                android:id="@+id/btn_thumb_up"
+                android:layout_width="@dimen/chat_feedback_thumb_width"
+                android:layout_height="@dimen/chat_feedback_thumb_height"
+                android:paddingHorizontal="@dimen/chat_feedback_thumb_padding_vertical"
+                android:paddingVertical="@dimen/chat_feedback_thumb_padding_vertical"
+                android:src="@drawable/ic_thumb_up_disable" />
+
+            <View
+                android:layout_width="@dimen/chat_feedback_divider_width"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/chat_feedback_divider_margin_horizontal"
+                android:background="@color/feedback_common_color" />
+
+            <ImageView
+                android:id="@+id/btn_thumb_down"
+                android:layout_width="@dimen/chat_feedback_thumb_width"
+                android:layout_height="@dimen/chat_feedback_thumb_height"
+                android:paddingHorizontal="@dimen/chat_feedback_thumb_padding_vertical"
+                android:paddingVertical="@dimen/chat_feedback_thumb_padding_vertical"
+                android:src="@drawable/ic_thumb_down_disable" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_message_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+        app:layout_constraintStart_toStartOf="@+id/ll_msg"
+        app:layout_constraintTop_toBottomOf="@+id/ll_msg">
+        <LinearLayout
+            android:id="@+id/ll_contacts_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/chat_message_widget_margin_top"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+    </HorizontalScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
