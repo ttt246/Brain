@@ -1,21 +1,18 @@
 """train model:
 {
-    "trainId": "String",
-    "displayName": "String",
-    "phoneNumbers": ["String"],
+    "id": "String",
+    "data": [{"page_content": "String", "timestamp": 0}],
     "status": "created | updated | deleted",
 }"""
-from typing import Any
 
-# from src.model.requests.request_model import TrainTrains
+from src.model.requests.request_model import Train
 
 
 class TrainModel:
-    def __init__(self):
-        self.train_id = ""
-        self.page_content = ""
+    def __init__(self, TrainData: Train):
+        self.id = TrainData.id
+        self.data = TrainData.data
         self.status = TrainStatus.UPDATED
-
 
 
 """train status: created | updated | deleted"""

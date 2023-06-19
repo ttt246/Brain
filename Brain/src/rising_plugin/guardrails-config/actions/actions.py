@@ -47,7 +47,7 @@ from src.rising_plugin.pinecone_engine import (
 )
 
 
-def get_pinecone_index_training_namespace(self) -> str:
+def get_pinecone_index_train_namespace(self) -> str:
     return get_pinecone_index_namespace(f"trains")
 
 
@@ -63,17 +63,17 @@ async def general_question(query, model, uuid, image_search):
         vector=query_result,
         top_k=1,
         include_values=True,
-        namespace=get_pinecone_index_training_namespace(uuid),
+        namespace=get_pinecone_index_train_namespace(uuid),
     )
     documentId = relatedness_data["matches"][0]["id"]
 
     docs = []
     document_service = DocumentService()
-    documents = document_service.getAll()
+    documents = document_service.read()
     for document in documents:
         if document["id"] == documentId:
             docs.append(
-                Document(page_content=document["data"]["page_content"], metadata="")
+                Document(page_content=document["page_content"], metadata="")
             )
 
     chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
