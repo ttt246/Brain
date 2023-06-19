@@ -10,7 +10,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: Android
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -33,19 +35,13 @@ jobs:
           echo $DATA > /home/runner/work/RisingPhone/RisingPhone/app/google-services.json
 
       - name: Grant execute permission for gradlew
-        run: |
-          cd Android
-          chmod +x gradlew
+        run: chmod +x gradlew
       # Run Tests Build
       - name: Run gradle tests
-        run: |
-          cd Android
-          ./gradlew test
+        run: ./gradlew test
 
       - name: Build with Gradle
-        run: |
-          cd Android
-          ./gradlew build
+        run: ./gradlew build
 
       - name: Archive lint results
         if: always()

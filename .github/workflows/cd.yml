@@ -9,6 +9,9 @@ on:
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Brain
     steps:
       - uses: actions/checkout@v3
         with:
@@ -17,6 +20,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: |
-          cd Brain
-          git push https://posix4e:$HF_TOKEN@huggingface.co/spaces/ttt246/brain main
+        run: git push https://posix4e:$HF_TOKEN@huggingface.co/spaces/ttt246/brain main

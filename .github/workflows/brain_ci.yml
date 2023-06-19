@@ -1,4 +1,4 @@
-name: CI
+name: Brain CI
 on:
   push:
     branches: [main]
@@ -17,6 +17,9 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Brain
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -24,12 +27,9 @@ jobs:
           python-version: '3.10.4'
           cache: 'pip'
       - name: Brain - Install
-        run: |
-          cd Brain
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
       - name: Brain - Test
-        run: |
-          cd Brainpython -m pytest
+        run: python -m pytest
       - name: Brain - api test with saucectl
         uses: saucelabs/saucectl-run-action@v3
         with:

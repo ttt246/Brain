@@ -1,4 +1,4 @@
-name: Development
+name: Extension CI
 
 on:
   pull_request:
@@ -13,6 +13,9 @@ jobs:
   test:
     name: Test application
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: Extension
     timeout-minutes: 10
     steps:
       - name: "☁️ checkout repository"
@@ -24,17 +27,13 @@ jobs:
           node-version: 16
 
       - name: "🔧 install npm@latest"
-        run: |
-          cd Extension
-          npm i -g npm@latest
+        run: npm i -g npm@latest
 
       - name: "📦 install dependencies"
         uses: bahmutov/npm-install@v1
 
       - name: "🔍 run tests"
-        run: |
-          cd Extension
-          npm run test --if-present
+        run: npm run test --if-present
 
   lint:
     name: Code standards
@@ -50,17 +49,13 @@ jobs:
           node-version: 16
 
       - name: "🔧 install npm@latest"
-        run: |
-          cd Extension
-          npm i -g npm@latest
+        run: npm i -g npm@latest
 
       - name: "📦 install dependencies"
         uses: bahmutov/npm-install@v1
 
       - name: "🔍 lint code"
-        run: |
-          cd Extension
-          npm run lint --if-present
+        run: npm run lint --if-present
 
   build:
     runs-on: ubuntu-22.04
@@ -70,9 +65,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: |
-          cd Extension
-          npm ci
-      - run: |
-          cd Extension
-          npm run build
+      - run: npm ci
+      - run: npm run build
