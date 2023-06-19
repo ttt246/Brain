@@ -49,5 +49,8 @@ class TrainService:
     def delete_all(self) -> Any:
         return delete_all_pinecone(self.get_pinecone_index_namespace())
 
+    def delete_one(self, id: str) -> Any:
+        return delete_pinecone(self.get_pinecone_index_namespace(), id)
+
     def get_pinecone_index_namespace(self) -> str:
         return get_pinecone_index_namespace(f"trains")
