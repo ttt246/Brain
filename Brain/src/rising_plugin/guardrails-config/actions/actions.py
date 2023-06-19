@@ -22,6 +22,7 @@ from langchain.vectorstores import utils
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.docstore.document import Document
 
+from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import (
     OPENAI_API_KEY,
     COMMAND_SMS_INDEXS,
@@ -43,10 +44,31 @@ from Brain.src.rising_plugin.llm.llms import (
     FALCON_7B,
 )
 
+"""
+query is json string with below format
+{
+    "query": string,
+    "model": string,
+    "uuid": string,
+    "image_search": bool,
+}
+"""
+
 
 @action()
-async def general_question(query, model, uuid, image_search):
-    """step1: handle with gpt-4"""
+async def general_question(query):
+    """step 0: convert string to json"""
+    try:
+        json_query = json.loads(query)
+    except Exception as ex:
+        raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
+    """step 0-->: parsing parms from the json query"""
+    query = json_query["query"]
+    model = json_query["model"]
+    uuid = json_query["uuid"]
+    image_search = json_query["image_search"]
+
+    """step 1: handle with gpt-4"""
     file_path = os.path.dirname(os.path.abspath(__file__))
 
     with open(f"{file_path}/phone.json", "r") as infile:
