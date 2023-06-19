@@ -1,12 +1,12 @@
 # assembler to mapping data into another data type.
 from typing import Any, List
 
-from src.common.http_response_codes import responses
-from src.model.basic_model import BasicModel
-from src.model.contact_model import ContactModel
-from src.model.message_model import MessageModel
-from src.model.requests.request_model import ChatRising, SendSMS, TrainContacts
-from src.model.sms_model import SMSModel
+from Brain.src.common.http_response_codes import responses
+from Brain.src.model.basic_model import BasicModel
+from Brain.src.model.contact_model import ContactModel
+from Brain.src.model.message_model import MessageModel
+from Brain.src.model.requests.request_model import ChatRising, SendSMS, TrainContacts
+from Brain.src.model.sms_model import SMSModel
 
 
 class Assembler:

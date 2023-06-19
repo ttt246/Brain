@@ -1,9 +1,9 @@
 """lLMs which we offer"""
 from typing import Any
 
-from src.common.brain_exception import BrainException
-from src.rising_plugin.llm.falcon_llm import FalconLLM
-from src.rising_plugin.llm.gpt_llm import GptLLM
+from Brain.src.common.brain_exception import BrainException
+from Brain.src.rising_plugin.llm.falcon_llm import FalconLLM
+from Brain.src.rising_plugin.llm.gpt_llm import GptLLM
 
 GPT_3_5_TURBO = "gpt-3.5-turbo"
 GPT_4 = "gpt-4"

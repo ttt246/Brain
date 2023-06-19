@@ -1,11 +1,11 @@
 import json
 import os
 
-from src.common.assembler import Assembler
-from src.common.brain_exception import BrainException
-from src.common.utils import ProgramType
-from src.model.image_model import ImageModel
-from src.model.requests.request_model import (
+from Brain.src.common.assembler import Assembler
+from Brain.src.common.brain_exception import BrainException
+from Brain.src.common.utils import ProgramType
+from Brain.src.model.image_model import ImageModel
+from Brain.src.model.requests.request_model import (
     Notification,
     UploadImage,
     ImageRelatedness,
@@ -17,24 +17,24 @@ from src.model.requests.request_model import (
     ClientInfo,
     get_client_info,
 )
-from src.rising_plugin.risingplugin import (
+from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
     getTextFromImage,
     query_image_ask,
     handle_chat_completion,
 )
-from src.firebase.cloudmessage import send_message, get_tokens
-from src.rising_plugin.csv_embed import csv_embed
-from src.rising_plugin.image_embedding import embed_image_text, query_image_text
+from Brain.src.firebase.cloudmessage import send_message, get_tokens
+from Brain.src.rising_plugin.csv_embed import csv_embed
+from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
-from src.logs import logger
-from src.model.basic_model import BasicModel
-from src.model.feedback_model import FeedbackModel
-from src.service.command_service import CommandService
-from src.service.contact_service import ContactsService
-from src.service.feedback_service import FeedbackService
-from src.service.llm.chat_service import ChatService
-from src.service.twilio_service import TwilioService
+from Brain.src.logs import logger
+from Brain.src.model.basic_model import BasicModel
+from Brain.src.model.feedback_model import FeedbackModel
+from Brain.src.service.command_service import CommandService
+from Brain.src.service.contact_service import ContactsService
+from Brain.src.service.feedback_service import FeedbackService
+from Brain.src.service.llm.chat_service import ChatService
+from Brain.src.service.twilio_service import TwilioService
 
 from fastapi import APIRouter, Request, Depends
 

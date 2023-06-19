@@ -3,7 +3,7 @@ from typing import Any
 
 from langchain.chat_models import ChatOpenAI
 from langchain.chains.question_answering import load_qa_chain
-from src.common.utils import (
+from Brain.src.common.utils import (
     OPENAI_API_KEY,
 )
 

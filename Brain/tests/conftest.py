@@ -2,7 +2,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.firebase.firebase import initialize_app
+from Brain.src.firebase.firebase import initialize_app
 
 initialize_app()
 

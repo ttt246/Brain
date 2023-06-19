@@ -1,5 +1,5 @@
 """message model to manage browsering questions as agent"""
-from src.service.llm.base import Message
+from Brain.src.service.llm.base import Message
 
 
 class MessageModel:

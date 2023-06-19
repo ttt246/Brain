@@ -1,7 +1,7 @@
 """Image model to process & handle them"""
 from typing import Any
 
-from src.model.basic_model import DataStatus
+from Brain.src.model.basic_model import DataStatus
 
 
 class ImageModel:

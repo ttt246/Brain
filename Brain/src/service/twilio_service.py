@@ -4,9 +4,9 @@ from typing import Any
 
 from twilio.rest import Client
 
-from src.common.utils import ACCOUNT_SID, AUTH_TOKEN
-from src.logs import logger
-from src.model.sms_model import SMSModel
+from Brain.src.common.utils import ACCOUNT_SID, AUTH_TOKEN
+from Brain.src.logs import logger
+from Brain.src.model.sms_model import SMSModel
 
 
 class TwilioService:

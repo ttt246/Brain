@@ -41,8 +41,8 @@ HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
 def get_firebase_cred():
-    if os.path.exists("firebase_cred.json"):
-        file = open("firebase_cred.json")
+    if os.path.exists("Brain/firebase_cred.json"):
+        file = open("Brain/firebase_cred.json")
         cred = json.load(file)
         file.close()
         return credentials.Certificate(cred)

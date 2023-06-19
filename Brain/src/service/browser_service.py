@@ -1,6 +1,6 @@
 """service to handle & process the browser"""
-from src.model.requests.request_model import BrowserItem
-from src.rising_plugin.risingplugin import getCompletionOnly
+from Brain.src.model.requests.request_model import BrowserItem
+from Brain.src.rising_plugin.risingplugin import getCompletionOnly
 
 
 class BrowserService:

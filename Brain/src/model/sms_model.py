@@ -1,7 +1,7 @@
 """sms message model includes from, to and body"""
 from typing import Any
 
-from src.model.requests.request_model import SendSMS
+from Brain.src.model.requests.request_model import SendSMS
 
 
 class SMSModel:
