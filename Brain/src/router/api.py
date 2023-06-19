@@ -16,8 +16,6 @@ from src.model.requests.request_model import (
     BasicReq,
     ClientInfo,
     get_client_info,
-    Document,
-    Training,
 )
 from src.rising_plugin.risingplugin import (
     getCompletion,
@@ -26,7 +24,6 @@ from src.rising_plugin.risingplugin import (
     handle_chat_completion,
 )
 from src.firebase.cloudmessage import send_message, get_tokens
-from src.service.training_service import TrainingService
 from src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from src.logs import logger
@@ -37,7 +34,6 @@ from src.service.contact_service import ContactsService
 from src.service.feedback_service import FeedbackService
 from src.service.llm.chat_service import ChatService
 from src.service.twilio_service import TwilioService
-from src.service.document_service import DocumentService
 
 from fastapi import APIRouter, Request, Depends
 
@@ -52,8 +48,6 @@ def construct_blueprint_api() -> APIRouter:
     feedback_service = FeedbackService()
     command_service = CommandService()
     contacts_service = ContactsService()
-    document_service = DocumentService()
-    training_service = TrainingService()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -166,34 +160,6 @@ def construct_blueprint_api() -> APIRouter:
             message=value,
             result={"program": "image", "content": image_response},
         )
-
-    """@generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.get("/training-all-documents")
-    def training_all_documents():
-        training_service.trainingAllDocuments()
-
-        return assembler.to_response(200, "trained successfully", "")
-
-    """@generator.request_body(
-        {
-            "token": "test_token",
-            "uuid": "test_uuid",
-            "id": "test_id",
-            "data": {"page_content": "page_content", "timestamp": 0},
-            "status": "update",
-        }
-    )
-    @generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.post("/training-one-document")
-    def training_one_document(data: Training):
-        training_service.trainingOneDocument(data)
-        return assembler.to_response(200, "trained successfully", "")
 
     """@generator.request_body(
         {
@@ -388,36 +354,5 @@ def construct_blueprint_api() -> APIRouter:
         return assembler.to_response(
             200, "Deleted all contacts from pinecone successfully", ""
         )
-
-    """@generator.request_body(
-        {
-            "token": "test_token",
-            "uuid": "test_uuid",
-            "page_content": "string",
-        }
-    )
-    @generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.post("/document")
-    def add_document(data: Document):
-        try:
-            document_service.add(data.page_content)
-        except Exception as e:
-            return assembler.to_response(400, "failed to add", "")
-        return assembler.to_response(200, "added successfully", "")
-
-    """@generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.get("/document")
-    def get_all_documents():
-        try:
-            result = document_service.getAll()
-        except Exception as e:
-            return assembler.to_response(400, "failed to get all documents", "")
-        return assembler.to_response(200, "Get all documents list successfully", result)
 
     return router
