@@ -19,9 +19,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Brain
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4

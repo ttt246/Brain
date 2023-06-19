@@ -1,12 +1,12 @@
-from src.firebase.firebase import initialize_app
+from Brain.src.firebase.firebase import initialize_app
 from fastapi import Depends, FastAPI
 import uvicorn
 
-from src.router.browser_router import construct_blueprint_browser_api
+from Brain.src.router.browser_router import construct_blueprint_browser_api
 
 initialize_app()
 
-from src.router.api import construct_blueprint_api
+from Brain.src.router.api import construct_blueprint_api
 
 app = FastAPI()
 app.include_router(construct_blueprint_api(), tags=["ai_app"])
