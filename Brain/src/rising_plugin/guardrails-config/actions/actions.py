@@ -17,16 +17,14 @@ import os
 import json
 import numpy as np
 
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import utils
-from langchain.document_loaders.csv_loader import CSVLoader
+from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
 
 from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import (
-    OPENAI_API_KEY,
-    COMMAND_SMS_INDEXS,
+    COMMAND_SMS_INDEXES,
     COMMAND_BROWSER_OPEN,
+    PINECONE_INDEX_NAME,
     DEFAULT_GPT_MODEL,
 )
 from Brain.src.model.req_model import ReqModel
@@ -34,6 +32,7 @@ from Brain.src.model.requests.request_model import BasicReq
 from Brain.src.rising_plugin.image_embedding import (
     query_image_text,
 )
+from Brain.src.rising_plugin.csv_embed import get_embed
 
 from nemoguardrails.actions import action
 
@@ -46,6 +45,11 @@ from Brain.src.rising_plugin.llm.llms import (
     GPT_4,
     FALCON_7B,
     GPT_LLM_MODELS,
+)
+
+from Brain.src.rising_plugin.pinecone_engine import (
+    get_pinecone_index_namespace,
+    init_pinecone,
 )
 
 """
@@ -74,7 +78,11 @@ query is json string with below format
 
 @action()
 async def general_question(query):
+    """init falcon model"""
+    falcon_llm = FalconLLM()
     """step 0: convert string to json"""
+    index = init_pinecone(PINECONE_INDEX_NAME)
+    train_service = TrainService()
     try:
         json_query = json.loads(query)
     except Exception as ex:
@@ -87,35 +95,31 @@ async def general_question(query):
     setting = ReqModel(json_query["setting"])
 
     """step 1: handle with gpt-4"""
-    file_path = os.path.dirname(os.path.abspath(__file__))
 
-    with open(f"{file_path}/phone.json", "r") as infile:
-        data = json.load(infile)
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+    query_result = get_embed(query)
+    relatedness_data = index.query(
+        vector=query_result,
+        top_k=1,
+        include_values=False,
+        namespace=train_service.get_pinecone_index_train_namespace(),
+    )
 
-    query_result = embeddings.embed_query(query)
-    doc_list = utils.maximal_marginal_relevance(np.array(query_result), data, k=1)
-    loader = CSVLoader(file_path=f"{file_path}/phone.csv", encoding="utf8")
-    csv_text = loader.load()
-
+    if len(relatedness_data["matches"]) == 0:
+        return str({"program": "message", "content": ""})
+    document_id = relatedness_data["matches"][0]["id"]
     docs = []
+    document = train_service.read_one_document(document_id)
+    docs.append(Document(page_content=document["page_content"], metadata=""))
 
-    for res in doc_list:
-        docs.append(
-            Document(
-                page_content=csv_text[res].page_content, metadata=csv_text[res].metadata
-            )
+    """ 1. calling gpt model to categorize for all message"""
+    if model in GPT_LLM_MODELS:
+        chain_data = get_llm_chain(model=model, setting=setting).run(
+            input_documents=docs, question=query
         )
-
-    chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
-    # test
-    # if model == GPT_3_5_TURBO or model == GPT_4 or model == GPT_4_32K:
-    #     gpt_llm = GptLLM(model=model)
-    #     chain_data = gpt_llm.get_chain().run(input_documents=docs, question=query)
-    # elif model == FALCON_7B:
-    #     falcon_llm = FalconLLM()
-    #     chain_data = falcon_llm.get_chain().run(question=query)
-    falcon_llm = FalconLLM()
+    else:
+        chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
+            input_documents=docs, question=query
+        )
     try:
         result = json.loads(chain_data)
         # check image query with only its text
@@ -124,17 +128,16 @@ async def general_question(query):
                 result["content"] = {
                     "image_name": query_image_text(result["content"], "", uuid)
                 }
-
-            # else:
-            #     return result
-        """check program is message to handle it with falcon llm"""
+        """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":
-            result["content"] = falcon_llm.query(question=query)
+            if model == FALCON_7B:
+                result["content"] = falcon_llm.query(question=query)
         return str(result)
     except ValueError as e:
         # Check sms and browser query
-        if doc_list[0] in COMMAND_SMS_INDEXS:
+        if document_id in COMMAND_SMS_INDEXES:
             return str({"program": "sms", "content": chain_data})
-        elif doc_list[0] in COMMAND_BROWSER_OPEN:
+        elif document_id in COMMAND_BROWSER_OPEN:
             return str({"program": "browser", "content": "https://google.com"})
+
         return str({"program": "message", "content": falcon_llm.query(question=query)})

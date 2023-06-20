@@ -15,9 +15,7 @@ app.include_router(
     construct_blueprint_browser_api(), prefix="/browser", tags=["ai_browser"]
 )
 
-app.include_router(
-    construct_blueprint_train_api(), prefix="/train", tags=["ai_train"]
-)
+app.include_router(construct_blueprint_train_api(), prefix="/train", tags=["ai_train"])
 
 
 if __name__ == "__main__":
