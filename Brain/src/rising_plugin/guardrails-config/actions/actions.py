@@ -15,13 +15,11 @@
 
 import json
 
-from langchain.embeddings.openai import OpenAIEmbeddings
 from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
 
 from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import (
-    OPENAI_API_KEY,
     COMMAND_SMS_INDEXES,
     COMMAND_BROWSER_OPEN,
     PINECONE_INDEX_NAME,
@@ -29,6 +27,7 @@ from Brain.src.common.utils import (
 from Brain.src.rising_plugin.image_embedding import (
     query_image_text,
 )
+from Brain.src.rising_plugin.csv_embed import get_embed
 
 from nemoguardrails.actions import action
 
@@ -65,12 +64,10 @@ async def general_question(query):
 
     """step 1: handle with gpt-4"""
 
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-
-    query_result = embeddings.embed_query(query)
+    query_result = get_embed(query)
     relatedness_data = index.query(
         vector=query_result,
-        top_k=3,
+        top_k=1,
         include_values=False,
         namespace=train_service.get_pinecone_index_train_namespace(),
     )
