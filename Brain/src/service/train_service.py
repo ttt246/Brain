@@ -90,7 +90,7 @@ class TrainService:
             query_result = get_embed(item["page_content"])
             result.append(query_result)
             key = item["document_id"]
-            value = f'{item["page_content"]}, {query_result}'
+            value = f'{item["page_content"]}'
             # get vectoring data(embedding data)
             vectoring_values = get_embed(value)
             add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
