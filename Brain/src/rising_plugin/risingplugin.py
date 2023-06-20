@@ -25,6 +25,8 @@ from .image_embedding import (
     query_image_text,
     get_prompt_image_with_message,
 )
+from ..model.req_model import ReqModel
+from ..model.requests.request_model import BasicReq
 
 # Give the path to the folder containing the rails
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -41,7 +43,12 @@ def getChunks(query: str):
 
 
 def processLargeText(
-    app: any, chunks: any, model: str, uuid: str = "", image_search: bool = True
+    setting: ReqModel,
+    app: any,
+    chunks: any,
+    model: str,
+    uuid: str = "",
+    image_search: bool = True,
 ):
     if len(chunks) == 1:
         message = app.generate(
@@ -49,6 +56,7 @@ def processLargeText(
                 {
                     "role": "user",
                     "content": rails_input_with_args(
+                        setting=setting,
                         query=chunks[0],
                         model=model,
                         uuid=uuid,
@@ -89,6 +97,7 @@ def processLargeText(
                         {
                             "role": "user",
                             "content": rails_input_with_args(
+                                setting=setting,
                                 query=chunk_query,
                                 model=model,
                                 uuid=uuid,
@@ -116,6 +125,7 @@ def processLargeText(
                         {
                             "role": "user",
                             "content": rails_input_with_args(
+                                setting=setting,
                                 query=last_query,
                                 model=model,
                                 uuid=uuid,
@@ -130,19 +140,26 @@ def processLargeText(
 
 
 def getCompletion(
-    query,
-    model=DEFAULT_GPT_MODEL,
-    uuid="",
-    image_search=True,
+    query: str,
+    setting: ReqModel,
+    model: str = DEFAULT_GPT_MODEL,
+    uuid: str = "",
+    image_search: bool = True,
 ):
-    llm = get_llm(model=DEFAULT_GPT_MODEL).get_llm()
+    llm = get_llm(model=DEFAULT_GPT_MODEL, setting=setting).get_llm()
+
     # Break input text into chunks
     chunks = getChunks(query)
 
     app = LLMRails(config, llm)
 
     return processLargeText(
-        app=app, chunks=chunks, model=model, uuid=uuid, image_search=image_search
+        setting=setting,
+        app=app,
+        chunks=chunks,
+        model=model,
+        uuid=uuid,
+        image_search=image_search,
     )
 
 
@@ -156,10 +173,12 @@ def getCompletionOnly(
     return chain_data
 
 
-def query_image_ask(image_content, message, uuid):
+def query_image_ask(image_content, message, uuid, setting: BasicReq):
     prompt_template = get_prompt_image_with_message(image_content, message)
     try:
-        data = getCompletion(query=prompt_template, uuid=uuid, image_search=False)
+        data = getCompletion(
+            query=prompt_template, uuid=uuid, image_search=False, setting=setting
+        )
         # chain_data = json.loads(data.replace("'", '"'))
         # chain_data = json.loads(data)
         if data["program"] == "image":
@@ -214,15 +233,15 @@ response:
 
 
 # Define a content filter function
-def filter_guardrails(model: any, query: str):
-    llm = ChatOpenAI(model_name=model, temperature=0, openai_api_key=OPENAI_API_KEY)
+def filter_guardrails(setting: BasicReq, model: any, query: str):
+    llm = ChatOpenAI(model_name=model, temperature=0, openai_api_key=setting.openai_key)
     app = LLMRails(config, llm)
 
     # split query with chunks
     chunks = getChunks(query)
 
     # get message from guardrails
-    message = processLargeText(app=app, chunks=chunks, model=model)
+    message = processLargeText(app=app, chunks=chunks, model=model, setting=setting)
 
     if (
         message
@@ -240,13 +259,16 @@ compose json_string for rails input with its arguments
 """
 
 
-def rails_input_with_args(query: str, model: str, uuid: str, image_search: bool) -> str:
+def rails_input_with_args(
+    setting: ReqModel, query: str, model: str, uuid: str, image_search: bool
+) -> str:
     # convert json with params for rails.
     json_query_with_params = {
         "query": query,
         "model": model,
         "uuid": uuid,
         "image_search": image_search,
+        "setting": setting.to_json(),
     }
     return json.dumps(json_query_with_params)
 
