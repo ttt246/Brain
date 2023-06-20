@@ -77,6 +77,7 @@ def parseJsonFromCompletion(data: str) -> json:
     result = result.replace("': '", '": "')
     result = result.replace("': \\\"", '": \"')
     result = result.replace("', '", '", "')
+    result = result.replace("':", '":')
 
     substring = '\\"}'
     replacement = '\"}'
