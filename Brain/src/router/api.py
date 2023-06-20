@@ -24,7 +24,6 @@ from Brain.src.rising_plugin.risingplugin import (
     handle_chat_completion,
 )
 from Brain.src.firebase.cloudmessage import send_message, get_tokens
-from Brain.src.rising_plugin.csv_embed import csv_embed
 from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from Brain.src.logs import logger
@@ -161,16 +160,6 @@ def construct_blueprint_api() -> APIRouter:
             message=value,
             result={"program": "image", "content": image_response},
         )
-
-    """@generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.get("/training")
-    def csv_training():
-        csv_embed()
-
-        return assembler.to_response(200, "trained successfully", "")
 
     """@generator.request_body(
         {

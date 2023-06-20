@@ -30,8 +30,8 @@ DEFAULT_GPT_MODEL = "gpt-4"
 AGENT_NAME = "RisingBrain Assistant"
 
 # indexes of relatedness of embedding
-COMMAND_SMS_INDEXS = [4, 5]
-COMMAND_BROWSER_OPEN = [10]
+COMMAND_SMS_INDEXES = ["pWDrks5DO1bEPLlUtQ1f", "LEpAhmFi8tAOQUE7LHZZ"]  # 4, 5
+COMMAND_BROWSER_OPEN = ["taVNeDINonUqJWXBlESU"]  # 10
 
 # Twilio
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
@@ -77,6 +77,7 @@ def parseJsonFromCompletion(data: str) -> json:
     result = result.replace("': '", '": "')
     result = result.replace("': \\\"", '": \"')
     result = result.replace("', '", '", "')
+    result = result.replace("':", '":')
 
     substring = '\\"}'
     replacement = '\"}'
@@ -86,8 +87,10 @@ def parseJsonFromCompletion(data: str) -> json:
     if index == len(result) - 3:
         result = result[:index] + replacement + result[index + len(substring):]
     # fmt: on
-    result = json.loads(result.replace("':", '":'))
-    return result
+    try:
+        return json.loads(result)
+    except Exception as e:
+        return result
 
 
 def parseUrlFromStr(text: str) -> str:

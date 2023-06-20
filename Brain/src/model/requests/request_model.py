@@ -130,6 +130,14 @@ class TrainContacts(BasicReq):
     contacts: list[ContactReq]
 
 
+"""endpoint: /document"""
+
+
+class Document(BasicReq):
+    document_id: str
+    page_content: str
+
+
 """endpoint /browser/item"""
 
 
@@ -140,3 +148,16 @@ class BrowserItem(BasicReq):
 
     items: list[ItemReq]
     prompt: str
+
+
+"""endpoint /train"""
+
+
+class Train(BasicReq):
+    class TrainData(BaseModel):
+        page_content: str
+        timestamp: float
+
+    id: str
+    data: TrainData
+    status: str

@@ -13,24 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import json
-import numpy as np
 
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import utils
-from langchain.document_loaders.csv_loader import CSVLoader
+from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
 
 from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import (
-    OPENAI_API_KEY,
-    COMMAND_SMS_INDEXS,
+    COMMAND_SMS_INDEXES,
     COMMAND_BROWSER_OPEN,
+    PINECONE_INDEX_NAME,
 )
 from Brain.src.rising_plugin.image_embedding import (
     query_image_text,
 )
+from Brain.src.rising_plugin.csv_embed import get_embed
 
 from nemoguardrails.actions import action
 
@@ -44,50 +41,44 @@ from Brain.src.rising_plugin.llm.llms import (
     FALCON_7B,
 )
 
-"""
-query is json string with below format
-{
-    "query": string,
-    "model": string,
-    "uuid": string,
-    "image_search": bool,
-}
-"""
+from Brain.src.rising_plugin.pinecone_engine import (
+    get_pinecone_index_namespace,
+    init_pinecone,
+)
 
 
 @action()
 async def general_question(query):
     """step 0: convert string to json"""
+    index = init_pinecone(PINECONE_INDEX_NAME)
+    train_service = TrainService()
     try:
         json_query = json.loads(query)
     except Exception as ex:
         raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
-    """step 0-->: parsing parms from the json query"""
+    """step 0-->: parsing params from the json query"""
     query = json_query["query"]
     model = json_query["model"]
     uuid = json_query["uuid"]
     image_search = json_query["image_search"]
 
     """step 1: handle with gpt-4"""
-    file_path = os.path.dirname(os.path.abspath(__file__))
 
-    with open(f"{file_path}/phone.json", "r") as infile:
-        data = json.load(infile)
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-
-    query_result = embeddings.embed_query(query)
-    doc_list = utils.maximal_marginal_relevance(np.array(query_result), data, k=1)
-    loader = CSVLoader(file_path=f"{file_path}/phone.csv", encoding="utf8")
-    csv_text = loader.load()
-
+    query_result = get_embed(query)
+    relatedness_data = index.query(
+        vector=query_result,
+        top_k=1,
+        include_values=False,
+        namespace=train_service.get_pinecone_index_train_namespace(),
+    )
+    documentId = ""
+    if len(relatedness_data["matches"]) > 0:
+        documentId = relatedness_data["matches"][0]["id"]
+    else:
+        return None
     docs = []
-
-    for res in doc_list:
-        docs.append(
-            Document(
-                page_content=csv_text[res].page_content, metadata=csv_text[res].metadata
-            )
-        )
+    document = train_service.read_one_document(documentId)
+    docs.append(Document(page_content=document["page_content"], metadata=""))
 
     chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
     # test
@@ -115,8 +106,8 @@ async def general_question(query):
         return str(result)
     except ValueError as e:
         # Check sms and browser query
-        if doc_list[0] in COMMAND_SMS_INDEXS:
+        if documentId in COMMAND_SMS_INDEXES:
             return str({"program": "sms", "content": chain_data})
-        elif doc_list[0] in COMMAND_BROWSER_OPEN:
+        elif documentId in COMMAND_BROWSER_OPEN:
             return str({"program": "browser", "content": "https://google.com"})
         return str({"program": "message", "content": falcon_llm.query(question=query)})
