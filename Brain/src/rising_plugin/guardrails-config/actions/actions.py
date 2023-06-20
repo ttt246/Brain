@@ -77,7 +77,7 @@ async def general_question(query):
         include_values=False,
         namespace=get_pinecone_index_train_namespace(),
     )
-    documentId = ''
+    documentId = ""
     if len(relatedness_data["matches"]) > 0:
         documentId = relatedness_data["matches"][0]["id"]
 
