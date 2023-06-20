@@ -23,10 +23,10 @@ def to_json(page_content: str):
 
 
 class TrainService:
-    """train (getting embedding) and update pinecone with embeddings by train_id
+    """train (getting embedding) and update pinecone with embeddings by document_id
     train datatype:
-    key: id
-    values: {id},{data}, {status}"""
+    key: document_id
+    values: {page_content}"""
 
     def __init__(self):
         self.db = firestore.client()
@@ -114,4 +114,7 @@ class TrainService:
         return delete_pinecone(self.get_pinecone_index_namespace(), document_id)
 
     def get_pinecone_index_namespace(self) -> str:
+        return get_pinecone_index_namespace(f"trains")
+
+    def get_pinecone_index_train_namespace(self) -> str:
         return get_pinecone_index_namespace(f"trains")

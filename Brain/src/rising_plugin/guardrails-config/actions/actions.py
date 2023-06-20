@@ -48,19 +48,16 @@ from Brain.src.rising_plugin.pinecone_engine import (
 )
 
 
-def get_pinecone_index_train_namespace() -> str:
-    return get_pinecone_index_namespace(f"trains")
-
-
 @action()
 async def general_question(query):
     """step 0: convert string to json"""
     index = init_pinecone(PINECONE_INDEX_NAME)
+    train_service = TrainService()
     try:
         json_query = json.loads(query)
     except Exception as ex:
         raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
-    """step 0-->: parsing parms from the json query"""
+    """step 0-->: parsing params from the json query"""
     query = json_query["query"]
     model = json_query["model"]
     uuid = json_query["uuid"]
@@ -75,14 +72,13 @@ async def general_question(query):
         vector=query_result,
         top_k=3,
         include_values=False,
-        namespace=get_pinecone_index_train_namespace(),
+        namespace=train_service.get_pinecone_index_train_namespace(),
     )
     documentId = ""
     if len(relatedness_data["matches"]) > 0:
         documentId = relatedness_data["matches"][0]["id"]
 
     docs = []
-    train_service = TrainService()
     documents = train_service.read_all_documents()
     for document in documents:
         if document["document_id"] == documentId:
