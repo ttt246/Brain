@@ -48,9 +48,7 @@ jobs:
         run: ./gradlew test
 
       - name: Build with Gradle
-        run: |
-          cd Android
-          ./gradlew build
+        run: ./gradlew build
 
       - name: Archive lint results
         if: always()
@@ -61,22 +59,16 @@ jobs:
 
         # Create APK Debug
       - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
-        run: |
-          cd Android
-          ./gradlew assembleDebug
+        run: ./gradlew assembleDebug
 
         # Create APK Release
       - name: Build apk release project (APK) - ${{ env.main_project_module }} module
-        run: |
-          cd Android
-          ./gradlew assemble
+        run: ./gradlew assemble
 
         # Create Bundle AAB Release
         # Noted for main module build [main_project_module]:bundleRelease
       - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
-        run: |
-          cd Android
-          ./gradlew ${{ env.main_project_module }}:bundleRelease
+        run: ./gradlew ${{ env.main_project_module }}:bundleRelease
 
         # Upload Artifact Build
         # Noted For Output [main_project_module]/build/outputs/apk/debug/
