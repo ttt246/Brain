@@ -82,6 +82,7 @@ class TrainService:
         return {"document_id": document_id}
 
     def train_all_documents(self) -> str:
+        self.delete_all()
         documents = self.read_all_documents()
         result = list()
         pinecone_namespace = self.get_pinecone_index_namespace()

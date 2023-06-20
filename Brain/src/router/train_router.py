@@ -31,13 +31,25 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
+    @router.get("/all")
+    def train_all_documents():
+        try:
+            result = train_service.train_all_documents()
+        except Exception as e:
+            return assembler.to_response(400, "failed to get all documents", "")
+        return assembler.to_response(200, "Get all documents list successfully", result)
+
+    """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
+    "page_content":"page_content"}} )"""
+
     @router.get("/{document_id}")
     def read_one_document(document_id: str):
-        try:
-            result = train_service.read_one_document(document_id)
-        except Exception as e:
-            return assembler.to_response(400, "fail to get one document", "")
-        return assembler.to_response(200, "Get one document successfully", result)
+        if document_id != "all":
+            try:
+                result = train_service.read_one_document(document_id)
+            except Exception as e:
+                return assembler.to_response(400, "fail to get one document", "")
+            return assembler.to_response(200, "Get one document successfully", result)
 
     """@generator.request_body(
         {

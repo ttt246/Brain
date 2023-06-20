@@ -77,12 +77,11 @@ async def general_question(query):
     documentId = ""
     if len(relatedness_data["matches"]) > 0:
         documentId = relatedness_data["matches"][0]["id"]
-
+    else:
+        return None
     docs = []
-    documents = train_service.read_all_documents()
-    for document in documents:
-        if document["document_id"] == documentId:
-            docs.append(Document(page_content=document["page_content"], metadata=""))
+    document = train_service.read_one_document(documentId)
+    docs.append(Document(page_content=document["page_content"], metadata=""))
 
     chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
     # test
