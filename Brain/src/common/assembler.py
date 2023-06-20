@@ -5,7 +5,13 @@ from Brain.src.common.http_response_codes import responses
 from Brain.src.model.basic_model import BasicModel
 from Brain.src.model.contact_model import ContactModel
 from Brain.src.model.message_model import MessageModel
-from Brain.src.model.requests.request_model import ChatRising, SendSMS, TrainContacts
+from Brain.src.model.req_model import ReqModel
+from Brain.src.model.requests.request_model import (
+    ChatRising,
+    SendSMS,
+    TrainContacts,
+    BasicReq,
+)
 from Brain.src.model.sms_model import SMSModel
 
 
@@ -58,3 +64,8 @@ class Assembler:
 
     def to_result_format(self, program: str, content: str) -> Any:
         return {"program": program, "content": content}
+
+    """mapping basic req"""
+
+    def to_req_model(self, basic_req: BasicReq) -> ReqModel:
+        return ReqModel(basic_req.to_json())

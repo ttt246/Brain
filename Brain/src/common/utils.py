@@ -5,6 +5,7 @@ import re
 from firebase_admin import credentials
 
 # env variables
+DEFAULT_HOST_NAME = "test3-83ffc.appspot.com"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_KEY = os.getenv("PINECONE_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
@@ -17,7 +18,7 @@ API_URL = "http://localhost:5000/file/swagger.json"
 
 # firebase
 FIREBASE_STORAGE_ROOT = "images/"
-FIREBASE_STORAGE_BUCKET = "test3-83ffc.appspot.com"
+FIREBASE_STORAGE_BUCKET = DEFAULT_HOST_NAME
 
 # pinecone
 PINECONE_NAMESPACE = "risinglangchain-namespace"

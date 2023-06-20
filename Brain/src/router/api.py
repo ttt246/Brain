@@ -67,7 +67,9 @@ def construct_blueprint_api() -> APIRouter:
         if client_info.is_browser():
             query = f"{query} in a web browser"
 
-        result = getCompletion(query=query, uuid=uuid)
+        result = getCompletion(
+            query=query, uuid=uuid, setting=assembler.to_req_model(data)
+        )
 
         # check contact querying
         try:
@@ -143,7 +145,9 @@ def construct_blueprint_api() -> APIRouter:
         image_response = {}
         try:
             # check about asking image description with trained data
-            if query_image_ask(image_content, message, uuid):
+            if query_image_ask(
+                image_content=image_content, message=message, uuid=uuid, setting=data
+            ):
                 image_response["image_desc"] = image_content
             else:
                 relatedness_data = query_image_text(image_content, message, uuid)

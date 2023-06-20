@@ -4,6 +4,14 @@ from pydantic import BaseModel
 from fastapi import Depends, Request, HTTPException
 from user_agents import parse
 
+from Brain.src.common.utils import (
+    DEFAULT_HOST_NAME,
+    OPENAI_API_KEY,
+    PINECONE_KEY,
+    FIREBASE_ENV,
+    PINECONE_ENV,
+)
+
 """user-agent management"""
 
 
@@ -50,10 +58,46 @@ def get_client_info(request: Request):
     return parse_user_agent(user_agent)
 
 
+"""
+{
+    "host_name": string,
+    "openai_key": string, 
+    "pinecone_key": string, 
+    "pinecone_env": string,
+    "firebase_key": string,
+    "settings": {
+            "temperature": float
+        }, 
+    "token": string, 
+    "uuid": string, 
+}
+"""
+
+
 class BasicReq(BaseModel):
-    token: str
-    uuid: str
-    model: str = "gpt-3.5-turbo"
+    class Settings(BaseModel):
+        temperature: float = 0.6
+
+    host_name: str
+    openai_key: str
+    pinecone_key: str
+    pinecone_env: str
+    firebase_key: str
+    token: str = ""
+    uuid: str = ""
+    settings: Settings
+
+    def to_json(self):
+        return {
+            "host_name": self.host_name,
+            "openai_key": self.openai_key,
+            "pinecone_key": self.pinecone_key,
+            "pinecone_env": self.pinecone_env,
+            "firebase_key": self.firebase_key,
+            "settings": {"temperature": self.settings.temperature},
+            "token": self.token,
+            "uuid": self.uuid,
+        }
 
 
 """endpoint: /sendNotification"""
