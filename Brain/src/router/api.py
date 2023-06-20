@@ -24,7 +24,6 @@ from Brain.src.rising_plugin.risingplugin import (
     handle_chat_completion,
 )
 from Brain.src.firebase.cloudmessage import send_message, get_tokens
-from Brain.src.rising_plugin.csv_embed import csv_embed
 from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from Brain.src.logs import logger
@@ -35,7 +34,6 @@ from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
-from Brain.src.service.document_service import DocumentService
 
 from fastapi import APIRouter, Request, Depends
 

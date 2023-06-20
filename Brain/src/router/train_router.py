@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter
 
 from Brain.src.common.assembler import Assembler
 from Brain.src.model.requests.request_model import (
     Document,
-    Train,
 )
-from Brain.src.service.document_service import DocumentService
 from Brain.src.service.train_service import TrainService
 
 router = APIRouter()
@@ -23,49 +21,84 @@ def construct_blueprint_train_api() -> APIRouter:
     )"""
 
     @router.get("")
-    def train_all_documents():
-        train_service.trainAllDocuments()
-
-        return assembler.to_response(200, "trained all documents successfully", "")
-
-    """@generator.response(
-        status_code=200, schema={"message": "message", "result": "test_result"}
-    )"""
-
-    @router.get("/{id}")
-    def train_one_document(id: str):
-        train_service.trainOneDocument(id)
-        return assembler.to_response(200, "trained one document successfully", "")
-
-    """@generator.response(
-        status_code=200, schema={"message": "message", "result": "test result"}
-    )"""
-
-    @router.delete("")
-    def delete_all_trains():
+    def read_all_documents():
         try:
-            train_service.delete_all()
+            result = train_service.read_all_documents()
         except Exception as e:
-            return assembler.to_response(400, "fail to delete one train", "")
-        return assembler.to_response(200, "delete all trains successfully", "")
+            return assembler.to_response(400, "failed to get all documents", "")
+        return assembler.to_response(200, "Get all documents list successfully", result)
+
+    """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
+    "page_content":"page_content"}} )"""
+
+    @router.get("/{document_id}")
+    def read_one_document(document_id: str):
+        try:
+            result = train_service.read_one_document(document_id)
+        except Exception as e:
+            return assembler.to_response(400, "fail to get one document", "")
+        return assembler.to_response(200, "Get one document successfully", result)
 
     """@generator.request_body(
         {
             "token": "test_token",
             "uuid": "test_uuid",
-            "id": "string",            
+            "page_content": "string",            
         }
     )
-    @generator.response(
-        status_code=200, schema={"message": "message", "result": "test result"}
-    )"""
+    @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
+    "page_content":"page_content"}} )"""
 
-    @router.delete("/{id}")
-    def delete_one_train(id: str):
+    @router.post("")
+    def create_document_train(data: Document):
         try:
-            train_service.delete_one(id)
+            result = train_service.create_one_document(data.page_content)
+        except Exception as e:
+            return assembler.to_response(400, "failed to create one document", "")
+        return assembler.to_response(
+            200, "created one document and trained it successfully", result
+        )
+
+    """@generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "document_id": "string",
+            "page_content": "string",
+        }
+    )
+    @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
+    "page_content":"page_content"}} )"""
+
+    @router.put("")
+    def update_one_document(data: Document):
+        try:
+            result = train_service.update_one_document(
+                data.document_id, data.page_content
+            )
+        except Exception as e:
+            return assembler.to_response(400, "fail to update one document", "")
+        return assembler.to_response(
+            200, "updated one document and trained it successfully", result
+        )
+
+    """@generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "document_id": "string",            
+        }
+    )
+    @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id"}} )"""
+
+    @router.delete("/{document_id}")
+    def delete_one_document(document_id: str):
+        try:
+            result = train_service.delete_one_document(document_id)
         except Exception as e:
             return assembler.to_response(400, "fail to delete one train", "")
-        return assembler.to_response(200, "delete all trains successfully", "")
+        return assembler.to_response(
+            200, "deleted one document and train data successfully", result
+        )
 
     return router

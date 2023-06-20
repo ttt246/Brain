@@ -16,7 +16,7 @@
 import json
 
 from langchain.embeddings.openai import OpenAIEmbeddings
-from Brain.src.service.document_service import DocumentService
+from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
 
 from Brain.src.common.utils import (
@@ -68,8 +68,8 @@ async def general_question(query, model, uuid, image_search):
     documentId = relatedness_data["matches"][0]["id"]
 
     docs = []
-    document_service = DocumentService()
-    documents = document_service.read()
+    train_service = TrainService()
+    documents = train_service.read_all_documents()
     for document in documents:
         if document["id"] == documentId:
             docs.append(Document(page_content=document["page_content"], metadata=""))

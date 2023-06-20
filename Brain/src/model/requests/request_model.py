@@ -134,7 +134,7 @@ class TrainContacts(BasicReq):
 
 
 class Document(BasicReq):
-    id: str
+    document_id: str
     page_content: str
 
 
