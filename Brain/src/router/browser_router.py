@@ -3,6 +3,7 @@ from fastapi import APIRouter, Request, Depends
 from Brain.src.common.assembler import Assembler
 from Brain.src.common.program_type import ProgramType
 from Brain.src.common.utils import parseUrlFromStr
+from Brain.src.firebase.firebase import firebase_admin_with_setting
 from Brain.src.model.requests.request_model import BrowserItem
 from Brain.src.service.browser_service import BrowserService
 
@@ -28,6 +29,9 @@ def construct_blueprint_browser_api() -> APIRouter:
 
     @router.post("/item")
     def get_item(data: BrowserItem):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
+
         item_link = ""
         try:
             token = data.token

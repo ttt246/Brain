@@ -58,8 +58,8 @@ def llm_rails(
     image_search: bool = True,
 ) -> Any:
     """step 0: convert string to json"""
-    index = init_pinecone(PINECONE_INDEX_NAME)
-    train_service = TrainService(firebase_app=firebase_app)
+    index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
+    train_service = TrainService(firebase_app=firebase_app, setting=setting)
 
     """step 1: handle with gpt-4"""
 

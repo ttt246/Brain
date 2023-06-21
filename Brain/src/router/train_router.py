@@ -34,7 +34,7 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.get("/all")
+    @router.post("/all")
     def train_all_documents(data: BasicReq):
         # parsing params
         setting, firebase_app = firebase_admin_with_setting(data)
@@ -49,7 +49,7 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.get("/{document_id}")
+    @router.post("/{document_id}")
     def read_one_document(document_id: str, data: BasicReq):
         # parsing params
         setting, firebase_app = firebase_admin_with_setting(data)
@@ -122,7 +122,7 @@ def construct_blueprint_train_api() -> APIRouter:
     )
     @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id"}} )"""
 
-    @router.delete("/{document_id}")
+    @router.post("/delete/{document_id}")
     def delete_one_document(document_id: str, data: BasicReq):
         # parsing params
         setting, firebase_app = firebase_admin_with_setting(data)

@@ -1,6 +1,7 @@
 from os import remove
 from typing import Any
 
+import firebase_admin
 from firebase_admin import firestore
 
 
@@ -13,8 +14,11 @@ class FeedbackService:
     db: Any
     feedbacks_ref: Any
 
+    def __init__(self, firebase_app: firebase_admin.App):
+        self.firebase_app = firebase_app
+
     def init_firestore(self):
-        self.db = firestore.client()
+        self.db = firestore.client(app=self.firebase_app)
         self.feedbacks_ref = self.db.collection("feedbacks")
 
     """add a new feedback"""

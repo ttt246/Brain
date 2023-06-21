@@ -1,12 +1,9 @@
 import json
-import os
 
 from Brain.src.common.assembler import Assembler
 from Brain.src.common.brain_exception import BrainException
-from Brain.src.common.utils import ProgramType
+from Brain.src.common.utils import ProgramType, DEFAULT_GPT_MODEL
 from Brain.src.firebase.firebase import (
-    initialize_app,
-    get_firebase_admin_name,
     firebase_admin_with_setting,
 )
 from Brain.src.model.image_model import ImageModel
@@ -26,7 +23,6 @@ from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
     getTextFromImage,
     query_image_ask,
-    handle_chat_completion,
 )
 from Brain.src.firebase.cloudmessage import CloudMessage
 from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
@@ -40,7 +36,7 @@ from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
 
-from fastapi import APIRouter, Request, Depends
+from fastapi import APIRouter, Depends
 
 router = APIRouter()
 
@@ -50,7 +46,7 @@ def construct_blueprint_api() -> APIRouter:
     assembler = Assembler()
 
     # Service
-    feedback_service = FeedbackService()
+
     command_service = CommandService()
     contacts_service = ContactsService()
 
@@ -117,12 +113,10 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/uploadImage")
     def upload_image(data: UploadImage):
-        # cloud message
-        cloud_message = CloudMessage()
-        # parsing params
-        setting = assembler.to_req_model(data)
         # firebase admin init
-        initialize_app(setting)
+        setting, firebase_app = firebase_admin_with_setting(data)
+        # cloud message
+        cloud_message = CloudMessage(firebase_app=firebase_app)
 
         image_model = ImageModel()
         token = data.token
@@ -154,8 +148,11 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/image_relatedness")
     def image_relatedness(data: ImageRelatedness):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
+
         # cloud message
-        cloud_message = CloudMessage()
+        cloud_message = CloudMessage(firebase_app=firebase_app)
         # parsing params
         image_name = data.image_name
         message = data.message
@@ -168,7 +165,7 @@ def construct_blueprint_api() -> APIRouter:
         try:
             # check about asking image description with trained data
             if query_image_ask(
-                image_content=image_content, message=message, uuid=uuid, setting=data
+                image_content=image_content, message=message, setting=setting
             ):
                 image_response["image_desc"] = image_content
             else:
@@ -203,6 +200,12 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/feedback")
     def add_feedback(data: Feedback):
         try:
+            # firebase admin init
+            setting, firebase_app = firebase_admin_with_setting(data)
+
+            # cloud message
+            cloud_message = CloudMessage(firebase_app=firebase_app)
+            feedback_service = FeedbackService(firebase_app=firebase_app)
             token = data.token
             uuid = data.uuid
 
@@ -226,8 +229,14 @@ def construct_blueprint_api() -> APIRouter:
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @router.get("/feedback/{search}/{rating}")
-    def get_feedback(search: str, rating: int):
+    @router.post("/feedback/{search}/{rating}")
+    def get_feedback(search: str, rating: int, data: BasicReq):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
+
+        # cloud message
+        cloud_message = CloudMessage(firebase_app=firebase_app)
+        feedback_service = FeedbackService(firebase_app=firebase_app)
         result = feedback_service.get(search, rating)
         return assembler.to_response(200, "added successfully", result)
 
@@ -235,8 +244,8 @@ def construct_blueprint_api() -> APIRouter:
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @router.get("/commands")
-    def get_commands():
+    @router.post("/commands")
+    def get_commands(data: BasicReq):
         result = command_service.get()
         return assembler.to_response(
             200, "success", {"program": "help_command", "content": result}
@@ -264,14 +273,18 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/chat_rising")
     def message_agent(data: ChatRising):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
+
+        # cloud message
+        cloud_message = CloudMessage(firebase_app=firebase_app)
         try:
             token = data.token
             uuid = data.uuid
             histories = assembler.to_array_message_model(data.history)  # json array
             user_input = data.user_input
-            model = data.model
             """init chat service with model"""
-            chat_service = ChatService(ai_name=uuid, llm_model=model)
+            chat_service = ChatService(ai_name=uuid, llm_model=DEFAULT_GPT_MODEL)
             # getting chat response from rising ai
             assistant_reply = chat_service.chat_with_ai(
                 prompt="",
@@ -309,6 +322,8 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/send_sms")
     def send_sms(data: SendSMS):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
         try:
             token = data.token
             uuid = data.uuid
@@ -342,6 +357,8 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/train/contacts")
     def train_contacts(data: TrainContacts):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
         try:
             token = data.token
             uuid = data.uuid
@@ -368,6 +385,8 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/train/contacts/delete")
     def delete_all_contacts(data: BasicReq):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
         try:
             token = data.token
             uuid = data.uuid

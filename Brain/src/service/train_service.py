@@ -1,13 +1,12 @@
 """service to manage trains"""
-from typing import List, Any
+from typing import Any
 
 import firebase_admin
 
+from Brain.src.model.req_model import ReqModel
 from Brain.src.rising_plugin.csv_embed import get_embed
 from Brain.src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
-    update_pinecone,
-    init_pinecone,
     delete_pinecone,
     add_pinecone,
     delete_all_pinecone,
@@ -33,8 +32,9 @@ class TrainService:
     db: Any
     documents_ref: Any
 
-    def __init__(self, firebase_app: firebase_admin.App):
+    def __init__(self, firebase_app: firebase_admin.App, setting: ReqModel):
         self.firebase_app = firebase_app
+        self.setting = setting
 
     def init_firestore(self):
         self.db = firestore.client(app=self.firebase_app)
@@ -107,7 +107,12 @@ class TrainService:
             value = f'{item["page_content"]}'
             # get vectoring data(embedding data)
             vectoring_values = get_embed(value)
-            add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
+            add_pinecone(
+                namespace=pinecone_namespace,
+                key=key,
+                value=vectoring_values,
+                setting=self.setting,
+            )
 
         return "trained all documents successfully"
 
@@ -121,15 +126,27 @@ class TrainService:
         value = f"{page_content}, {query_result}"
         # get vectoring data(embedding data)
         vectoring_values = get_embed(value)
-        add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
+        add_pinecone(
+            namespace=pinecone_namespace,
+            key=key,
+            value=vectoring_values,
+            setting=self.setting,
+        )
 
     def delete_all(self) -> Any:
         self.init_firestore()
-        return delete_all_pinecone(self.get_pinecone_index_namespace())
+        return delete_all_pinecone(
+            namespace=self.get_pinecone_index_namespace(),
+            setting=self.setting,
+        )
 
     def delete_one_pinecone(self, document_id: str) -> Any:
         self.init_firestore()
-        return delete_pinecone(self.get_pinecone_index_namespace(), document_id)
+        return delete_pinecone(
+            namespace=self.get_pinecone_index_namespace(),
+            key=document_id,
+            setting=self.setting,
+        )
 
     def get_pinecone_index_namespace(self) -> str:
         self.init_firestore()
