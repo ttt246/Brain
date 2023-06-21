@@ -4,6 +4,11 @@ import os
 from Brain.src.common.assembler import Assembler
 from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import ProgramType
+from Brain.src.firebase.firebase import (
+    initialize_app,
+    get_firebase_admin_name,
+    firebase_admin_with_setting,
+)
 from Brain.src.model.image_model import ImageModel
 from Brain.src.model.requests.request_model import (
     Notification,
@@ -23,7 +28,7 @@ from Brain.src.rising_plugin.risingplugin import (
     query_image_ask,
     handle_chat_completion,
 )
-from Brain.src.firebase.cloudmessage import send_message, get_tokens
+from Brain.src.firebase.cloudmessage import CloudMessage
 from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
 
 from Brain.src.logs import logger
@@ -60,6 +65,13 @@ def construct_blueprint_api() -> APIRouter:
     def send_notification(
         data: Notification, client_info: ClientInfo = Depends(get_client_info)
     ):
+        # firebase admin init
+        setting, firebase_app = firebase_admin_with_setting(data)
+
+        # cloud message
+        cloud_message = CloudMessage(firebase_app=firebase_app)
+
+        # parsing params
         query = data.message
         token = data.token
         uuid = data.uuid
@@ -68,7 +80,7 @@ def construct_blueprint_api() -> APIRouter:
             query = f"{query} in a web browser"
 
         result = getCompletion(
-            query=query, uuid=uuid, setting=assembler.to_req_model(data)
+            query=query, setting=assembler.to_req_model(data), firebase_app=firebase_app
         )
 
         # check contact querying
@@ -82,7 +94,7 @@ def construct_blueprint_api() -> APIRouter:
 
             notification = {"title": "alert", "content": json.dumps(result)}
 
-            state, value = send_message(notification, [token])
+            state, value = cloud_message.send_message(notification, [token])
             return assembler.to_response(200, value, result)
         except Exception as e:
             logger.error(
@@ -105,6 +117,13 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/uploadImage")
     def upload_image(data: UploadImage):
+        # cloud message
+        cloud_message = CloudMessage()
+        # parsing params
+        setting = assembler.to_req_model(data)
+        # firebase admin init
+        initialize_app(setting)
+
         image_model = ImageModel()
         token = data.token
 
@@ -118,7 +137,7 @@ def construct_blueprint_api() -> APIRouter:
 
         notification = {"title": "alert", "content": embed_result}
 
-        state, value = send_message(notification, [token])
+        state, value = cloud_message.send_message(notification, [token])
         return assembler.to_response(200, value, image_model.to_json())
 
     """@generator.response(
@@ -135,6 +154,9 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/image_relatedness")
     def image_relatedness(data: ImageRelatedness):
+        # cloud message
+        cloud_message = CloudMessage()
+        # parsing params
         image_name = data.image_name
         message = data.message
         token = data.token
@@ -157,7 +179,7 @@ def construct_blueprint_api() -> APIRouter:
             print("image_relatedness parsing error for message chain data")
 
         notification = {"title": "alert", "content": json.dumps(image_response)}
-        state, value = send_message(notification, [token])
+        state, value = cloud_message.send_message(notification, [token])
 
         return assembler.to_response(
             code=200,

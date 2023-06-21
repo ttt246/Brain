@@ -80,46 +80,24 @@ query is json string with below format
 async def general_question(query):
     """init falcon model"""
     falcon_llm = FalconLLM()
-    """step 0: convert string to json"""
-    index = init_pinecone(PINECONE_INDEX_NAME)
-    train_service = TrainService()
+    docs = []
+
+    """step 0-->: parsing parms from the json query"""
     try:
         json_query = json.loads(query)
     except Exception as ex:
         raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
-    """step 0-->: parsing parms from the json query"""
     query = json_query["query"]
-    model = json_query["model"]
-    uuid = json_query["uuid"]
     image_search = json_query["image_search"]
+    page_content = json_query["page_content"]
+    document_id = json_query["document_id"]
     setting = ReqModel(json_query["setting"])
 
-    """step 1: handle with gpt-4"""
-
-    query_result = get_embed(query)
-    relatedness_data = index.query(
-        vector=query_result,
-        top_k=1,
-        include_values=False,
-        namespace=train_service.get_pinecone_index_train_namespace(),
-    )
-
-    if len(relatedness_data["matches"]) == 0:
-        return str({"program": "message", "content": ""})
-    document_id = relatedness_data["matches"][0]["id"]
-    docs = []
-    document = train_service.read_one_document(document_id)
-    docs.append(Document(page_content=document["page_content"], metadata=""))
-
+    docs.append(Document(page_content=page_content, metadata=""))
     """ 1. calling gpt model to categorize for all message"""
-    if model in GPT_LLM_MODELS:
-        chain_data = get_llm_chain(model=model, setting=setting).run(
-            input_documents=docs, question=query
-        )
-    else:
-        chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
-            input_documents=docs, question=query
-        )
+    chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
+        input_documents=docs, question=query
+    )
     try:
         result = json.loads(chain_data)
         # check image query with only its text
@@ -130,8 +108,8 @@ async def general_question(query):
                 }
         """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":
-            if model == FALCON_7B:
-                result["content"] = falcon_llm.query(question=query)
+            """FALCON_7B:"""
+            result["content"] = falcon_llm.query(question=query)
         return str(result)
     except ValueError as e:
         # Check sms and browser query

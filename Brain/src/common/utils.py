@@ -3,6 +3,7 @@ import os
 import re
 
 from firebase_admin import credentials
+from Brain.src.model.req_model import ReqModel
 
 # env variables
 DEFAULT_HOST_NAME = "test3-83ffc.appspot.com"
@@ -41,14 +42,14 @@ AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
-def get_firebase_cred():
+def get_firebase_cred(setting: ReqModel):
     if os.path.exists("Brain/firebase_cred.json"):
         file = open("Brain/firebase_cred.json")
         cred = json.load(file)
         file.close()
         return credentials.Certificate(cred)
     else:
-        cred = json.loads(FIREBASE_ENV)
+        cred = json.loads(setting.firebase_key)
         return credentials.Certificate(cred)
 
 

@@ -1,6 +1,8 @@
 """service to manage trains"""
 from typing import List, Any
 
+import firebase_admin
+
 from Brain.src.rising_plugin.csv_embed import get_embed
 from Brain.src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
@@ -28,13 +30,20 @@ class TrainService:
     key: document_id
     values: {page_content}"""
 
-    def __init__(self):
-        self.db = firestore.client()
+    db: Any
+    documents_ref: Any
+
+    def __init__(self, firebase_app: firebase_admin.App):
+        self.firebase_app = firebase_app
+
+    def init_firestore(self):
+        self.db = firestore.client(app=self.firebase_app)
         self.documents_ref = self.db.collection("documents")
 
     """read all documents from firestore"""
 
     def read_all_documents(self):
+        self.init_firestore()
         query = self.documents_ref.order_by("timestamp")
         docs = query.stream()
         result = []
@@ -48,6 +57,7 @@ class TrainService:
     """read one document from firestore"""
 
     def read_one_document(self, document_id: str):
+        self.init_firestore()
         doc = self.documents_ref.document(document_id).get()
         if doc.exists:
             return {
@@ -60,6 +70,7 @@ class TrainService:
     """create a new document and train it"""
 
     def create_one_document(self, page_content: str):
+        self.init_firestore()
         # Auto-generate document ID
         auto_generated_doc_ref = self.documents_ref.document()
         auto_generated_doc_ref.set(to_json(page_content))
@@ -70,6 +81,7 @@ class TrainService:
     """update a document by using id and train it"""
 
     def update_one_document(self, document_id: str, page_content: str):
+        self.init_firestore()
         self.documents_ref.document(document_id).update(to_json(page_content))
         self.train_one_document(document_id, page_content)
         return {"document_id": document_id, "page_content": page_content}
@@ -77,11 +89,13 @@ class TrainService:
     """delete a document by using document_id"""
 
     def delete_one_document(self, document_id: str):
+        self.init_firestore()
         self.documents_ref.document(document_id).delete()
         self.delete_one_pinecone(document_id)
         return {"document_id": document_id}
 
     def train_all_documents(self) -> str:
+        self.init_firestore()
         self.delete_all()
         documents = self.read_all_documents()
         result = list()
@@ -98,6 +112,7 @@ class TrainService:
         return "trained all documents successfully"
 
     def train_one_document(self, document_id: str, page_content: str) -> None:
+        self.init_firestore()
         pinecone_namespace = self.get_pinecone_index_namespace()
         result = list()
         query_result = get_embed(page_content)
@@ -109,13 +124,17 @@ class TrainService:
         add_pinecone(namespace=pinecone_namespace, key=key, value=vectoring_values)
 
     def delete_all(self) -> Any:
+        self.init_firestore()
         return delete_all_pinecone(self.get_pinecone_index_namespace())
 
     def delete_one_pinecone(self, document_id: str) -> Any:
+        self.init_firestore()
         return delete_pinecone(self.get_pinecone_index_namespace(), document_id)
 
     def get_pinecone_index_namespace(self) -> str:
+        self.init_firestore()
         return get_pinecone_index_namespace(f"trains")
 
     def get_pinecone_index_train_namespace(self) -> str:
+        self.init_firestore()
         return get_pinecone_index_namespace(f"trains")

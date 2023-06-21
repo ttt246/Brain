@@ -4,14 +4,6 @@ from pydantic import BaseModel
 from fastapi import Depends, Request, HTTPException
 from user_agents import parse
 
-from Brain.src.common.utils import (
-    DEFAULT_HOST_NAME,
-    OPENAI_API_KEY,
-    PINECONE_KEY,
-    FIREBASE_ENV,
-    PINECONE_ENV,
-)
-
 """user-agent management"""
 
 

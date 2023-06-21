@@ -5,8 +5,6 @@ import uvicorn
 from Brain.src.router.browser_router import construct_blueprint_browser_api
 from Brain.src.router.train_router import construct_blueprint_train_api
 
-initialize_app()
-
 from Brain.src.router.api import construct_blueprint_api
 
 app = FastAPI()

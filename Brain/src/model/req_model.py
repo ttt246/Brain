@@ -1,6 +1,6 @@
 from typing import Any
 
-from Brain.src.common.utils import DEFAULT_HOST_NAME
+DEFAULT_HOST_NAME = "test3-83ffc.appspot.com"
 
 
 class ReqModel:

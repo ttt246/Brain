@@ -1,4 +1,5 @@
 from os import remove
+from typing import Any
 
 from firebase_admin import firestore
 
@@ -9,18 +10,23 @@ from Brain.src.model.feedback_model import FeedbackModel
 
 
 class FeedbackService:
-    def __init__(self):
+    db: Any
+    feedbacks_ref: Any
+
+    def init_firestore(self):
         self.db = firestore.client()
         self.feedbacks_ref = self.db.collection("feedbacks")
 
     """add a new feedback"""
 
     def add(self, feedback: FeedbackModel):
+        self.init_firestore()
         return self.feedbacks_ref.document().set(feedback.to_json())
 
     """get list of feedback"""
 
     def get(self, search, rating):
+        self.init_firestore()
         if rating == 0:
             query = self.feedbacks_ref.where("rating", "!=", rating)
         else:
