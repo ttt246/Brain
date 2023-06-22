@@ -42,7 +42,7 @@ def get_firebase_admin_name(uuid: str = ""):
 def firebase_admin_with_setting(data: BasicReq):
     # firebase admin init
     assembler = Assembler()
-    setting = assembler.to_req_model(data)
+    setting = assembler.to_req_model(data.confs)
     try:
         firebase_app = initialize_app(setting)
     except Exception as ex:

@@ -67,5 +67,5 @@ class Assembler:
 
     """mapping basic req"""
 
-    def to_req_model(self, basic_req: BasicReq) -> ReqModel:
+    def to_req_model(self, basic_req: BasicReq.Confs) -> ReqModel:
         return ReqModel(basic_req.to_json())
