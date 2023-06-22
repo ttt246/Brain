@@ -1,93 +1,46 @@
 {
-  "name": "Rising Browser",
-  "description": "Integrating GPT funtionality into your browser deeply, everything you need is here",
-  "version": "0.0.1",
   "manifest_version": 3,
-  "icons": {
-    "16": "logo1.png",
-    "32": "logo1.png",
-    "48": "logo1.png",
-    "128": "logo1.png"
-  },
-  "host_permissions": [
-    "https://*.openai.com/",
-    "https://*.bing.com/",
-    "https://*.poe.com/"
-  ],
-  "permissions": [
-    "commands",
-    "cookies",
-    "storage",
-    "contextMenus",
-    "unlimitedStorage",
-    "tabs"
-  ],
-  "optional_permissions": [
-    "background"
-  ],
+  "name": "Chatbot Chrome Extension",
+  "description": "A chrome extension to implement the chatbot using OpenAI by Saeid Nobahari.",
+  "options_page": "options.html",
+  "permissions": ["activeTab", "tabs", "windows", "contextMenus", "storage"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.bundle.js"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "icon-34.png"
   },
-  "options_ui": {
-    "page": "popup.html",
-    "open_in_tab": true
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "icons": {
+    "128": "icon-128.png"
   },
   "content_scripts": [
     {
       "matches": [
-        "https://*/*",
         "http://*/*",
-        "file://*/*"
+        "https://*/*",
+        "<all_urls>"
       ],
       "js": [
-        "shared.js",
-        "content-script.js"
+        "contentScript.bundle.js"
       ],
       "css": [
-        "content-script.css"
+        "content.styles.css"
       ]
     }
   ],
+  "devtools_page": "devtools.html",
   "web_accessible_resources": [
     {
       "resources": [
-        "logo1.png"
+        "content.styles.css",
+        "icon-128.png",
+        "icon-34.png"
       ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "matches": []
     }
-  ],
-  "commands": {
-    "newChat": {
-      "suggested_key": {
-        "default": "Ctrl+B",
-        "mac": "MacCtrl+B"
-      },
-      "description": "Create a new chat"
-    },
-    "summarizePage": {
-      "suggested_key": {
-        "default": "Alt+B",
-        "mac": "Alt+B"
-      },
-      "description": "Summarize this page"
-    },
-    "openConversationPage": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+H",
-        "mac": "MacCtrl+Shift+H"
-      },
-      "description": "Open the independent conversation page"
-    },
-    "openConversationWindow": {
-      "description": "Open the independent conversation window"
-    },
-    "closeAllChats": {
-      "description": "Close all chats in this page"
-    }
-  }
+  ]
 }

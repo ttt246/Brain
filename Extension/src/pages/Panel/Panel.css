@@ -1,0 +1,47 @@
+.main-layout {
+  display: flex;
+  flex-direction: column;
+  height: 350px; /* Set the height of the layout to be 100% of the viewport */
+  width: 400px;
+  border-radius: 5px;
+  background-color: #f5f5f5dd;
+}
+
+.main-layout .ant-layout-content {
+  flex: 1; /* This will make the Content element grow to fill the available space */
+}
+
+.header {
+  padding-left: 10px;
+  text-align: left;
+}
+
+.footer {
+  padding: 10px;
+  justify-self: end;
+}
+
+.content {
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.content::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: #aaaaaa;
+  border-radius: 100px;
+}
+
+.divider {
+  margin: 0;
+}
