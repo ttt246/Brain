@@ -6,14 +6,16 @@ assertions:
         content: >-
           {
               "image_name": "0ddffe51-3763-48d9-ab74-2086de529217",
-              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
-              "uuid": "test-uuid",
-              "openai_key": "",
-              "pinecone_key": "",
-              "pinecone_env": "",
-              "firebase_key": "",
-              "settings": {
-                  "temperature": 0.6
+              "confs": {
+                "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
+                "uuid": "test-uuid",
+                "openai_key": "",
+                "pinecone_key": "",
+                "pinecone_env": "",
+                "firebase_key": "",
+                "settings": {
+                    "temperature": 0.6
+                }
               },
               "status": "updated"
           }

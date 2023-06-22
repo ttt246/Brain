@@ -4,13 +4,14 @@ assertions:
     - id: body
       contentType: application/json
       content: |-
-        {
-            "openai_key": "",
-            "pinecone_key": "",
-            "pinecone_env": "",
-            "firebase_key": "",
-            "settings": {
-                "temperature": 0.6
+        {   "confs": {
+              "openai_key": "",
+              "pinecone_key": "",
+              "pinecone_env": "",
+              "firebase_key": "",
+              "settings": {
+                  "temperature": 0.6
+              }
             }
         }
   url: ${protocol}${domain}${endpoint}

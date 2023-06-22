@@ -5,8 +5,7 @@ assertions:
         contentType: application/json
         content: >-
           {
-              "token": "test_token",
-              "uuid": "test_uuid",
+              
               "history": [{
                       "role": "system",
                       "content": "You are a helpful assistant."
@@ -21,12 +20,16 @@ assertions:
                   }
               ],
               "user_input": "Where was it played?",
-              "openai_key": "",
-              "pinecone_key": "",
-              "pinecone_env": "",
-              "firebase_key": "",
-              "settings": {
-                  "temperature": 0.6
+              "confs": {
+                "token": "test_token",
+                "uuid": "test_uuid",
+                "openai_key": "",
+                "pinecone_key": "",
+                "pinecone_env": "",
+                "firebase_key": "",
+                "settings": {
+                    "temperature": 0.6
+                }
               }
           }
     url: ${protocol}${domain}${endpoint}

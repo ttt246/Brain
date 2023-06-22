@@ -5,8 +5,7 @@ assertions:
         contentType: application/json
         content: >-
           {
-              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
-              "uuid": "test-uuid",
+              
               "prompt": {
                   "image_name": "test_image",
                   "message": "test_message"
@@ -16,12 +15,16 @@ assertions:
                   "message": "test_message"
               },
               "rating": 1,
-              "openai_key": "",
-              "pinecone_key": "",
-              "pinecone_env": "",
-              "firebase_key": "",
-              "settings": {
-                  "temperature": 0.6
+              "confs": {
+                "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
+                "uuid": "test-uuid",
+                "openai_key": "",
+                "pinecone_key": "",
+                "pinecone_env": "",
+                "firebase_key": "",
+                "settings": {
+                    "temperature": 0.6
+                }
               }
           }
     url: ${protocol}${domain}${endpoint}
