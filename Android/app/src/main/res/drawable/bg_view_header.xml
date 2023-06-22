@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:startColor="@color/bg_color_header_gradient_start"
+        android:endColor="@color/bg_color_header_gradient_end"
+        android:angle="@dimen/angel_header_bg_color_gradient"/>  <!-- This defines the gradient angle, change this value as needed -->
+</shape>
