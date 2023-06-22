@@ -1,74 +1,56 @@
-<p align="center">
-    <img src="./src/logo1.png">
-</p>
+<img src="src/assets/img/icon-128.png" width="64"/>
 
-<h1 align="center">Rising Browser(Extension)</h1>
+# Chatbot Chrome Extension
 
-<div align="center">
+[![npm](https://img.shields.io/npm/v/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
+[![npm-download](https://img.shields.io/npm/dw/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
+[![npm](https://img.shields.io/npm/dm/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
+
+## Announcements
+
+- Recently updated from **[React](https://reactjs.org)** ~~17~~ to **18**!
+- **_This boilerplate adopts [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/)!_**
+  - For V2 users, please check out the [manifest-v2](https://github.com/lxieyang/chrome-extension-boilerplate-react/tree/manifest-v2) branch, or use version [3.x](https://www.npmjs.com/package/chrome-extension-boilerplate-react/v/3.3.0).
+  - Check out the [Manifest V3 Migration Guide](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/).
+- Recently added [devtools](https://developer.chrome.com/docs/extensions/mv3/devtools/) Support! Thanks [GeekaholicLin](https://github.com/lxieyang/chrome-extension-boilerplate-react/issues/17)!
+- Recently updated from **[Webpack Dev Server](https://webpack.js.org/configuration/dev-server/)** ~~3.x~~ to **4.x** and **[Webpack](https://webpack.js.org/)** ~~4~~ to **5**!
+- Recently added [TypeScript](https://www.typescriptlang.org/) Support!
+- Recently used [davinci 003](https://beta.openai.com/) and [gpt-3.5-turbo](https://beta.openai.com/) of OpenAI
+
+## Features
+
+This is a Chatbot Chrome Extensions.
+
+This extension is updated with:
+
+- [Gpt-3.5-turbo](https://beta.openai.com/)
+- [Chrome Extension Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/)
+- [React 18](https://reactjs.org)
+- [Webpack 5](https://webpack.js.org/)
+- [Webpack Dev Server 4](https://webpack.js.org/configuration/dev-server/)
+- [React Refresh](https://www.npmjs.com/package/react-refresh)
+- [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
+- [eslint-config-react-app](https://www.npmjs.com/package/eslint-config-react-app)
+- [Prettier](https://prettier.io/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 
-All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. It will manipulate the browser automatically. Our plugins can run as an openai plugin, or in our backend.
-</div>
+## Installing and Running
 
-### Achievement
-<p align='center'>
-  <img align='center' src='src/assets/desc.png' width='100%' />
-</p>
+### Procedures:
 
-- 📱 Support for mobile devices to manage browser.
-- 🌍 Support all web browsers to manipulate it automatically as its extension.
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
+1. Check if your [Node.js](https://nodejs.org/) version is >= **18**.
+2. Clone this repository.
+3. Change the package's `name`, `description`, and `repository` fields in `package.json`.
+4. Change the name of your extension on `src/manifest.json`.
+5. Run `npm install` to install the dependencies.
+6. Run `npm start`
+7. Load your extension on Chrome following:
+   1. Access `chrome://extensions/`
+   2. Check `Developer mode`
+   3. Click on `Load unpacked extension`
+   4. Select the `build` folder.
+8. Happy hacking.
 
-###  ✨ Features
 
-- 🌈 Call up the chat dialog box on any page at any time. (<kbd>Ctrl</kbd>+<kbd>B</kbd>)
-- 📱 Support for mobile devices.
-- 📓 Summarize any page with right-click menu. (<kbd>Alt</kbd>+<kbd>B</kbd>)
-- 📖 Independent conversation page. (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd>)
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, New Bing, Self-Hosted, Azure, Poe etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
-- 🧰 Selection tool and right-click menu to perform various tasks, such as translation, summarization, polishing,
-  sentiment analysis, paragraph division, code explain and queries.
-- 🗂️ Static cards support floating chat boxes for multi-branch conversations.
-- 🖨️ Easily save your complete chat records or copy them partially.
-- 🎨 Powerful rendering support, whether for code highlighting or complex mathematical formulas.
-- 🌍 Language preference support.
-- 📝 Custom API address support.
-- ⚙️ All site adaptations and selection tools(bubble) can be freely switched on or off, disable modules you don't need.
-- 💡 Selection tools and site adaptation are easy to develop and extend, see the [Development&Contributing][dev-url]
-  section.
-- 😉 Chat to improve the answer quality.
-
-###  ✨ How to install
-
-#####  install node_modules
-  ``` bash
-  npm install
-  ```
-
-##### build and install extention
-  ```
-  npm run dev --development
-  ```
-
-##### Enter this into your Chrome search bar:
-
-    chrome://extensions/
-
-##### In the top-right corner, turn on developer mode.
-
-    This will then render two buttons in the top-left corner.
-    Load the unpacked extension and the packed extension.
-    Click on “Load unpacked extension,” and select your build folder.
-
-### Contributing
-Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
-
-1. **Fork** the repo on GitHub
-2. **Clone** the project to your own machine
-3. **Commit** changes to your own branch
-4. **Push** your work back up to your fork
-5. Submit a **Pull request** so that we can review your changes
-
-NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+Saeid Nobahari
