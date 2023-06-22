@@ -49,4 +49,6 @@ responses = {
     504: ("Gateway Timeout", "The gateway server did not receive a timely response"),
     505: ("HTTP Version Not Supported", "Cannot fulfill request."),
     506: ("Brain Exception"),
+    507: ("Firebase Connection Error", "Your key is not correct."),
+    508: ("Pinecone Connection Error", "Your key or env is not correct."),
 }

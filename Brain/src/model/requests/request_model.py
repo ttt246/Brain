@@ -70,7 +70,6 @@ class BasicReq(BaseModel):
     class Settings(BaseModel):
         temperature: float = 0.6
 
-    host_name: str
     openai_key: str
     pinecone_key: str
     pinecone_env: str
@@ -81,7 +80,6 @@ class BasicReq(BaseModel):
 
     def to_json(self):
         return {
-            "host_name": self.host_name,
             "openai_key": self.openai_key,
             "pinecone_key": self.pinecone_key,
             "pinecone_env": self.pinecone_env,
@@ -138,7 +136,6 @@ class ChatRising(BasicReq):
 
     history: list[Format]
     user_input: str
-    model: str
 
 
 """endpoint: /send_sms"""

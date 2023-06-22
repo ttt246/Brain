@@ -48,7 +48,6 @@ def construct_blueprint_api() -> APIRouter:
     # Service
 
     command_service = CommandService()
-    contacts_service = ContactsService()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -62,7 +61,10 @@ def construct_blueprint_api() -> APIRouter:
         data: Notification, client_info: ClientInfo = Depends(get_client_info)
     ):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
 
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
@@ -81,6 +83,7 @@ def construct_blueprint_api() -> APIRouter:
 
         # check contact querying
         try:
+            contacts_service = ContactsService(setting=setting)
             if result["program"] == ProgramType.CONTACT:
                 # querying contacts to getting its expected results
                 contacts_results = contacts_service.query_contacts(
@@ -114,25 +117,33 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/uploadImage")
     def upload_image(data: UploadImage):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
         # cloud message
-        cloud_message = CloudMessage(firebase_app=firebase_app)
+        try:
+            cloud_message = CloudMessage(firebase_app=firebase_app)
 
-        image_model = ImageModel()
-        token = data.token
+            image_model = ImageModel()
+            token = data.token
 
-        image_model.image_name = data.image_name
-        image_model.uuid = data.uuid
-        image_model.status = data.status
+            image_model.image_name = data.image_name
+            image_model.uuid = data.uuid
+            image_model.status = data.status
 
-        image_model.image_text = getTextFromImage(image_model.image_name)
+            image_model.image_text = getTextFromImage(
+                filename=image_model.image_name, firebase_app=firebase_app
+            )
 
-        embed_result = embed_image_text(image_model)
+            embed_result = embed_image_text(image=image_model, setting=setting)
 
-        notification = {"title": "alert", "content": embed_result}
+            notification = {"title": "alert", "content": embed_result}
 
-        state, value = cloud_message.send_message(notification, [token])
-        return assembler.to_response(200, value, image_model.to_json())
+            state, value = cloud_message.send_message(notification, [token])
+            return assembler.to_response(200, value, image_model.to_json())
+        except BrainException as ex:
+            return ex.get_response_exp()
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -149,7 +160,10 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/image_relatedness")
     def image_relatedness(data: ImageRelatedness):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
 
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
@@ -159,7 +173,7 @@ def construct_blueprint_api() -> APIRouter:
         token = data.token
         uuid = data.uuid
 
-        image_content = getTextFromImage(image_name)
+        image_content = getTextFromImage(filename=image_name, firebase_app=firebase_app)
         # check message type
         image_response = {}
         try:
@@ -169,11 +183,13 @@ def construct_blueprint_api() -> APIRouter:
             ):
                 image_response["image_desc"] = image_content
             else:
-                relatedness_data = query_image_text(image_content, message, uuid)
+                relatedness_data = query_image_text(image_content, message, setting)
 
                 image_response["image_name"] = relatedness_data
         except ValueError as e:
             print("image_relatedness parsing error for message chain data")
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
 
         notification = {"title": "alert", "content": json.dumps(image_response)}
         state, value = cloud_message.send_message(notification, [token])
@@ -222,6 +238,8 @@ def construct_blueprint_api() -> APIRouter:
             # add the feedback
             feedback_service.add(feedback)
         except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
             return assembler.to_response(400, "failed to add", "")
         return assembler.to_response(200, "added successfully", "")
 
@@ -232,7 +250,10 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/feedback/{search}/{rating}")
     def get_feedback(search: str, rating: int, data: BasicReq):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
 
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
@@ -274,7 +295,10 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/chat_rising")
     def message_agent(data: ChatRising):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
 
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
@@ -323,7 +347,10 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/send_sms")
     def send_sms(data: SendSMS):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return assembler.to_response(ex.code, ex.message, "")
         try:
             token = data.token
             uuid = data.uuid
@@ -358,7 +385,10 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/train/contacts")
     def train_contacts(data: TrainContacts):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return assembler.to_response(ex.code, ex.message, "")
         try:
             token = data.token
             uuid = data.uuid
@@ -368,8 +398,11 @@ def construct_blueprint_api() -> APIRouter:
             for contact in data.contacts:
                 contacts.append(assembler.to_contact_model(contact))
             # train contact
+            contacts_service = ContactsService(setting=setting)
             contacts_service.train(uuid, contacts)
         except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
             return assembler.to_response(400, "Failed to train contacts", "")
         return assembler.to_response(200, "Trained successfully", "")
 
@@ -386,15 +419,21 @@ def construct_blueprint_api() -> APIRouter:
     @router.post("/train/contacts/delete")
     def delete_all_contacts(data: BasicReq):
         # firebase admin init
-        setting, firebase_app = firebase_admin_with_setting(data)
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return assembler.to_response(ex.code, ex.message, "")
         try:
             token = data.token
             uuid = data.uuid
 
             # parsing contacts
             # train contact
+            contacts_service = ContactsService(setting=setting)
             contacts_service.delete_all(uuid)
         except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
             return assembler.to_response(400, "Failed to delete contacts", "")
         return assembler.to_response(
             200, "Deleted all contacts from pinecone successfully", ""

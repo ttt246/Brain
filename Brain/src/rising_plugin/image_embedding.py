@@ -9,6 +9,7 @@ from .pinecone_engine import (
 )
 from ..model.basic_model import DataStatus
 from ..model.image_model import ImageModel
+from ..model.req_model import ReqModel
 
 
 def get_embeddings():
@@ -16,7 +17,7 @@ def get_embeddings():
 
 
 # def embed_image_text(image_text: str, image_name: str, uuid: str) -> str:
-def embed_image_text(image: ImageModel) -> str:
+def embed_image_text(image: ImageModel, setting: ReqModel) -> str:
     prompt_template = f"""
         This is the text about the image.
         ###
@@ -24,7 +25,7 @@ def embed_image_text(image: ImageModel) -> str:
         """
 
     embed_image = get_embeddings().embed_query(prompt_template)
-    index = init_pinecone(PINECONE_INDEX_NAME)
+    index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
 
     """create | update | delete in pinecone"""
     pinecone_namespace = get_pinecone_index_namespace(image.uuid)
@@ -46,16 +47,16 @@ def embed_image_text(image: ImageModel) -> str:
     return "success to embed image text"
 
 
-def query_image_text(image_content, message, uuid):
+def query_image_text(image_content, message, setting: ReqModel):
     embed_image = get_embeddings().embed_query(
         get_prompt_image_with_message(image_content, message)
     )
-    index = init_pinecone(PINECONE_INDEX_NAME)
+    index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
     relatedness_data = index.query(
         vector=embed_image,
         top_k=3,
         include_values=False,
-        namespace=get_pinecone_index_namespace(uuid),
+        namespace=get_pinecone_index_namespace(setting.uuid),
     )
     if len(relatedness_data["matches"]) > 0:
         return relatedness_data["matches"][0]["id"]

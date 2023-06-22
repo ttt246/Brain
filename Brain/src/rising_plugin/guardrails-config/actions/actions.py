@@ -104,7 +104,7 @@ async def general_question(query):
         if result["program"] == "image":
             if image_search:
                 result["content"] = {
-                    "image_name": query_image_text(result["content"], "", setting.uuid)
+                    "image_name": query_image_text(result["content"], "", setting)
                 }
         """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":

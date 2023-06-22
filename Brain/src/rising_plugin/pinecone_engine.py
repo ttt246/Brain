@@ -1,6 +1,9 @@
 # initialize pinecone
 import pinecone
 from typing import Any
+
+from ..common.brain_exception import BrainException
+from ..common.http_response_codes import responses
 from ..common.utils import (
     PINECONE_INDEX_NAME,
     PINECONE_NAMESPACE,
@@ -14,14 +17,17 @@ POD_TYPE = "p1.x1"
 
 # get the existing index in pinecone or create a new one
 def init_pinecone(index_name, setting: ReqModel, flag=True):
-    pinecone.init(api_key=setting.pinecone_key, environment=setting.pinecone_env)
-    if flag:
-        return pinecone.Index(index_name)
-    else:
-        # create a new index in pinecone
-        return pinecone.create_index(
-            index_name, dimension=DIMENSION, metric=METRIC, pod_type=POD_TYPE
-        )
+    try:
+        pinecone.init(api_key=setting.pinecone_key, environment=setting.pinecone_env)
+        if flag:
+            return pinecone.Index(index_name)
+        else:
+            # create a new index in pinecone
+            return pinecone.create_index(
+                index_name, dimension=DIMENSION, metric=METRIC, pod_type=POD_TYPE
+            )
+    except Exception as ex:
+        raise BrainException(code=508, message=responses[508])
 
 
 """add item in pinecone"""

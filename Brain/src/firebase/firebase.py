@@ -1,9 +1,14 @@
+import json
+import os
 from typing import Any
 
 import firebase_admin
+from firebase_admin import credentials
 
 from Brain.src.common.assembler import Assembler
-from Brain.src.common.utils import get_firebase_cred, FIREBASE_STORAGE_BUCKET
+from Brain.src.common.brain_exception import BrainException
+from Brain.src.common.http_response_codes import responses
+from Brain.src.common.utils import FIREBASE_STORAGE_BUCKET
 from Brain.src.logs import logger
 from Brain.src.model.req_model import ReqModel
 from Brain.src.model.requests.request_model import BasicReq
@@ -37,6 +42,19 @@ def firebase_admin_with_setting(data: BasicReq):
     # firebase admin init
     assembler = Assembler()
     setting = assembler.to_req_model(data)
-
-    firebase_app = initialize_app(setting)
+    try:
+        firebase_app = initialize_app(setting)
+    except Exception as ex:
+        raise BrainException(code=507, message=responses[507])
     return setting, firebase_app
+
+
+def get_firebase_cred(setting: ReqModel):
+    if os.path.exists("Brain/firebase_cred.json"):
+        file = open("Brain/firebase_cred.json")
+        cred = json.load(file)
+        file.close()
+        return credentials.Certificate(cred)
+    else:
+        cred = json.loads(setting.firebase_key)
+        return credentials.Certificate(cred)

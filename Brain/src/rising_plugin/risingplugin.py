@@ -21,6 +21,7 @@ from .csv_embed import get_embed
 from .llm.llms import get_llm, GPT_4, FALCON_7B
 from .pinecone_engine import init_pinecone
 from ..common.brain_exception import BrainException
+from ..common.http_response_codes import responses
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
@@ -64,13 +65,15 @@ def llm_rails(
     """step 1: handle with gpt-4"""
 
     query_result = get_embed(query)
-    relatedness_data = index.query(
-        vector=query_result,
-        top_k=1,
-        include_values=False,
-        namespace=train_service.get_pinecone_index_train_namespace(),
-    )
-
+    try:
+        relatedness_data = index.query(
+            vector=query_result,
+            top_k=1,
+            include_values=False,
+            namespace=train_service.get_pinecone_index_train_namespace(),
+        )
+    except Exception as ex:
+        raise BrainException(code=508, message=responses[508])
     if len(relatedness_data["matches"]) == 0:
         return str({"program": "message", "content": ""})
     document_id = relatedness_data["matches"][0]["id"]
@@ -215,9 +218,9 @@ def query_image_ask(image_content, message, setting: ReqModel):
     return False
 
 
-def getTextFromImage(filename):
+def getTextFromImage(filename: str, firebase_app: firebase_admin.App) -> str:
     # Create a reference to the image file you want to download
-    bucket = storage.bucket()
+    bucket = storage.bucket(app=firebase_app)
     blob = bucket.blob(FIREBASE_STORAGE_ROOT.__add__(filename))
     download_url = ""
 

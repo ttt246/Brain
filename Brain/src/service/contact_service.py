@@ -1,6 +1,7 @@
 """service to manage contacts"""
 from typing import List, Any
 
+from Brain.src.model.req_model import ReqModel
 from Brain.src.rising_plugin.csv_embed import get_embed
 from Brain.src.rising_plugin.pinecone_engine import (
     get_pinecone_index_namespace,
@@ -16,6 +17,9 @@ from Brain.src.model.contact_model import ContactModel, ContactStatus
 
 
 class ContactsService:
+    def __init__(self, setting: ReqModel):
+        self.setting = setting
+
     """train contacts (getting embedding) and update pinecone with embeddings by contact_id
     train datatype:
     key: contactId
@@ -33,13 +37,23 @@ class ContactsService:
             # create | update | delete pinecone
             if contact.status == ContactStatus.CREATED:
                 add_pinecone(
-                    namespace=pinecone_namespace, key=key, value=vectoring_values
+                    namespace=pinecone_namespace,
+                    key=key,
+                    value=vectoring_values,
+                    setting=self.setting,
                 )
             elif contact.status == ContactStatus.DELETED:
-                delete_pinecone(namespace=pinecone_namespace, key=key)
+                delete_pinecone(
+                    namespace=pinecone_namespace,
+                    key=key,
+                    setting=self.setting,
+                )
             elif contact.status == ContactStatus.UPDATED:
                 update_pinecone(
-                    namespace=pinecone_namespace, key=key, value=vectoring_values
+                    namespace=pinecone_namespace,
+                    key=key,
+                    value=vectoring_values,
+                    setting=self.setting,
                 )
 
     """"query contact with search text
@@ -47,7 +61,7 @@ class ContactsService:
 
     def query_contacts(self, uuid: str, search: str) -> List[str]:
         vector_data = get_embed(search)
-        index = init_pinecone(PINECONE_INDEX_NAME)
+        index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=self.setting)
         relatedness_data = index.query(
             vector=vector_data,
             top_k=5,
@@ -63,7 +77,9 @@ class ContactsService:
     """delete all items in the specific nanespace"""
 
     def delete_all(self, uuid: str) -> Any:
-        return delete_all_pinecone(self.get_pinecone_index_namespace(uuid))
+        return delete_all_pinecone(
+            namespace=self.get_pinecone_index_namespace(uuid), setting=self.setting
+        )
 
     """get pinecone namespace of pinecone"""
 

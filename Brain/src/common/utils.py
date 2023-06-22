@@ -2,11 +2,8 @@ import json
 import os
 import re
 
-from firebase_admin import credentials
-from Brain.src.model.req_model import ReqModel
 
 # env variables
-DEFAULT_HOST_NAME = "test3-83ffc.appspot.com"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_KEY = os.getenv("PINECONE_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
@@ -19,7 +16,7 @@ API_URL = "http://localhost:5000/file/swagger.json"
 
 # firebase
 FIREBASE_STORAGE_ROOT = "images/"
-FIREBASE_STORAGE_BUCKET = DEFAULT_HOST_NAME
+FIREBASE_STORAGE_BUCKET = "test3-83ffc.appspot.com"
 
 # pinecone
 PINECONE_NAMESPACE = "risinglangchain-namespace"
@@ -40,17 +37,6 @@ ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 # HuggingFace
 HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-
-
-def get_firebase_cred(setting: ReqModel):
-    if os.path.exists("Brain/firebase_cred.json"):
-        file = open("Brain/firebase_cred.json")
-        cred = json.load(file)
-        file.close()
-        return credentials.Certificate(cred)
-    else:
-        cred = json.loads(setting.firebase_key)
-        return credentials.Certificate(cred)
 
 
 class ProgramType:
