@@ -10,8 +10,15 @@ assertions:
           {
               "image_name": "0ddffe51-3763-48d9-ab74-2086de529217",
               "message": "This is the text about the image",
-              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh", 
-              "uuid": "test-uuid"
+              "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
+              "uuid": "test-uuid",
+              "openai_key": "",
+              "pinecone_key": "",
+              "pinecone_env": "",
+              "firebase_key": "",
+              "settings": {
+                  "temperature": 0.6
+              }
           }
     url: ${protocol}${domain}${endpoint}
     var: payload
@@ -21,10 +28,25 @@ assertions:
     value: application/json
   - id: assert-exists
     expression: payload
-  - id: assert-exists
+  - id: assert-is
+    expression: payload.message
+    type: array
+  - id: each
+    children:
+      - id: assert-exists
+        expression: _1
     expression: payload.message
   - id: assert-exists
     expression: payload.result
+  - id: assert-exists
+    expression: payload.result.program
+  - id: assert-exists
+    expression: payload.result.content
+  - id: assert-exists
+    expression: payload.result.content.image_name
+  - id: assert-is
+    expression: payload.status_code
+    type: integer
 configs: []
 
 # See https://github.com/saucelabs/saucectl-apix-example/blob/main/docs/README.md#unit-unityaml for more details about the syntax used in this file.

@@ -19,9 +19,10 @@ def initialize_app(setting: ReqModel) -> firebase_admin.App:
     # Check if the app is already initialized
     try:
         app = firebase_admin.get_app(app_name)
-        if app is not None:
-            # Delete the existing app
-            firebase_admin.delete_app(app)
+        return app
+        # if app is not None:
+        #     # Delete the existing app
+        #     firebase_admin.delete_app(app)
     except Exception as ex:
         logger.warn(
             title="firebase init",

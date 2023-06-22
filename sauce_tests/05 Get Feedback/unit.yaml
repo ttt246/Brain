@@ -1,16 +1,59 @@
 assertions:
-  - id: get
-    children: []
-    url: ${protocol}${domain}${endpoint}
-    var: payload
-    mode: json
-  - id: assert-equals
-    expression: payload_response.headers['Content-Type']
-    value: application/json
-  - id: assert-exists
-    expression: payload
-  - id: assert-exists
-    expression: payload.message
-  - id: assert-exists
-    expression: payload.result
+- id: post
+  children:
+    - id: body
+      contentType: application/json
+      content: |-
+        {
+            "openai_key": "",
+            "pinecone_key": "",
+            "pinecone_env": "",
+            "firebase_key": "",
+            "settings": {
+                "temperature": 0.6
+            }
+        }
+  url: ${protocol}${domain}${endpoint}
+  var: payload
+  mode: json
+- id: assert-equals
+  expression: payload_response.headers['Content-Type']
+  value: application/json
+- id: assert-exists
+  expression: payload
+- id: assert-is
+  expression: payload.message
+  type: array
+- id: each
+  children:
+    - id: assert-exists
+      expression: _1
+  expression: payload.message
+- id: assert-is
+  expression: payload.result
+  type: array
+- id: each
+  children:
+    - id: assert-exists
+      expression: _1.id
+    - id: assert-is
+      expression: _1.data.rating
+      type: integer
+    - id: assert-exists
+      expression: _1.data.completion.image_name
+    - id: assert-exists
+      expression: _1.data.completion.message
+    - id: assert-exists
+      expression: _1.data.prompt.image_name
+    - id: assert-exists
+      expression: _1.data.prompt.message
+    - id: assert-exists
+      expression: _1.data.uuid
+    - id: assert-is
+      expression: _1.data.timestamp
+      type: float
+  expression: payload.result.pick(5)
+- id: assert-is
+  expression: payload.status_code
+  type: integer
 configs: []
