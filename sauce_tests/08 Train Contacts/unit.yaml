@@ -5,20 +5,22 @@ assertions:
         contentType: application/json
         content: |-
           {
-              "token": "test_token",
-              "uuid": "test-uuid",
               "contacts": [{
                   "contactId": "1",
                   "displayName": "Thomas",
                   "phoneNumbers": ["217 374 8105"],
                   "status": "updated"
               }],
-              "openai_key": "",
-              "pinecone_key": "",
-              "pinecone_env": "",
-              "firebase_key": "",
-              "settings": {
-                  "temperature": 0.6
+              "confs": {
+                "token": "test_token",
+                "uuid": "test-uuid",
+                "openai_key": "",
+                "pinecone_key": "",
+                "pinecone_env": "",
+                "firebase_key": "",
+                "settings": {
+                    "temperature": 0.6
+                }
               }
           }
     url: ${protocol}${domain}${endpoint}
