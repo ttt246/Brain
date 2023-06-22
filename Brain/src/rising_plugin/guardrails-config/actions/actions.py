@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import json
+import numpy as np
 
 from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
@@ -23,7 +25,10 @@ from Brain.src.common.utils import (
     COMMAND_SMS_INDEXES,
     COMMAND_BROWSER_OPEN,
     PINECONE_INDEX_NAME,
+    DEFAULT_GPT_MODEL,
 )
+from Brain.src.model.req_model import ReqModel
+from Brain.src.model.requests.request_model import BasicReq
 from Brain.src.rising_plugin.image_embedding import (
     query_image_text,
 )
@@ -39,6 +44,7 @@ from Brain.src.rising_plugin.llm.llms import (
     GPT_4_32K,
     GPT_4,
     FALCON_7B,
+    GPT_LLM_MODELS,
 )
 
 from Brain.src.rising_plugin.pinecone_engine import (
@@ -46,68 +52,70 @@ from Brain.src.rising_plugin.pinecone_engine import (
     init_pinecone,
 )
 
+"""
+query is json string with below format
+{
+    "query": string,
+    "model": string,
+    "uuid": string,
+    "image_search": bool,
+    "setting": {
+        "host_name": string,
+        "openai_key": string, 
+        "pinecone_key": string, 
+        "pinecone_env": string,
+        "firebase_key": string,
+        "firebase_env": string 
+        "settings": {
+                "temperature": float
+            }, 
+        "token": string, 
+        "uuid": string, 
+    }
+}
+"""
+
 
 @action()
 async def general_question(query):
-    """step 0: convert string to json"""
-    index = init_pinecone(PINECONE_INDEX_NAME)
-    train_service = TrainService()
+    """init falcon model"""
+    falcon_llm = FalconLLM()
+    docs = []
+
+    """step 0-->: parsing parms from the json query"""
     try:
         json_query = json.loads(query)
     except Exception as ex:
         raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
-    """step 0-->: parsing params from the json query"""
     query = json_query["query"]
-    model = json_query["model"]
-    uuid = json_query["uuid"]
     image_search = json_query["image_search"]
+    page_content = json_query["page_content"]
+    document_id = json_query["document_id"]
+    setting = ReqModel(json_query["setting"])
 
-    """step 1: handle with gpt-4"""
-
-    query_result = get_embed(query)
-    relatedness_data = index.query(
-        vector=query_result,
-        top_k=1,
-        include_values=False,
-        namespace=train_service.get_pinecone_index_train_namespace(),
+    docs.append(Document(page_content=page_content, metadata=""))
+    """ 1. calling gpt model to categorize for all message"""
+    chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
+        input_documents=docs, question=query
     )
-    documentId = ""
-    if len(relatedness_data["matches"]) > 0:
-        documentId = relatedness_data["matches"][0]["id"]
-    else:
-        return None
-    docs = []
-    document = train_service.read_one_document(documentId)
-    docs.append(Document(page_content=document["page_content"], metadata=""))
-
-    chain_data = get_llm_chain(model=model).run(input_documents=docs, question=query)
-    # test
-    # if model == GPT_3_5_TURBO or model == GPT_4 or model == GPT_4_32K:
-    #     gpt_llm = GptLLM(model=model)
-    #     chain_data = gpt_llm.get_chain().run(input_documents=docs, question=query)
-    # elif model == FALCON_7B:
-    #     falcon_llm = FalconLLM()
-    #     chain_data = falcon_llm.get_chain().run(question=query)
-    falcon_llm = FalconLLM()
     try:
         result = json.loads(chain_data)
         # check image query with only its text
         if result["program"] == "image":
             if image_search:
                 result["content"] = {
-                    "image_name": query_image_text(result["content"], "", uuid)
+                    "image_name": query_image_text(result["content"], "", setting)
                 }
-
-            # else:
-            #     return result
-        """check program is message to handle it with falcon llm"""
+        """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":
+            """FALCON_7B:"""
             result["content"] = falcon_llm.query(question=query)
         return str(result)
     except ValueError as e:
         # Check sms and browser query
-        if documentId in COMMAND_SMS_INDEXES:
+        if document_id in COMMAND_SMS_INDEXES:
             return str({"program": "sms", "content": chain_data})
-        elif documentId in COMMAND_BROWSER_OPEN:
+        elif document_id in COMMAND_BROWSER_OPEN:
             return str({"program": "browser", "content": "https://google.com"})
+
         return str({"program": "message", "content": falcon_llm.query(question=query)})

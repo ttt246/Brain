@@ -2,7 +2,6 @@ import json
 import os
 import re
 
-from firebase_admin import credentials
 
 # env variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -38,17 +37,6 @@ ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 # HuggingFace
 HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-
-
-def get_firebase_cred():
-    if os.path.exists("Brain/firebase_cred.json"):
-        file = open("Brain/firebase_cred.json")
-        cred = json.load(file)
-        file.close()
-        return credentials.Certificate(cred)
-    else:
-        cred = json.loads(FIREBASE_ENV)
-        return credentials.Certificate(cred)
 
 
 class ProgramType:

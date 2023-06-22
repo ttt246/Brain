@@ -1,8 +1,11 @@
 from fastapi import APIRouter
 
 from Brain.src.common.assembler import Assembler
+from Brain.src.common.brain_exception import BrainException
+from Brain.src.firebase.firebase import firebase_admin_with_setting
 from Brain.src.model.requests.request_model import (
     Document,
+    BasicReq,
 )
 from Brain.src.service.train_service import TrainService
 
@@ -13,15 +16,19 @@ def construct_blueprint_train_api() -> APIRouter:
     # Assembler
     assembler = Assembler()
 
-    # Services
-    train_service = TrainService()
-
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
     @router.get("")
-    def read_all_documents():
+    def read_all_documents(data: BasicReq):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         try:
             result = train_service.read_all_documents()
         except Exception as e:
@@ -31,8 +38,15 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.get("/all")
-    def train_all_documents():
+    @router.post("/all")
+    def train_all_documents(data: BasicReq):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         try:
             result = train_service.train_all_documents()
         except Exception as e:
@@ -42,8 +56,15 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.get("/{document_id}")
-    def read_one_document(document_id: str):
+    @router.post("/{document_id}")
+    def read_one_document(document_id: str, data: BasicReq):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         if document_id != "all":
             try:
                 result = train_service.read_one_document(document_id)
@@ -63,6 +84,13 @@ def construct_blueprint_train_api() -> APIRouter:
 
     @router.post("")
     def create_document_train(data: Document):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         try:
             result = train_service.create_one_document(data.page_content)
         except Exception as e:
@@ -84,6 +112,13 @@ def construct_blueprint_train_api() -> APIRouter:
 
     @router.put("")
     def update_one_document(data: Document):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         try:
             result = train_service.update_one_document(
                 data.document_id, data.page_content
@@ -103,11 +138,20 @@ def construct_blueprint_train_api() -> APIRouter:
     )
     @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id"}} )"""
 
-    @router.delete("/{document_id}")
-    def delete_one_document(document_id: str):
+    @router.post("/delete/{document_id}")
+    def delete_one_document(document_id: str, data: BasicReq):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
         try:
             result = train_service.delete_one_document(document_id)
         except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
             return assembler.to_response(400, "fail to delete one train", "")
         return assembler.to_response(
             200, "deleted one document and train data successfully", result
