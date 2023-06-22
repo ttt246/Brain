@@ -67,27 +67,30 @@ def get_client_info(request: Request):
 
 
 class BasicReq(BaseModel):
-    class Settings(BaseModel):
-        temperature: float = 0.6
+    class Confs(BaseModel):
+        class Settings(BaseModel):
+            temperature: float = 0.6
 
-    openai_key: str
-    pinecone_key: str
-    pinecone_env: str
-    firebase_key: str
-    token: str = ""
-    uuid: str = ""
-    settings: Settings
+        openai_key: str
+        pinecone_key: str
+        pinecone_env: str
+        firebase_key: str
+        token: str = ""
+        uuid: str = ""
+        settings: Settings
 
-    def to_json(self):
-        return {
-            "openai_key": self.openai_key,
-            "pinecone_key": self.pinecone_key,
-            "pinecone_env": self.pinecone_env,
-            "firebase_key": self.firebase_key,
-            "settings": {"temperature": self.settings.temperature},
-            "token": self.token,
-            "uuid": self.uuid,
-        }
+        def to_json(self):
+            return {
+                "openai_key": self.openai_key,
+                "pinecone_key": self.pinecone_key,
+                "pinecone_env": self.pinecone_env,
+                "firebase_key": self.firebase_key,
+                "settings": {"temperature": self.settings.temperature},
+                "token": self.token,
+                "uuid": self.uuid,
+            }
+
+    confs: Confs
 
 
 """endpoint: /sendNotification"""

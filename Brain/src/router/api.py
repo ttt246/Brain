@@ -71,14 +71,16 @@ def construct_blueprint_api() -> APIRouter:
 
         # parsing params
         query = data.message
-        token = data.token
-        uuid = data.uuid
+        token = setting.token
+        uuid = setting.uuid
         # check browser endpoint
         if client_info.is_browser():
             query = f"{query} in a web browser"
 
         result = getCompletion(
-            query=query, setting=assembler.to_req_model(data), firebase_app=firebase_app
+            query=query,
+            setting=setting,
+            firebase_app=firebase_app,
         )
 
         # check contact querying
@@ -126,10 +128,10 @@ def construct_blueprint_api() -> APIRouter:
             cloud_message = CloudMessage(firebase_app=firebase_app)
 
             image_model = ImageModel()
-            token = data.token
+            token = setting.token
 
             image_model.image_name = data.image_name
-            image_model.uuid = data.uuid
+            image_model.uuid = setting.uuid
             image_model.status = data.status
 
             image_model.image_text = getTextFromImage(
@@ -170,8 +172,8 @@ def construct_blueprint_api() -> APIRouter:
         # parsing params
         image_name = data.image_name
         message = data.message
-        token = data.token
-        uuid = data.uuid
+        token = setting.token
+        uuid = setting.uuid
 
         image_content = getTextFromImage(filename=image_name, firebase_app=firebase_app)
         # check message type
@@ -222,8 +224,8 @@ def construct_blueprint_api() -> APIRouter:
             # cloud message
             cloud_message = CloudMessage(firebase_app=firebase_app)
             feedback_service = FeedbackService(firebase_app=firebase_app)
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
 
             # parsing feedback payload
             prompt = BasicModel(
@@ -303,8 +305,8 @@ def construct_blueprint_api() -> APIRouter:
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
         try:
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
             histories = assembler.to_array_message_model(data.history)  # json array
             user_input = data.user_input
             """init chat service with model"""
@@ -352,8 +354,8 @@ def construct_blueprint_api() -> APIRouter:
         except BrainException as ex:
             return assembler.to_response(ex.code, ex.message, "")
         try:
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
 
             # parsing feedback payload
             sms_model = assembler.to_sms_model(data.data)
@@ -390,8 +392,8 @@ def construct_blueprint_api() -> APIRouter:
         except BrainException as ex:
             return assembler.to_response(ex.code, ex.message, "")
         try:
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
 
             # parsing contacts
             contacts = []
@@ -424,8 +426,8 @@ def construct_blueprint_api() -> APIRouter:
         except BrainException as ex:
             return assembler.to_response(ex.code, ex.message, "")
         try:
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
 
             # parsing contacts
             # train contact

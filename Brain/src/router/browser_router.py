@@ -38,8 +38,8 @@ def construct_blueprint_browser_api() -> APIRouter:
 
         item_link = ""
         try:
-            token = data.token
-            uuid = data.uuid
+            token = setting.token
+            uuid = setting.uuid
 
             # parsing contacts
             # train contact
