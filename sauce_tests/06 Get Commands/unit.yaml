@@ -1,16 +1,48 @@
  assertions:
-  - id: get
-    children: []
-    url: ${protocol}${domain}${endpoint}
-    var: payload
-    mode: json
-  - id: assert-equals
-    expression: payload_response.headers['Content-Type']
-    value: application/json
-  - id: assert-exists
-    expression: payload
-  - id: assert-exists
-    expression: payload.message
-  - id: assert-exists
-    expression: payload.result
+- id: post
+  children:
+    - id: body
+      contentType: application/json
+      content: |-
+        {
+            "openai_key": "",
+            "pinecone_key": "",
+            "pinecone_env": "",
+            "firebase_key": "",
+            "settings": {
+                "temperature": 0.6
+            }
+        }
+  url: ${protocol}${domain}${endpoint}
+  var: payload
+  mode: json
+- id: assert-equals
+  expression: payload_response.headers['Content-Type']
+  value: application/json
+- id: assert-exists
+  expression: payload
+- id: assert-is
+  expression: payload.message
+  type: array
+- id: each
+  children:
+    - id: assert-exists
+      expression: _1
+  expression: payload.message
+- id: assert-exists
+  expression: payload.result
+- id: assert-exists
+  expression: payload.result.program
+- id: assert-is
+  expression: payload.result.content
+  type: array
+- id: each
+  children:
+    - id: assert-exists
+      expression: _1
+  expression: payload.result.content
+- id: assert-is
+  expression: payload.status_code
+  type: integer
+
 configs: []

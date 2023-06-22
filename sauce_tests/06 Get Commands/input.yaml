@@ -1,4 +1,4 @@
- - id: global
+- id: global
   children:
     - id: variable
       name: protocol
