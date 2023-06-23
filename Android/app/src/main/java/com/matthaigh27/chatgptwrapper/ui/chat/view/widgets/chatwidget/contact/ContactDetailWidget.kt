@@ -39,22 +39,24 @@ class ContactDetailWidget(
         llPhones = findViewById(R.id.ll_contacts)
 
         llPhones?.removeAllViews()
-        txtDisplayName?.text = contactModel.name
-        contactModel.phoneList.forEach { phoneNumber ->
-            val contactDetailItem = ContactDetailItem(context)
-            contactDetailItem.setContactDetailItemInfo(phoneNumber, contactModel.name)
-            contactDetailItem.setVisibilityListener(object :
-                ContactDetailItem.OnContactDetailVisibilityListener {
-                override fun invisible() {
-                    this@ContactDetailWidget.dismiss()
-                }
-            })
+        txtDisplayName?.text = contactModel.displayName
+        contactModel.phoneNumbers.forEach { phoneNumber ->
+            val contactDetailItem = ContactDetailItem(context).apply {
+                this.callback = callback
+                this.setContactDetailItemInfo(phoneNumber, contactModel.displayName)
+                this.setVisibilityListener(object :
+                    ContactDetailItem.OnContactDetailVisibilityListener {
+                    override fun invisible() {
+                        this@ContactDetailWidget.dismiss()
+                    }
+                })
+            }
             llPhones?.addView(contactDetailItem)
         }
 
         btnEditContact?.setOnClickListener(this)
         imgAvatar = findViewById(R.id.img_avatar)
-        imgAvatar?.setContactAvatar(contactModel.id.toLong())
+        imgAvatar?.setContactAvatar(contactModel.contactId.toLong())
     }
 
     private fun ImageView.setContactAvatar(contactId: Long) {
@@ -73,7 +75,7 @@ class ContactDetailWidget(
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.btn_edit_contact -> {
-                goToContactEditor(contactModel.id)
+                goToContactEditor(contactModel.contactId)
             }
 
             R.id.btn_send_message -> {

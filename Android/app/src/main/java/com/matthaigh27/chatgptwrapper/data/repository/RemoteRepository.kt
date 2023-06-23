@@ -2,7 +2,9 @@ package com.matthaigh27.chatgptwrapper.data.repository
 
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
+import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
 import com.matthaigh27.chatgptwrapper.utils.helpers.network.RequestFactory.buildBaseApiRequest
@@ -52,6 +54,28 @@ object RemoteRepository {
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                onFailure(t.message.toString())
+            }
+        })
+    }
+
+    fun trainContacts(
+        request: TrainContactsApiRequest,
+        onSuccess: OnSuccess<EmptyResultApiResponse>,
+        onFailure: OnFailure<String>
+    ) {
+        val call = apiService.trainContacts(request)
+
+        call.enqueue(object : Callback<EmptyResultApiResponse> {
+            override fun onResponse(call: Call<EmptyResultApiResponse>, response: Response<EmptyResultApiResponse>) {
+                response.body()?.let { data ->
+                    onSuccess(EmptyResultApiResponse(data.status_code, data.message, data.result))
+                }?: run {
+                    onFailure(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<EmptyResultApiResponse>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })

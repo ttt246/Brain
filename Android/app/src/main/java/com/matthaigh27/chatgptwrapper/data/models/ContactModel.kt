@@ -1,8 +1,8 @@
 package com.matthaigh27.chatgptwrapper.data.models
 
 data class ContactModel(
-    var id: String = "",
-    var name: String = "",
-    var phoneList: ArrayList<String> = ArrayList(),
-    var status: String = ""
+    var contactId: String = String(),
+    var displayName: String = String(),
+    var phoneNumbers: ArrayList<String> = ArrayList(),
+    var status: String = String()
 )

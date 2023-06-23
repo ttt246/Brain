@@ -31,8 +31,8 @@ object ContactHelper {
                 )).toInt()
 
                 val contact = ContactModel()
-                contact.id = id
-                contact.name = name
+                contact.contactId = id
+                contact.displayName = name
 
                 if (phoneNumber > 0) {
                     val cursorPhone = context.contentResolver.query(
@@ -48,7 +48,7 @@ object ContactHelper {
                             val phoneNumValue = cursorPhone.getString(
                                 cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                             )
-                            contact.phoneList.add(phoneNumValue)
+                            contact.phoneNumbers.add(phoneNumValue)
                         }
                     }
                     cursorPhone.close()
@@ -70,19 +70,17 @@ object ContactHelper {
             for (i in originalContacts!!.indices) {
                 var isExist = false
                 contacts.forEach { contact ->
-                    if (originalContacts[i].id == contact.id) {
-                        if (originalContacts[i].name != contact.name ||
-                            originalContacts[i].phoneNumber != contact.phoneList.toString()
-                        ) {
+                    if (originalContacts[i].id == contact.contactId) {
+                        if (originalContacts[i].name != contact.displayName || originalContacts[i].phoneNumber != contact.phoneNumbers.toString()) {
                             contact.status = "updated"
                             changedContactList.add(contact)
 
                             try {
                                 RoomRepository.updateContact(
                                     ContactEntity(
-                                        contact.id,
-                                        contact.name,
-                                        contact.phoneList.toString()
+                                        contact.contactId,
+                                        contact.displayName,
+                                        contact.phoneNumbers.toString()
                                     )
                                 )
                             } catch (e: Exception) {
@@ -97,16 +95,16 @@ object ContactHelper {
                 }
                 if (!isExist) {
                     val deletedContacts = ContactModel()
-                    deletedContacts.id = originalContacts[i].id
+                    deletedContacts.contactId = originalContacts[i].id
                     deletedContacts.status = "deleted"
                     changedContactList.add(deletedContacts)
 
                     try {
                         RoomRepository.deleteContact(
                             ContactEntity(
-                                deletedContacts.id,
-                                deletedContacts.name,
-                                deletedContacts.phoneList.toString()
+                                deletedContacts.contactId,
+                                deletedContacts.displayName,
+                                deletedContacts.phoneNumbers.toString()
                             )
                         )
                     } catch (e: Exception) {
@@ -121,9 +119,9 @@ object ContactHelper {
                     try {
                         RoomRepository.insertContact(
                             ContactEntity(
-                                contact.id,
-                                contact.name,
-                                contact.phoneList.toString()
+                                contact.contactId,
+                                contact.displayName,
+                                contact.phoneNumbers.toString()
                             )
                         )
                     } catch (e: Exception) {
@@ -133,5 +131,16 @@ object ContactHelper {
             }
             changedContactList
         }.await()
+    }
+
+    fun getContactModelById(contactId: String, contacts: ArrayList<ContactModel>): ContactModel {
+        var contactModel = ContactModel()
+        val searchResults = contacts.filter { contact ->
+            contactId == contact.contactId
+        }
+        if (searchResults.isNotEmpty()) {
+            contactModel = searchResults[0]
+        }
+        return contactModel
     }
 }

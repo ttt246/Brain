@@ -15,7 +15,7 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterfa
 import de.hdodenhof.circleimageview.CircleImageView
 
 class SearchContactWidget(
-    context: Context, cotactModel: ContactModel, attrs: AttributeSet?
+    context: Context, cotactModel: ContactModel, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs), View.OnClickListener {
 
     private var context: Context
@@ -38,8 +38,8 @@ class SearchContactWidget(
         civInfoAvatar = findViewById(R.id.civ_avatar)
         txtInfoName = findViewById(R.id.txt_info_name)
 
-        txtInfoName.text = contactModel.name
-        civInfoAvatar.setContactAvatar(context, contactModel.id.toLong())
+        txtInfoName.text = contactModel.displayName
+        civInfoAvatar.setContactAvatar(context, contactModel.contactId.toLong())
 
         this.setOnClickListener(this)
     }
@@ -59,7 +59,9 @@ class SearchContactWidget(
 
 
     private fun showContactDetailView() {
-        val bottomSheetDialog = ContactDetailWidget(context, contactModel)
+        val bottomSheetDialog = ContactDetailWidget(context, contactModel).apply {
+            this.callback = callback
+        }
         bottomSheetDialog.show()
     }
 

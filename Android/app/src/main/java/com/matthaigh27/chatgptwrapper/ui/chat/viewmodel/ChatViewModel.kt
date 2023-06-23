@@ -7,7 +7,9 @@ import com.matthaigh27.chatgptwrapper.RisingApplication
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
+import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
 import com.matthaigh27.chatgptwrapper.data.repository.FirebaseRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getChangedContacts
@@ -72,6 +74,21 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    fun uploadImageToFirebase(imageByteArray: ByteArray): MutableLiveData<ApiResource<String>> {
+        val resource: MutableLiveData<ApiResource<String>> = MutableLiveData()
+        resource.value = ApiResource.Loading()
+        FirebaseRepository.uploadImage(
+            imageByteArray,
+            onSuccess = { apiResponse ->
+                resource.value = ApiResource.Success(apiResponse)
+            },
+            onFailure = { throwable ->
+                resource.value = ApiResource.Error(throwable)
+            }
+        )
+        return resource
+    }
+
     fun trainImages() {
         val originalLocalImages =
             ImageHelper.getImagesFromExternalStorage(RisingApplication.appContext.contentResolver)
@@ -80,8 +97,18 @@ class ChatViewModel : ViewModel() {
     fun trainContacts() {
         val contacts = getContacts(appContext)
         CoroutineScope(Dispatchers.Main).launch {
+            val resource: MutableLiveData<ApiResource<EmptyResultApiResponse>> = MutableLiveData()
             val changedContacts = getChangedContacts(contacts)
-            Log.v("Hello", "Hello")
+            val request = TrainContactsApiRequest(changedContacts, RequestFactory.buildApiKeys())
+            RemoteRepository.trainContacts(
+                request,
+                onSuccess = { apiResponse ->
+                    resource.value = ApiResource.Success(apiResponse)
+                },
+                onFailure = { throwable ->
+                    resource.value = ApiResource.Error(throwable)
+                }
+            )
         }
 
     }
