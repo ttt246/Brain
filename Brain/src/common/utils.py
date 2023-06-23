@@ -59,21 +59,26 @@ def validateJSON(jsonData):
 
 def parseJsonFromCompletion(data: str) -> json:
     result = data[1:-1]
+    array = result.split('\\"')
     # fmt: off
-    result = result.replace("{'", '{"')
-    result = result.replace("'}", '"}')
-    result = result.replace("': '", '": "')
-    result = result.replace("': \\\"", '": \"')
-    result = result.replace("', '", '", "')
-    result = result.replace("':", '":')
+    if len(array) > 1:
+        array[0] = array[0].replace("'", '"')
+        result = array[0] + '"' + array[1] + '"' + array[2]
+    else:
+        result = result.replace("{'", '{"')
+        result = result.replace("'}", '"}')
+        result = result.replace("': '", '": "')
+        result = result.replace("': \\\"", '": \"')
+        result = result.replace("', '", '", "')
+        result = result.replace("':", '":')
 
-    substring = '\\"}'
-    replacement = '\"}'
+        substring = '\\"}'
+        replacement = '\"}'
 
-    index = result.rfind(substring)
+        index = result.rfind(substring)
 
-    if index == len(result) - 3:
-        result = result[:index] + replacement + result[index + len(substring):]
+        if index == len(result) - 3:
+            result = result[:index] + replacement + result[index + len(substring):]
     # fmt: on
     try:
         return json.loads(result)
