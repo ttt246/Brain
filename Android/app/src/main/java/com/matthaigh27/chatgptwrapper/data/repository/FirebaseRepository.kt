@@ -1,8 +1,8 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
 import com.google.firebase.storage.FirebaseStorage
-import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
-import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
+import com.matthaigh27.chatgptwrapper.utils.helpers.network.OnFailure
+import com.matthaigh27.chatgptwrapper.utils.helpers.network.OnSuccess
 
 object FirebaseRepository {
     fun downloadImageWithName(

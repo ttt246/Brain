@@ -12,7 +12,7 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 
 class SendSmsWidget(
-    context: Context, attrs: AttributeSet?
+    context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs) {
 
     private val context: Context
@@ -23,7 +23,7 @@ class SendSmsWidget(
     private val btnOk: Button
     private val btnCancel: Button
 
-    private var callback: ChatMessageInterface? = null
+    var callback: ChatMessageInterface? = null
 
     init {
         inflate(context, R.layout.widget_send_sms, this)
@@ -47,8 +47,8 @@ class SendSmsWidget(
                 ).show()
                 return@setOnClickListener
             }
-            callback?.sentSms(edtPhoneNumber.text.toString(), edtMessage.text.toString())
             hide()
+            callback?.sentSms(edtPhoneNumber.text.toString(), edtMessage.text.toString())
         }
 
         btnCancel.setOnClickListener {

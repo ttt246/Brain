@@ -1,10 +1,9 @@
-package com.matthaigh27.chatgptwrapper.utils.helpers
+package com.matthaigh27.chatgptwrapper.utils.helpers.network
 
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.remote.requests.BaseApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.common.Keys
 import com.matthaigh27.chatgptwrapper.data.remote.requests.common.Settings
-import java.util.UUID
 
 object RequestFactory {
 

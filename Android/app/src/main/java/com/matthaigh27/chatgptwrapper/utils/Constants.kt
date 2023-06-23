@@ -26,4 +26,9 @@ object Constants {
     val ERROR_MSG_NOEXIST_COMMAND = "No such command name exists."
 
     val MSG_HELP_RPOMPT = "Help Prompt Command"
+
+    val FIELD_HELP_PROMPT_NAME = "name"
+    val FIELD_HELP_PROMPT_PROMPT = "prompt"
+    val FIELD_HELP_PROMPT_DESCRIPTION = "description"
+    val FIELD_HELP_PROMPT_TAGS = "tags"
 }

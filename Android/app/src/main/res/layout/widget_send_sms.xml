@@ -61,12 +61,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/edt_message">
 
                 <Button
-                    android:id="@+id/btn_cancel"
+                    android:id="@+id/btn_ok"
                     style="@style/ChatWidgetCommonButton"
                     android:text="@string/text_button_ok" />
 
                 <Button
-                    android:id="@+id/btn_ok"
+                    android:id="@+id/btn_cancel"
                     style="@style/ChatWidgetCommonButton"
                     android:text="@string/text_button_cancel" />
             </LinearLayout>

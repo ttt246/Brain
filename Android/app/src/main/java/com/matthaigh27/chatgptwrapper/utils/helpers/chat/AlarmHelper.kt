@@ -1,4 +1,4 @@
-package com.matthaigh27.chatgptwrapper.utils.helpers
+package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
 import android.content.Context
 import android.database.Cursor

@@ -1,6 +1,5 @@
-package com.matthaigh27.chatgptwrapper.utils.helpers
+package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
-import com.google.gson.JsonArray
 import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_JSON
@@ -13,11 +12,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object CommandHelper {
-    private val FIELD_HELP_PROMPT_NAME = "name"
-    private val FIELD_HELP_PROMPT_PROMPT = "prompt"
-    private val FIELD_HELP_PROMPT_DESCRIPTION = "description"
-    private val FIELD_HELP_PROMPT_TAGS = "tags"
-
     fun isMainHelpCommand(model: HelpCommandModel): Boolean {
         return model.main != HELP_COMMAND
     }
@@ -47,33 +41,6 @@ object CommandHelper {
             throw Exception(HELP_COMMAND_ERROR_NO_INVALID_FORMAT)
         }
         return commandModel
-    }
-
-    fun convertJsonArrayToHelpPromptList(promptData: String): ArrayList<HelpPromptModel> {
-        val promptList = ArrayList<HelpPromptModel>()
-        val promptJsonArray = JSONArray(promptData)
-
-        try {
-            for (i in 0 until promptJsonArray.length()) {
-                val helpCommand = JSONObject(promptJsonArray[i].toString())
-
-                val helpPromptModel = HelpPromptModel()
-                helpPromptModel.name = helpCommand.getString(FIELD_HELP_PROMPT_NAME)
-                helpPromptModel.description = helpCommand.getString(FIELD_HELP_PROMPT_DESCRIPTION)
-                helpPromptModel.prompt = helpCommand.getString(FIELD_HELP_PROMPT_PROMPT)
-
-                helpPromptModel.tags = ArrayList()
-                val jsonArrayTags = helpCommand.getJSONArray(FIELD_HELP_PROMPT_TAGS)
-                for (j in 0 until jsonArrayTags.length()) {
-                    helpPromptModel.tags.add(jsonArrayTags[j].toString())
-                }
-                promptList.add(helpPromptModel)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            throw Exception(ERROR_MSG_JSON)
-        }
-        return promptList
     }
 
     fun makePromptUsage(list: ArrayList<HelpPromptModel>) : String {

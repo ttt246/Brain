@@ -1,4 +1,4 @@
-package com.matthaigh27.chatgptwrapper.utils.helpers
+package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver

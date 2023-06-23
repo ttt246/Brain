@@ -8,8 +8,8 @@ import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiReques
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.repository.FirebaseRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
-import com.matthaigh27.chatgptwrapper.utils.helpers.ImageHelper
-import com.matthaigh27.chatgptwrapper.utils.helpers.RequestFactory
+import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
+import com.matthaigh27.chatgptwrapper.utils.helpers.network.RequestFactory
 
 class ChatViewModel : ViewModel() {
 

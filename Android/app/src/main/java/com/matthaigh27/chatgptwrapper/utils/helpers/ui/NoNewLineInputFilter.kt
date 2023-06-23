@@ -1,4 +1,4 @@
-package com.matthaigh27.chatgptwrapper.utils.helpers
+package com.matthaigh27.chatgptwrapper.utils.helpers.ui
 
 import android.text.InputFilter
 import android.text.Spanned

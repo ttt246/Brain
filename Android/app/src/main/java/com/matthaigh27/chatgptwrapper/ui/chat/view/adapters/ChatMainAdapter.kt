@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.SendSmsWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
 import com.matthaigh27.chatgptwrapper.utils.Constants
-import com.matthaigh27.chatgptwrapper.utils.helpers.ImageHelper
+import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
 
 class ChatMainAdapter(
     context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface
@@ -119,11 +121,15 @@ class ChatMainAdapter(
     private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
         when (data.content) {
             Constants.TYPE_WIDGET_SMS -> {
-
+                val sendSmsWidget = SendSmsWidget(context).apply {
+                    this.callback = callbacks
+                }
+                holder.itemLayout.addView(sendSmsWidget)
+                holder.itemLayout.visibility = View.VISIBLE
             }
 
             Constants.TYPE_WIDGET_HELP_PROMPT -> {
-
+//                val helpPromptWidget = HelpPromptWidget(context)
             }
 
             Constants.TYPE_WIDGET_SEARCH_CONTACT -> {
