@@ -14,7 +14,7 @@ import android.widget.GridLayout
 import android.widget.LinearLayout
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
-import com.matthaigh27.chatgptwrapper.ui.setting.SettingActivity
+import com.matthaigh27.chatgptwrapper.ui.setting.view.SettingActivity
 import com.matthaigh27.chatgptwrapper.utils.helpers.ImageHelper
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoAdapter

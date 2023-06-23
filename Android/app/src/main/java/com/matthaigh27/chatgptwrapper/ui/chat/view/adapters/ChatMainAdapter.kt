@@ -1,6 +1,7 @@
 package com.matthaigh27.chatgptwrapper.ui.chat.view.adapters
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,11 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.utils.Constants
+import com.matthaigh27.chatgptwrapper.utils.helpers.ImageHelper
 
-class ChatMainAdapter(context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatMainAdapter(
+    context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MSG_SENT = 0
     private val VIEW_TYPE_MSG_RECEIVED = 1
@@ -42,6 +45,7 @@ class ChatMainAdapter(context: Context, list: ArrayList<ChatMessageModel>, callb
                     )
                 )
             }
+
             VIEW_TYPE_MSG_RECEIVED -> {
                 ReceivedMessageViewHolder(
                     inflater.inflate(
@@ -49,6 +53,7 @@ class ChatMainAdapter(context: Context, list: ArrayList<ChatMessageModel>, callb
                     )
                 )
             }
+
             else -> {
                 ChatWidgetViewHolder(
                     inflater.inflate(
@@ -70,38 +75,61 @@ class ChatMainAdapter(context: Context, list: ArrayList<ChatMessageModel>, callb
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val index = holder.adapterPosition
         val chatMessageModel: ChatMessageModel = chatMessageList[index]
-        when(chatMessageModel.type) {
+        when (chatMessageModel.type) {
             VIEW_TYPE_MSG_SENT -> {
                 setMessageData(holder as SentMessageViewHolder, chatMessageModel)
             }
+
             VIEW_TYPE_MSG_RECEIVED -> {
                 setMessageData(holder as ReceivedMessageViewHolder, chatMessageModel)
             }
+
             else -> {
                 setMessageData(holder as ChatWidgetViewHolder, chatMessageModel)
             }
         }
     }
 
-    private fun setMessageData(holder : SentMessageViewHolder, data: ChatMessageModel) {
+    private fun setMessageData(holder: SentMessageViewHolder, data: ChatMessageModel) {
         holder.txtMessage.text = data.content
     }
 
-    private fun setMessageData(holder : ReceivedMessageViewHolder, data: ChatMessageModel) {
-        holder.txtMessage.text = data.content
+    private fun setMessageData(holder: ReceivedMessageViewHolder, data: ChatMessageModel) {
+        if (data.hasImage) {
+            data.image?.let { image ->
+                val originBitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+                val radius = context.resources.getDimensionPixelSize(R.dimen.radius_small)
+                val bmp = ImageHelper.getRoundedCornerBitmap(originBitmap, radius)
+                holder.imgMessage.visibility = View.VISIBLE
+                holder.imgMessage.setImageBitmap(bmp)
+
+                data.content?.let { message ->
+                    holder.txtMessage.text = message
+                } ?: run {
+                    holder.txtMessage.visibility = View.GONE
+                }
+            }
+        } else {
+            holder.txtMessage.text = data.content
+            holder.imgMessage.visibility = View.GONE
+            holder.txtMessage.visibility = View.VISIBLE
+        }
     }
 
-    private fun setMessageData(holder : ChatWidgetViewHolder, data: ChatMessageModel) {
-        when(data.content) {
+    private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
+        when (data.content) {
             Constants.TYPE_WIDGET_SMS -> {
 
             }
+
             Constants.TYPE_WIDGET_HELP_PROMPT -> {
 
             }
+
             Constants.TYPE_WIDGET_SEARCH_CONTACT -> {
 
             }
+
             Constants.TYPE_WIDGET_FEEDBACK -> {
 
             }

@@ -10,16 +10,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 
-class HelpPromptWidget(context: Context, model: HelpCommandModel) : ConstraintLayout(context),
+class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLayout(context),
     View.OnClickListener {
     private lateinit var llPromptKeys: LinearLayout
     private lateinit var txtKeysTitle: TextView
 
     private var promptEditTextList: ArrayList<EditText>? = null
-    private val promptModel: HelpCommandModel
+    private val promptModel: HelpPromptModel
     var callback: ChatMessageInterface? = null
 
 

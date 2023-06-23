@@ -17,7 +17,10 @@
     <string name="title_chat_widget">widget title</string>
     <string name="title_chat_widget_sms">SMS</string>
 
-    <string name="label_setting_pinecone">Pinecone</string>
-    <string name="label_setting_openai">OpenAI</string>
-    <string name="label_setting_firebase">Firebase</string>
+    <string name="label_setting_pinecone_key">Pinecone Key</string>
+    <string name="label_setting_pinecone_env">Pinecone Env</string>
+    <string name="label_setting_firebase_key">Firebase Key</string>
+    <string name="label_setting_temperature">Temperature</string>
+
+    <string name="text_setting_button_save">Save</string>
 </resources>

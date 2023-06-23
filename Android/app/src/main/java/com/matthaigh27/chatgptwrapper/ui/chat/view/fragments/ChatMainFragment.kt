@@ -2,8 +2,6 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.InputFilter
-import android.text.Spanned
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +10,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -22,14 +19,26 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonElement
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.ui.chat.view.adapters.ChatMainAdapter
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.toolbar.ChatToolsWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
 import com.matthaigh27.chatgptwrapper.utils.Constants
+import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_NOEXIST_COMMAND
+import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.utils.helpers.CommandHelper.convertJsonArrayToHelpPromptList
+import com.matthaigh27.chatgptwrapper.utils.helpers.CommandHelper.getHelpCommandFromStr
+import com.matthaigh27.chatgptwrapper.utils.helpers.CommandHelper.isMainHelpCommand
+import com.matthaigh27.chatgptwrapper.utils.helpers.CommandHelper.makePromptItemUsage
+import com.matthaigh27.chatgptwrapper.utils.helpers.CommandHelper.makePromptUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.NoNewLineInputFilter
 
 class ChatMainFragment : Fragment(), OnClickListener {
@@ -51,6 +60,8 @@ class ChatMainFragment : Fragment(), OnClickListener {
     private lateinit var chatMessageInterface: ChatMessageInterface
 
     private var chatToolsWidget: ChatToolsWidget? = null
+
+    private var helpPromptList: ArrayList<HelpPromptModel>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -125,9 +136,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
         rvChatList = rootView.findViewById(R.id.rv_chat_list)
         chatMainAdapter = ChatMainAdapter(
-            requireContext(),
-            chatMessageList,
-            chatMessageInterface
+            requireContext(), chatMessageList, chatMessageInterface
         )
 
         rvChatList?.adapter = chatMainAdapter
@@ -188,19 +197,71 @@ class ChatMainFragment : Fragment(), OnClickListener {
         }
     }
 
-    private fun addMessage(type: Int, content: String, data: String? = null) {
-        when(type) {
+    private fun addMessage(
+        type: Int,
+        content: String? = null,
+        data: JsonElement? = null,
+        hasImage: Boolean = false,
+        image: ByteArray? = null
+    ) {
+        addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
+        when (type) {
             TYPE_CHAT_SENT -> {
-                addChatItemToList(ChatMessageModel(type, content))
+                if (content!!.isNotEmpty() && content.first() == '/') {
+                    openHelpPromptWidget(content)
+                    return
+                }
                 sendNotification(content)
             }
-            TYPE_CHAT_RECEIVE -> {
-                addChatItemToList(ChatMessageModel(type, content))
+        }
+    }
+
+    private fun openHelpPromptWidget(message: String) {
+        try {
+            val command: HelpCommandModel = getHelpCommandFromStr(message)
+            if (isMainHelpCommand(command)) {
+                when (command.main) {
+                    TYPE_WIDGET_SMS -> {
+                        addMessage(
+                            type = TYPE_CHAT_WIDGET, content = TYPE_WIDGET_SMS
+                        )
+                    }
+
+                    else -> {
+                        helpPromptList?.let { list ->
+                            val data = list.filter { model ->
+                                model.name == command.main
+                            }
+
+                            if(data.isEmpty()) {
+                                addMessage(
+                                    type = TYPE_CHAT_RECEIVE, content = ERROR_MSG_NOEXIST_COMMAND
+                                )
+                            } else {
+                                addMessage(
+                                    type = TYPE_CHAT_WIDGET,
+                                    content = TYPE_WIDGET_HELP_PROMPT,
+                                    data = data[0].toString() as JsonElement
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                if (command.assist == HELP_COMMAND_ALL) {
+                    addMessage(
+                        type = TYPE_CHAT_RECEIVE, content = makePromptUsage(helpPromptList!!)
+                    )
+                } else {
+                    addMessage(
+                        type = TYPE_CHAT_RECEIVE,
+                        content = makePromptItemUsage(helpPromptList!!, command.assist!!)
+                    )
+                }
             }
-            TYPE_CHAT_WIDGET -> {
-                val chatModel = ChatMessageModel(type, content)
-                chatMessageList.add(chatModel)
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToast(e.message.toString())
         }
     }
 
@@ -209,7 +270,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun addChatItemToList(chatModel: ChatMessageModel){
+    private fun addChatItemToList(chatModel: ChatMessageModel) {
         edtMessageInput?.setText("")
 
         chatMessageList.add(chatModel)
@@ -219,16 +280,22 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private fun getAllCommands() {
         viewModel.getAllHelpCommands().observe(viewLifecycleOwner, Observer { resource ->
-            when(resource) {
+            when (resource) {
                 is ApiResource.Loading -> {
                     showLoading(true)
                 }
+
                 is ApiResource.Success -> {
                     showLoading(false)
+                    resource.data?.let { data ->
+                        helpPromptList =
+                            convertJsonArrayToHelpPromptList(data.result.content.asJsonArray)
+                    }
                 }
+
                 is ApiResource.Error -> {
-                    showToast(resource.message!!)
                     showLoading(false)
+                    showToast(resource.message!!)
                 }
             }
         })
@@ -236,41 +303,76 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private fun sendNotification(message: String) {
         viewModel.sendNotification(message).observe(viewLifecycleOwner, Observer { resource ->
-            when(resource) {
+            when (resource) {
                 is ApiResource.Loading -> {
                     showLoading(true)
                 }
+
                 is ApiResource.Success -> {
+                    showLoading(false)
+
                     val apiResponse = resource.data
                     val code = apiResponse?.status_code
-                    when(apiResponse?.result?.program) {
+                    when (apiResponse?.result?.program) {
                         Constants.TYPE_RESPONSE_MESSAGE -> {
                             addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
                         }
+
                         Constants.TYPE_RESPONSE_BROWSER -> {
                             addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.url)
                         }
+
                         Constants.TYPE_RESPONSE_ALERT -> {
 
                         }
+
                         Constants.TYPE_RESPONSE_CONTACT -> {
 
                         }
-                        Constants.TYPE_RESPONSE_IMAGE -> {
 
+                        Constants.TYPE_RESPONSE_IMAGE -> {
+                            val content = apiResponse.result.content.asJsonObject
+                            viewModel.downloadImageFromFirebase(
+                                content["image_name"].asString
+                            ).observe(viewLifecycleOwner, Observer { resource ->
+                                when (resource) {
+                                    is ApiResource.Loading -> {
+                                        showLoading(true)
+                                    }
+
+                                    is ApiResource.Success -> {
+                                        showLoading(false)
+                                        addMessage(
+                                            type = TYPE_CHAT_RECEIVE,
+                                            content = null,
+                                            data = null,
+                                            hasImage = true,
+                                            image = resource.data
+                                        )
+                                    }
+
+                                    is ApiResource.Error -> {
+                                        showToast(resource.message!!)
+                                        showLoading(false)
+                                    }
+                                }
+                            })
                         }
+
                         Constants.TYPE_RESPONSE_HELP_COMMAND -> {
 
                         }
+
                         Constants.TYPE_RESPONSE_SMS -> {
 
                         }
+
                         else -> {
 
                         }
                     }
-                    showLoading(false)
                 }
+
                 is ApiResource.Error -> {
                     showToast(resource.message!!)
                     showLoading(false)

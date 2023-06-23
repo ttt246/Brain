@@ -6,11 +6,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.ui.base.BaseActivity
 import com.matthaigh27.chatgptwrapper.ui.chat.view.dialogs.ConfirmDialog
 import com.matthaigh27.chatgptwrapper.ui.chat.view.fragments.ChatMainFragment
 
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 1
     private val PERMISSIONS = arrayOf(

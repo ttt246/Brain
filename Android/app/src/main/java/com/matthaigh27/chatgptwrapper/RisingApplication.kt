@@ -18,7 +18,7 @@ class RisingApplication : Application() {
         initToken()
         // on below line we are getting device id.
         uuid = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-        appContext = applicationContext as com.matthaigh27.chatgptwrapper.RisingApplication
+        appContext = applicationContext as RisingApplication
     }
 
     private fun initToken() {
@@ -40,6 +40,6 @@ class RisingApplication : Application() {
     }
 
     companion object {
-        lateinit var appContext: com.matthaigh27.chatgptwrapper.RisingApplication
+        lateinit var appContext: RisingApplication
     }
 }

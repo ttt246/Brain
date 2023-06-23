@@ -1,12 +1,11 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
-import com.matthaigh27.chatgptwrapper.data.remote.requests.ApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
+import com.matthaigh27.chatgptwrapper.utils.helpers.RequestFactory.buildBaseApiRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,38 +16,43 @@ object RemoteRepository {
 
     fun getAllHelpCommands(
         onSuccess: OnSuccess<ApiResponse>,
-        onFailure: OnFailure
+        onFailure: OnFailure<String>
     ) {
-        val call = apiService.getAllHelpCommands()
+        val call = apiService.getAllHelpCommands(buildBaseApiRequest())
 
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 response.body()?.let {
                     onSuccess(ApiResponse(it.status_code, it.message, it.result))
+                }?: run {
+                    onFailure(response.message())
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                onFailure(t)
+                onFailure(t.message.toString())
             }
         })
     }
 
     fun sendNotification(
-        request: ApiRequest,
+        request: NotificationApiRequest,
         onSuccess: OnSuccess<ApiResponse>,
-        onFailure: OnFailure
+        onFailure: OnFailure<String>
     ) {
         val call = apiService.sendNotification(request)
 
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                val data = response.body()
-                onSuccess(ApiResponse(data!!.status_code, data.message, data.result))
+                response.body()?.let { data ->
+                    onSuccess(ApiResponse(data.status_code, data.message, data.result))
+                }?: run {
+                    onFailure(response.message())
+                }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                onFailure(t)
+                onFailure(t.message.toString())
             }
         })
     }

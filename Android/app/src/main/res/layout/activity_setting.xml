@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.setting.SettingActivity">
+    tools:context=".ui.setting.view.SettingActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_header"
@@ -45,18 +45,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="@dimen/spacing_tiny"
+        app:layout_constraintBottom_toTopOf="@+id/ll_action"
         app:layout_constraintTop_toBottomOf="@+id/cl_header">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/outlinedTextField"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/label_setting_pinecone"
-            app:boxStrokeWidth="1dp">
+            android:id="@+id/txt_pinecone_key"
+            style="@style/SettingEditText"
+            android:layout_marginBottom="@dimen/spacing_tiny"
+            android:hint="@string/label_setting_pinecone_key">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -65,12 +64,10 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sdfasfsdf"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/label_setting_pinecone"
-            app:boxStrokeWidth="1dp">
+            android:id="@+id/txt_pinecone_env"
+            style="@style/SettingEditText"
+            android:layout_marginBottom="@dimen/spacing_tiny"
+            android:hint="@string/label_setting_pinecone_env">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -78,6 +75,54 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txt_firebase_key"
+            style="@style/SettingEditText"
+            android:hint="@string/label_setting_firebase_key"
+            android:layout_marginBottom="@dimen/spacing_small">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            style="@style/ThinHorizontalDividerStyle"
+            android:layout_marginBottom="@dimen/spacing_small" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txt_temperature"
+            style="@style/SettingEditText"
+            android:layout_height="match_parent"
+            android:hint="@string/label_setting_temperature">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_action"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View style="@style/ThinHorizontalDividerStyle" />
+
+        <TextView
+            android:id="@+id/btn_setting_save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/text_setting_button_save"
+            android:textColor="@color/color_accent"
+            android:textSize="@dimen/font_normal" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

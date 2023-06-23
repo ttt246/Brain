@@ -1,0 +1,46 @@
+package com.matthaigh27.chatgptwrapper.ui.setting.view
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.view.View.OnClickListener
+import com.google.android.material.textfield.TextInputLayout
+import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.ui.base.BaseActivity
+import com.matthaigh27.chatgptwrapper.ui.chat.view.ChatActivity
+
+class SettingActivity : BaseActivity() {
+
+    private lateinit var txtPineconeKey: TextInputLayout
+    private lateinit var txtPineconeEnv: TextInputLayout
+    private lateinit var txtFirebaseKey: TextInputLayout
+    private lateinit var txtTemperature: TextInputLayout
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_setting)
+
+        init()
+    }
+
+    private fun init() {
+        txtPineconeKey = findViewById(R.id.txt_pinecone_key)
+        txtPineconeEnv = findViewById(R.id.txt_pinecone_env)
+        txtFirebaseKey = findViewById(R.id.txt_firebase_key)
+        txtTemperature = findViewById(R.id.txt_temperature)
+
+        findViewById<View>(R.id.btn_setting_save).setOnClickListener { saveSettingData() }
+        findViewById<View>(R.id.btn_back_chat).setOnClickListener { backToChatMain() }
+    }
+
+    private fun saveSettingData() {
+        val pineconeKey = txtPineconeKey.editText?.text.toString()
+        val pineconeEnv = txtPineconeEnv.editText?.text.toString()
+        val firebaseKey = txtFirebaseKey.editText?.text.toString()
+        val temperature = txtTemperature.editText?.text.toString()
+    }
+
+    private fun backToChatMain() {
+        startActivity(Intent(this@SettingActivity, ChatActivity::class.java))
+    }
+}
