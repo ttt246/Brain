@@ -1,15 +1,22 @@
 package com.matthaigh27.chatgptwrapper.ui.chat.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.matthaigh27.chatgptwrapper.RisingApplication
+import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.repository.FirebaseRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
+import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getChangedContacts
+import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContacts
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
 import com.matthaigh27.chatgptwrapper.utils.helpers.network.RequestFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
 
@@ -71,6 +78,11 @@ class ChatViewModel : ViewModel() {
     }
 
     fun trainContacts() {
+        val contacts = getContacts(appContext)
+        CoroutineScope(Dispatchers.Main).launch {
+            val changedContacts = getChangedContacts(contacts)
+            Log.v("Hello", "Hello")
+        }
 
     }
 }

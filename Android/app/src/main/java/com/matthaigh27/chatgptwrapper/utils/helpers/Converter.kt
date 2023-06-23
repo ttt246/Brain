@@ -1,5 +1,6 @@
 package com.matthaigh27.chatgptwrapper.utils.helpers
 
+import com.google.gson.Gson
 import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.utils.Constants
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper
@@ -33,5 +34,10 @@ object Converter {
             throw Exception(Constants.ERROR_MSG_JSON)
         }
         return promptList
+    }
+
+    fun helpPromptModelToString(model: HelpPromptModel): String {
+        val gson = Gson()
+        return gson.toJson(model)
     }
 }

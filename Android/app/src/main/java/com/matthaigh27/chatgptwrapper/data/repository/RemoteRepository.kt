@@ -3,8 +3,8 @@ package com.matthaigh27.chatgptwrapper.data.repository
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
-import com.matthaigh27.chatgptwrapper.utils.helpers.network.OnFailure
-import com.matthaigh27.chatgptwrapper.utils.helpers.network.OnSuccess
+import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
+import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
 import com.matthaigh27.chatgptwrapper.utils.helpers.network.RequestFactory.buildBaseApiRequest
 import retrofit2.Call
 import retrofit2.Callback

@@ -47,23 +47,15 @@ class SendSmsWidget(
                 ).show()
                 return@setOnClickListener
             }
-            hide()
             callback?.sentSms(edtPhoneNumber.text.toString(), edtMessage.text.toString())
         }
 
         btnCancel.setOnClickListener {
-            hide()
             callback?.canceledSms()
         }
     }
 
     fun setPhoneNumber(phonenumber: String) {
         edtPhoneNumber.setText(phonenumber)
-    }
-
-    fun hide() {
-        this.visibility = View.GONE
-        edtMessage.setText("")
-        edtPhoneNumber.setText("")
     }
 }

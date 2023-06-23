@@ -1,7 +1,9 @@
 package com.matthaigh27.chatgptwrapper.utils
 
+import com.matthaigh27.chatgptwrapper.BuildConfig
+
 object Constants {
-    val API_BASE_URL = "https://ttt246-brain.hf.space/"
+    val API_BASE_URL = BuildConfig.BASE_URL
 
     val TYPE_RESPONSE_MESSAGE = "message"
     val TYPE_RESPONSE_BROWSER = "browser"
@@ -31,4 +33,6 @@ object Constants {
     val FIELD_HELP_PROMPT_PROMPT = "prompt"
     val FIELD_HELP_PROMPT_DESCRIPTION = "description"
     val FIELD_HELP_PROMPT_TAGS = "tags"
+
+    val PROPS_WIDGET_DESC = "widget description"
 }

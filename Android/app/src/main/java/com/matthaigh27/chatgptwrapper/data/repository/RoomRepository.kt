@@ -33,15 +33,15 @@ object RoomRepository {
         return MutableLiveData(contactDao.getAllData())
     }
 
-    fun insertImage(entity: ContactEntity) {
+    fun insertContact(entity: ContactEntity) {
         contactDao.insert(entity)
     }
 
-    fun updateImage(entity: ContactEntity) {
+    fun updateContact(entity: ContactEntity) {
         contactDao.update(entity)
     }
 
-    fun deleteImage(entity: ContactEntity) {
+    fun deleteContact(entity: ContactEntity) {
         contactDao.delete(entity)
     }
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
@@ -32,6 +33,7 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.toolbar.ChatToolsWidg
 import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_NOEXIST_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
+import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALERT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_CONTACT
@@ -46,6 +48,7 @@ import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.isMainHel
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptItemUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.ui.NoNewLineInputFilter
+import org.json.JSONObject
 
 class ChatMainFragment : Fragment(), OnClickListener {
 
@@ -184,6 +187,14 @@ class ChatMainFragment : Fragment(), OnClickListener {
         rvChatList?.scrollToPosition(chatMessageList.size - 1)
     }
 
+    private fun trainContacts() {
+        viewModel.trainContacts()
+    }
+
+    private fun trainImages() {
+
+    }
+
     private fun openHelpPromptWidget(message: String) {
         try {
             val command: HelpCommandModel = getHelpCommandFromStr(message)
@@ -206,10 +217,13 @@ class ChatMainFragment : Fragment(), OnClickListener {
                                     type = TYPE_CHAT_RECEIVE, content = ERROR_MSG_NOEXIST_COMMAND
                                 )
                             } else {
+                                val widgetDesc = JsonObject().apply {
+                                    this.addProperty(PROPS_WIDGET_DESC, data[0].toString())
+                                }
                                 addMessage(
                                     type = TYPE_CHAT_WIDGET,
                                     content = TYPE_WIDGET_HELP_PROMPT,
-                                    data = data[0].toString() as JsonElement
+                                    data = widgetDesc
                                 )
                             }
                         }
@@ -350,9 +364,17 @@ class ChatMainFragment : Fragment(), OnClickListener {
             }
 
             override fun sentHelpPrompt(prompt: String) {
+                addMessage(
+                    type = TYPE_CHAT_SENT,
+                    content = prompt
+                )
             }
 
             override fun canceledHelpPrompt() {
+                addMessage(
+                    type = TYPE_CHAT_SENT,
+                    content = "You canceled Help prompt."
+                )
             }
 
             override fun doVoiceCall(phoneNumber: String) {
@@ -379,5 +401,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        trainImages()
+        trainContacts()
     }
 }
