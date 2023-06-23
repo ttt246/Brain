@@ -6,14 +6,13 @@ buildscript {
         google()  // Google's Maven repository
         mavenCentral()  // Maven Central repository
     }
-    dependencies {
 
+    dependencies {
         // Add the dependency for the Google services Gradle plugin
         classpath 'com.google.gms:google-services:4.3.15'
-//        classpath 'com.google.gms:google-services:4.3.13'
-
     }
 }
+
 plugins {
     id 'com.android.application' version '7.4.2' apply false
     id 'com.android.library' version '7.4.2' apply false
@@ -25,14 +24,13 @@ task clean(type: Delete) {
 }
 
 ext {
-    buildToolsVersion = "32.0.0"
-    androidxAnnotationVersion = "1.5.0"
-    guavaVersion = "31.1-android"
     coreVersion = "1.6.0-alpha01"
     extJUnitVersion = "1.2.0-alpha01"
     runnerVersion = "1.6.0-alpha01"
-    rulesVersion = "1.6.0-alpha01"
-    espressoVersion = "3.6.0-alpha01"
     uiAutomatorVersion = "2.2.0"
-    room_version = '2.5.1'
+    roomVersion = '2.5.1'
+
+    lifecycleVersion = "2.5.1"
+    okHttpVersion = '3.11.0'
+    retrofitVersion = '2.9.0'
 }
