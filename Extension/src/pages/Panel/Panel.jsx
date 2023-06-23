@@ -47,7 +47,18 @@ const Panel = () => {
 
     const sendNotification = async () => {
         const params = {
-            "token": "string", "uuid": "string", "model": "gpt-3.5-turbo", "message": question
+            "confs": {
+                "openai_key": "string",
+                "pinecone_key": "string",
+                "pinecone_env": "string",
+                "firebase_key": "string",
+                "token": "",
+                "uuid": "",
+                "settings": {
+                    "temperature": 0.6
+                }
+            },
+            "message": question
         }
 
         setQuestion("")
@@ -142,6 +153,9 @@ const Panel = () => {
                 case 'select_item':
                     addMessage("select item", false)
                     break
+                case 'ask_website':
+                    askAboutCurrentWebsite();
+                    break
                 default:
                     break
             }
@@ -152,7 +166,19 @@ const Panel = () => {
 
     const selectItem = async () => {
         const params = {
-            "token": "string", "uuid": "string", "prompt": prompt, "items": currentATags
+            "confs": {
+                "openai_key": "string",
+                "pinecone_key": "string",
+                "pinecone_env": "string",
+                "firebase_key": "string",
+                "token": "",
+                "uuid": "",
+                "settings": {
+                    "temperature": 0.6
+                }
+            },
+            "prompt": prompt,
+            "items": scrapeATags()
         }
         console.log(params)
 
@@ -196,6 +222,51 @@ const Panel = () => {
         return links
     }
 
+    const scrapeWebsites = () => {
+        const data = []
+
+        const tags = document.querySelectorAll(['a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7'])
+
+        tags.forEach((tag) => {
+            const content = tag.textContent || ''
+
+            data.push(content)
+        })
+
+        return data
+    }
+
+    const askAboutCurrentWebsite = async () => {
+        const params = {
+            "confs": {
+                "openai_key": "string",
+                "pinecone_key": "string",
+                "pinecone_env": "string",
+                "firebase_key": "string",
+                "token": "",
+                "uuid": "",
+                "settings": {
+                    "temperature": 0.6
+                }
+            },
+            "prompt": prompt,
+            "items": scrapeWebsites()
+        }
+
+        const requestOptions = {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json'
+            }, body: JSON.stringify(params)
+        }
+
+        setLoadingStatus(true)
+        const response = await fetch('https://ttt246-brain.hf.space/browser/ask_website', requestOptions)
+        const data = await response.json()
+        setLoadingStatus(false)
+
+        return data
+    }
+
 
     return (
         <Layout className="main-layout">
@@ -219,7 +290,8 @@ const Panel = () => {
                     onChange={handleQuestionChange}
                     onKeyDown={handleQuestionUpdated}/>
             </Footer>
-        </Layout>);
+        </Layout>
+    );
 };
 
 export default Panel;

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chatbot Chrome Extension",
-  "description": "A chrome extension to implement the chatbot using OpenAI by Saeid Nobahari.",
+  "description": "A chrome extension to implement the chatbot using OpenAI by RisingLand.",
   "options_page": "options.html",
   "permissions": ["activeTab", "tabs", "windows", "contextMenus", "storage"],
   "background": {

@@ -1,7 +1,7 @@
 {
   "name": "rising-browser",
   "version": "1.0.0",
-  "description": "A chatbot chrome extension was developed by Saeid Nobahari.",
+  "description": "A rising chrome extension was developed by RisingLand",
   "license": "MIT",
   "scripts": {
     "build": "node utils/build.js",
