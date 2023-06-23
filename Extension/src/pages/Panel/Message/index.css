@@ -1,0 +1,26 @@
+.message {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.message_sent {
+    width: fit-content;
+    padding: 5px;
+    border: #04c4f8 1px solid;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #04c4f8;
+    align-self: end;
+}
+
+.message_received {
+    width: fit-content;
+    padding: 5px;
+    border: #bc0fdb 1px solid;
+    border-radius: 3px;
+    background-color: transparent;
+    color: #bc0fdb;
+}
+
+
