@@ -289,7 +289,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     showLoading(false)
                     resource.data?.let { data ->
                         helpPromptList =
-                            convertJsonArrayToHelpPromptList(data.result.content.asJsonArray)
+                            convertJsonArrayToHelpPromptList(data.result.content.asJsonArray.toString())
                     }
                 }
 

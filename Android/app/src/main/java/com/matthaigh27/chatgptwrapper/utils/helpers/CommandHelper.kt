@@ -8,6 +8,7 @@ import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_INVALID_FORMAT
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_MAIN
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -48,11 +49,12 @@ object CommandHelper {
         return commandModel
     }
 
-    fun convertJsonArrayToHelpPromptList(promptJsonArray: JsonArray): ArrayList<HelpPromptModel> {
+    fun convertJsonArrayToHelpPromptList(promptData: String): ArrayList<HelpPromptModel> {
         val promptList = ArrayList<HelpPromptModel>()
+        val promptJsonArray = JSONArray(promptData)
 
         try {
-            for (i in 0 until promptJsonArray.size()) {
+            for (i in 0 until promptJsonArray.length()) {
                 val helpCommand = JSONObject(promptJsonArray[i].toString())
 
                 val helpPromptModel = HelpPromptModel()
@@ -63,7 +65,7 @@ object CommandHelper {
                 helpPromptModel.tags = ArrayList()
                 val jsonArrayTags = helpCommand.getJSONArray(FIELD_HELP_PROMPT_TAGS)
                 for (j in 0 until jsonArrayTags.length()) {
-                    helpPromptModel.tags!!.add(jsonArrayTags[j].toString())
+                    helpPromptModel.tags.add(jsonArrayTags[j].toString())
                 }
                 promptList.add(helpPromptModel)
             }
