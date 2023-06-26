@@ -26,7 +26,7 @@ def csv_embed():
 """getting embed"""
 
 
-def get_embed(data: str, setting:ReqModel) -> list[float]:
+def get_embed(data: str, setting: ReqModel) -> list[float]:
     embeddings = OpenAIEmbeddings(openai_api_key=setting.openai_key)
     return embeddings.embed_query(data)
 
