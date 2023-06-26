@@ -4,6 +4,7 @@ from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 import json
 
+from Brain.src.model.req_model import ReqModel
 from ..common.utils import OPENAI_API_KEY
 
 
@@ -25,8 +26,8 @@ def csv_embed():
 """getting embed"""
 
 
-def get_embed(data: str) -> list[float]:
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+def get_embed(data: str, setting: ReqModel) -> list[float]:
+    embeddings = OpenAIEmbeddings(openai_api_key=setting.openai_key)
     return embeddings.embed_query(data)
 
 

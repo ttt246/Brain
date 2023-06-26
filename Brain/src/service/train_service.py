@@ -101,12 +101,12 @@ class TrainService:
         result = list()
         pinecone_namespace = self.get_pinecone_index_namespace()
         for item in documents:
-            query_result = get_embed(item["page_content"])
+            query_result = get_embed(data=item["page_content"], setting=self.setting)
             result.append(query_result)
             key = item["document_id"]
             value = f'{item["page_content"]}'
             # get vectoring data(embedding data)
-            vectoring_values = get_embed(value)
+            vectoring_values = get_embed(data=value, setting=self.setting)
             add_pinecone(
                 namespace=pinecone_namespace,
                 key=key,
@@ -120,12 +120,12 @@ class TrainService:
         self.init_firestore()
         pinecone_namespace = self.get_pinecone_index_namespace()
         result = list()
-        query_result = get_embed(page_content)
+        query_result = get_embed(data=page_content, setting=self.setting)
         result.append(query_result)
         key = document_id
         value = f"{page_content}, {query_result}"
         # get vectoring data(embedding data)
-        vectoring_values = get_embed(value)
+        vectoring_values = get_embed(data=value, setting=self.setting)
         add_pinecone(
             namespace=pinecone_namespace,
             key=key,
