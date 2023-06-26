@@ -69,6 +69,8 @@ def construct_blueprint_api() -> APIRouter:
         # cloud message
         cloud_message = CloudMessage(firebase_app=firebase_app)
 
+        # test
+        
         # parsing params
         query = data.message
         token = setting.token
