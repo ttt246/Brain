@@ -7,7 +7,18 @@ import './Panel.css';
 
 const {Footer, Content} = Layout;
 
-let currentATags = []
+const confs = {
+    "openai_key": "string",
+    "pinecone_key": "string",
+    "pinecone_env": "string",
+    "firebase_key": "string",
+    "token": "",
+    "uuid": "",
+    "settings": {
+        "temperature": 0.6
+    }
+}
+
 let prompt = ""
 
 const Panel = () => {
@@ -16,6 +27,10 @@ const Panel = () => {
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
 
+    /*
+     * methods for states in ui
+     * lifecycle methods
+     */
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
             addMessage(question, true);
@@ -27,6 +42,10 @@ const Panel = () => {
     const handleQuestionChange = (event) => {
         setQuestion(event.target.value);
     };
+
+    useEffect(() => {
+        chat_box.current.scrollTop = chat_box.current.scrollHeight;
+    }, [messages]);
 
     const addMessage = (message, type, isLoading = false) => {
         if (message === "") return;
@@ -45,24 +64,10 @@ const Panel = () => {
             }]);
     };
 
-    const sendNotification = async () => {
-        const params = {
-            "confs": {
-                "openai_key": "string",
-                "pinecone_key": "string",
-                "pinecone_env": "string",
-                "firebase_key": "string",
-                "token": "",
-                "uuid": "",
-                "settings": {
-                    "temperature": 0.6
-                }
-            },
-            "message": question
-        }
-
-        setQuestion("")
-
+    /*
+     * methods for sending request to server
+     */
+    const sendRequest =  async (params, url) => {
         const requestOptions = {
             method: 'POST', headers: {
                 'Content-Type': 'application/json'
@@ -70,10 +75,21 @@ const Panel = () => {
         }
 
         setLoadingStatus(true)
-        const response = await fetch('https://ttt246-brain.hf.space/sendNotification', requestOptions)
+        const response = await fetch(url, requestOptions)
         const data = await response.json()
         setLoadingStatus(false)
 
+        return data
+    }
+
+    const sendNotification = async () => {
+        const params = {
+            "confs": confs,
+            "message": question
+        }
+        setQuestion("")
+
+        const data = sendRequest(params, 'https://ttt246-brain.hf.space/sendNotification')
         if (data.result === undefined || data.result == null) {
             return
         }
@@ -141,20 +157,10 @@ const Panel = () => {
                     break
                 case 'select_item_detail_info':
                     addMessage("I need more detail info to select item", false)
-                    setLoadingStatus(true)
-                    let data = await selectItem()
-                    setLoadingStatus(false)
-
-                    console.log(data)
-
-                    if(data.result.program === "select_item")
-                        window.open(data.result.content, '_blank', 'noreferrer')
-                    break
-                case 'select_item':
-                    addMessage("select item", false)
+                    selectItem()
                     break
                 case 'ask_website':
-                    askAboutCurrentWebsite();
+                    askAboutCurrentWebsite()
                     break
                 default:
                     break
@@ -166,44 +172,27 @@ const Panel = () => {
 
     const selectItem = async () => {
         const params = {
-            "confs": {
-                "openai_key": "string",
-                "pinecone_key": "string",
-                "pinecone_env": "string",
-                "firebase_key": "string",
-                "token": "",
-                "uuid": "",
-                "settings": {
-                    "temperature": 0.6
-                }
-            },
+            "confs": confs,
             "prompt": prompt,
             "items": scrapeATags()
         }
-        console.log(params)
-
-        const requestOptions = {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json'
-            }, body: JSON.stringify(params)
-        }
-
-        setLoadingStatus(true)
-        const response = await fetch('https://ttt246-brain.hf.space/browser/item', requestOptions)
-        const data = await response.json()
-        setLoadingStatus(false)
-
-        return data
+        const data = sendRequest(params, 'https://ttt246-brain.hf.space/browser/item')
+        window.open(data.result.content, '_blank', 'noreferrer')
     }
 
-    useEffect(() => {
-        chat_box.current.scrollTop = chat_box.current.scrollHeight;
-    }, [messages]);
+    const askAboutCurrentWebsite = async () => {
+        const params = {
+            "confs": confs,
+            "prompt": prompt,
+            "items": scrapeWebsites()
+        }
+        const data = sendRequest(params, 'https://ttt246-brain.hf.space/browser/ask_website')
+        addMessage(data.result.content, false)
+    }
 
-    useEffect(() => {
-        currentATags = scrapeATags()
-    }, [])
-
+    /*
+     * methods for scraping websites
+     */
     const scrapeATags = () => {
         const links = []
 
@@ -224,49 +213,14 @@ const Panel = () => {
 
     const scrapeWebsites = () => {
         const data = []
-
         const tags = document.querySelectorAll(['a', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7'])
-
         tags.forEach((tag) => {
             const content = tag.textContent || ''
-
-            data.push(content)
+            if(content !== '')
+                data.push(content)
         })
-
         return data
     }
-
-    const askAboutCurrentWebsite = async () => {
-        const params = {
-            "confs": {
-                "openai_key": "string",
-                "pinecone_key": "string",
-                "pinecone_env": "string",
-                "firebase_key": "string",
-                "token": "",
-                "uuid": "",
-                "settings": {
-                    "temperature": 0.6
-                }
-            },
-            "prompt": prompt,
-            "items": scrapeWebsites()
-        }
-
-        const requestOptions = {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json'
-            }, body: JSON.stringify(params)
-        }
-
-        setLoadingStatus(true)
-        const response = await fetch('https://ttt246-brain.hf.space/browser/ask_website', requestOptions)
-        const data = await response.json()
-        setLoadingStatus(false)
-
-        return data
-    }
-
 
     return (
         <Layout className="main-layout">
