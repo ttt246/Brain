@@ -20,7 +20,7 @@ def construct_blueprint_train_api() -> APIRouter:
         status_code=200, schema={"message": "message", "result": "test_result"}
     )"""
 
-    @router.get("")
+    @router.post("")
     def read_all_documents(data: BasicReq):
         # parsing params
         try:
@@ -82,7 +82,7 @@ def construct_blueprint_train_api() -> APIRouter:
     @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.post("")
+    @router.post("/create")
     def create_document_train(data: Document):
         # parsing params
         try:

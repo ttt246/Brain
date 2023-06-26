@@ -12,8 +12,8 @@ from ..model.image_model import ImageModel
 from ..model.req_model import ReqModel
 
 
-def get_embeddings():
-    return OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+def get_embeddings(setting: ReqModel):
+    return OpenAIEmbeddings(openai_api_key=setting.openai_key)
 
 
 # def embed_image_text(image_text: str, image_name: str, uuid: str) -> str:
@@ -24,7 +24,7 @@ def embed_image_text(image: ImageModel, setting: ReqModel) -> str:
         {image.image_text}
         """
 
-    embed_image = get_embeddings().embed_query(prompt_template)
+    embed_image = get_embeddings(setting=setting).embed_query(prompt_template)
     index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
 
     """create | update | delete in pinecone"""
@@ -48,7 +48,7 @@ def embed_image_text(image: ImageModel, setting: ReqModel) -> str:
 
 
 def query_image_text(image_content, message, setting: ReqModel):
-    embed_image = get_embeddings().embed_query(
+    embed_image = get_embeddings(setting=setting).embed_query(
         get_prompt_image_with_message(image_content, message)
     )
     index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)

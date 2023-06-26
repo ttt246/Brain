@@ -33,7 +33,7 @@ class ContactsService:
             key = contact.contact_id
             value = f"{contact.display_name}, {contact.get_str_phones()}"
             # get vectoring data(embedding data)
-            vectoring_values = get_embed(value)
+            vectoring_values = get_embed(data=value, setting=self.setting)
             # create | update | delete pinecone
             if contact.status == ContactStatus.CREATED:
                 add_pinecone(
@@ -60,7 +60,7 @@ class ContactsService:
     response: list of contactId as index key of pinecone"""
 
     def query_contacts(self, uuid: str, search: str) -> List[str]:
-        vector_data = get_embed(search)
+        vector_data = get_embed(data=search, setting=self.setting)
         index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=self.setting)
         relatedness_data = index.query(
             vector=vector_data,

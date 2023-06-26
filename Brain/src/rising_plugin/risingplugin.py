@@ -64,7 +64,7 @@ def llm_rails(
 
     """step 1: handle with gpt-4"""
 
-    query_result = get_embed(query)
+    query_result = get_embed(data=query, setting=setting)
     try:
         relatedness_data = index.query(
             vector=query_result,
