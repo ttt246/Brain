@@ -6,7 +6,6 @@ import Message from './Message'
 import './Panel.css';
 
 const {Footer, Content} = Layout;
-
 const confs = {
     "openai_key": "string",
     "pinecone_key": "string",
@@ -18,6 +17,11 @@ const confs = {
         "temperature": 0.6
     }
 }
+
+const URL_BASE = 'https://ttt246-brain.hf.space/'
+const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
+const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
+const URL_ASK_WEBSITE = URL_BASE + 'browser/ask_website'
 
 let prompt = ""
 
@@ -89,7 +93,7 @@ const Panel = () => {
         }
         setQuestion("")
 
-        const data = sendRequest(params, 'https://ttt246-brain.hf.space/sendNotification')
+        const data = sendRequest(params, URL_SEND_NOTIFICATION)
         if (data.result === undefined || data.result == null) {
             return
         }
@@ -176,7 +180,7 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeATags()
         }
-        const data = sendRequest(params, 'https://ttt246-brain.hf.space/browser/item')
+        const data = sendRequest(params, URL_BROWSER_ITEM)
         window.open(data.result.content, '_blank', 'noreferrer')
     }
 
@@ -186,7 +190,7 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeWebsites()
         }
-        const data = sendRequest(params, 'https://ttt246-brain.hf.space/browser/ask_website')
+        const data = sendRequest(params, URL_ASK_WEBSITE)
         addMessage(data.result.content, false)
     }
 
