@@ -42,7 +42,7 @@ class TrainService:
 
     """read all documents from firestore"""
 
-    def read_all_documents(self):
+    def read_all_documents(self) -> Any:
         self.init_firestore()
         query = self.documents_ref.order_by("timestamp")
         docs = query.stream()

@@ -56,7 +56,7 @@ def construct_blueprint_train_api() -> APIRouter:
     """@generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id", 
     "page_content":"page_content"}} )"""
 
-    @router.post("/{document_id}")
+    @router.post("/read/{document_id}")
     def read_one_document(document_id: str, data: BasicReq):
         # parsing params
         try:
