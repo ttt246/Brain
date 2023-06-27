@@ -13,17 +13,19 @@ import android.view.animation.RotateAnimation
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
+import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.ui.chat.view.adapters.ChatMainAdapter
@@ -32,26 +34,33 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.toolbar.ChatToolsWidg
 import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_NOEXIST_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
+import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALERT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_IMAGE
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MESSAGE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_SMS
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.utils.helpers.Converter
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.stringToHelpPromptList
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.getHelpCommandFromStr
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.isMainHelpCommand
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptItemUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.ui.NoNewLineInputFilter
+import org.json.JSONArray
+import java.util.Calendar
 
 class ChatMainFragment : Fragment(), OnClickListener {
 
     private val TYPE_CHAT_SENT = 0
     private val TYPE_CHAT_RECEIVE = 1
     private val TYPE_CHAT_WIDGET = 2
+    private val TYPE_CHAT_ERROR = 3
 
     private lateinit var rootView: View
     lateinit var viewModel: ChatViewModel
@@ -67,6 +76,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private var chatToolsWidget: ChatToolsWidget? = null
     private var helpPromptList: ArrayList<HelpPromptModel>? = null
+
+    private var currentSelectedImage: ByteArray? = null
+    private var currentUploadedImageName: String? = null
+    private var isImagePicked: Boolean = false
+    private var showloadingCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -87,13 +101,15 @@ class ChatMainFragment : Fragment(), OnClickListener {
         fetchAllCommands()
     }
 
+
+
     private fun initViewModel() {
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
     }
 
     private fun initLoadingRotate() {
         loadingRotate = RotateAnimation(/* fromDegrees = */ 0f, /* toDegrees = */
-            360f, /* pivotXType = */
+            720f, /* pivotXType = */
             Animation.RELATIVE_TO_SELF, /* pivotXValue = */
             0.5f, /* pivotYType = */
             Animation.RELATIVE_TO_SELF, /* pivotYValue = */
@@ -135,13 +151,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun initChatToolsWidget() {
-        chatToolsWidget = ChatToolsWidget(requireContext(), requireActivity())
+        chatToolsWidget = ChatToolsWidget(requireContext(), requireActivity()).apply {
+            this.callback = chatMessageInterface
+        }
         val llToolBar = rootView.findViewById<LinearLayout>(R.id.ll_toolbar)
         llToolBar.addView(chatToolsWidget)
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
     }
 
     private fun showLoading(isLoading: Boolean) {
@@ -150,9 +164,15 @@ class ChatMainFragment : Fragment(), OnClickListener {
         if (isLoading) {
             imgLoading.startAnimation(loadingRotate)
             imgLoading.visibility = View.VISIBLE
+            edtMessageInput?.isEnabled = false
+            showloadingCount++
         } else {
-            imgLoading.clearAnimation()
-            imgLoading.visibility = View.GONE
+            showloadingCount--
+            if(showloadingCount == 0) {
+                imgLoading.clearAnimation()
+                imgLoading.visibility = View.GONE
+                edtMessageInput?.isEnabled = true
+            }
         }
     }
 
@@ -163,16 +183,42 @@ class ChatMainFragment : Fragment(), OnClickListener {
         hasImage: Boolean = false,
         image: ByteArray? = null
     ) {
-        addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
         when (type) {
             TYPE_CHAT_SENT -> {
                 if (content!!.isNotEmpty() && content.first() == '/') {
                     openHelpPromptWidget(content)
                     return
                 }
-                sendNotification(content)
+                if (isImagePicked) {
+                    addChatItemToList(
+                        ChatMessageModel(
+                            type = type,
+                            content = content,
+                            data = data,
+                            hasImage = true,
+                            image = currentSelectedImage
+                        )
+                    )
+                    isImagePicked = false
+                } else {
+                    addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
+                    sendNotification(content)
+                }
+            }
+
+            else -> {
+                addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
             }
         }
+    }
+
+    private fun addErrorMessage(
+        message: String
+    ) {
+        addMessage(
+            type = TYPE_CHAT_RECEIVE,
+            content = message
+        )
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -182,6 +228,18 @@ class ChatMainFragment : Fragment(), OnClickListener {
         chatMessageList.add(chatModel)
         chatMainAdapter?.notifyDataSetChanged()
         rvChatList?.scrollToPosition(chatMessageList.size - 1)
+    }
+
+    private fun trainContacts() {
+        viewModel.trainContacts().observe(viewLifecycleOwner, Observer { state ->
+            showLoading(state)
+        })
+    }
+
+    private fun trainImages() {
+        viewModel.trainImages().observe(viewLifecycleOwner, Observer { state ->
+            showLoading(state)
+        })
     }
 
     private fun openHelpPromptWidget(message: String) {
@@ -201,17 +259,22 @@ class ChatMainFragment : Fragment(), OnClickListener {
                                 model.name == command.main
                             }
 
-                            if(data.isEmpty()) {
+                            if (data.isEmpty()) {
                                 addMessage(
                                     type = TYPE_CHAT_RECEIVE, content = ERROR_MSG_NOEXIST_COMMAND
                                 )
                             } else {
+                                val widgetDesc = JsonObject().apply {
+                                    this.addProperty(PROPS_WIDGET_DESC, data[0].toString())
+                                }
                                 addMessage(
                                     type = TYPE_CHAT_WIDGET,
                                     content = TYPE_WIDGET_HELP_PROMPT,
-                                    data = data[0].toString() as JsonElement
+                                    data = widgetDesc
                                 )
                             }
+                        } ?: run {
+                            addErrorMessage("Help commands don't exist.")
                         }
                     }
                 }
@@ -229,7 +292,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            showToast(e.message.toString())
+            addErrorMessage(e.message.toString())
         }
     }
 
@@ -251,7 +314,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
                 is ApiResource.Error -> {
                     showLoading(false)
-                    showToast(resource.message!!)
+                    addErrorMessage(resource.message!!)
                 }
             }
         })
@@ -263,35 +326,22 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 is ApiResource.Loading -> {
                     showLoading(true)
                 }
+
                 is ApiResource.Success -> {
                     showLoading(false)
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
-                        TYPE_RESPONSE_MESSAGE -> {
-                            addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
-                        }
-                        TYPE_RESPONSE_BROWSER -> {
-                            fetchResponseBrowser(apiResponse)
-                        }
-                        TYPE_RESPONSE_ALERT -> {
-
-                        }
-                        TYPE_RESPONSE_CONTACT -> {
-
-                        }
-                        TYPE_RESPONSE_IMAGE -> {
-                            fetchResponseImage(apiResponse)
-                        }
-                        TYPE_RESPONSE_SMS -> {
-
-                        }
-                        else -> {
-
-                        }
+                        TYPE_RESPONSE_MESSAGE -> addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
+                        TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
+                        TYPE_RESPONSE_CONTACT -> fetchResponseContact(apiResponse)
+                        TYPE_RESPONSE_IMAGE -> fetchResponseImage(apiResponse)
+                        TYPE_RESPONSE_ALARM -> fetchResponseAlarm(apiResponse)
+                        else -> addMessage(TYPE_CHAT_RECEIVE, apiResponse!!.result.toString())
                     }
                 }
+
                 is ApiResource.Error -> {
-                    showToast(resource.message!!)
+                    addErrorMessage(resource.message!!)
                     showLoading(false)
                 }
             }
@@ -325,13 +375,38 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 }
 
                 is ApiResource.Error -> {
-                    showToast(resource.message!!)
+                    addErrorMessage(resource.message!!)
                     showLoading(false)
                 }
             }
         })
     }
 
+    private fun fetchResponseContact(apiResponse: ApiResponse) {
+        val contactIds = JSONArray(apiResponse.result.content.asString.replace("'", "\""))
+        if (contactIds.length() > 0) {
+            addMessage(
+                type = TYPE_CHAT_WIDGET,
+                content = TYPE_WIDGET_SEARCH_CONTACT,
+                data = apiResponse.result.content
+            )
+        } else {
+            addMessage(
+                type = TYPE_CHAT_RECEIVE,
+                content = "Contacts that you are looking for don't exist.",
+            )
+        }
+    }
+
+    private fun fetchResponseAlarm(apiResponse: ApiResponse) {
+        val time: Time = Converter.stringToTime(apiResponse.result.content.asJsonObject.get("time").asString)
+        val label = apiResponse.result.content.asJsonObject.get("label").asString
+        val props = ScheduleAlarmProps(time, label)
+        val widgetDesc = JsonObject().apply {
+            this.addProperty(PROPS_WIDGET_DESC, props.toString())
+        }
+        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM, widgetDesc)
+    }
 
     private fun initChatInterface() {
         chatMessageInterface = object : ChatMessageInterface {
@@ -350,21 +425,81 @@ class ChatMainFragment : Fragment(), OnClickListener {
             }
 
             override fun sentHelpPrompt(prompt: String) {
+                addMessage(
+                    type = TYPE_CHAT_SENT,
+                    content = prompt
+                )
             }
 
             override fun canceledHelpPrompt() {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You canceled Help prompt."
+                )
             }
 
             override fun doVoiceCall(phoneNumber: String) {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You made a voice call to $phoneNumber"
+                )
             }
 
             override fun doVideoCall(phoneNumber: String) {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You made a video call to $phoneNumber"
+                )
             }
 
             override fun sendSmsWithPhoneNumber(phoneNumber: String) {
+                val widgetDesc = JsonObject().apply {
+                    this.addProperty(PROPS_WIDGET_DESC, phoneNumber)
+                }
+                addMessage(
+                    type = TYPE_CHAT_WIDGET,
+                    content = TYPE_WIDGET_SMS,
+                    data = widgetDesc
+                )
             }
 
             override fun pickImage(isSuccess: Boolean, data: ByteArray?) {
+                if (!isSuccess)
+                    addErrorMessage("Fail to pick image")
+                viewModel.uploadImageToFirebase(data!!)
+                    .observe(viewLifecycleOwner, Observer { resource ->
+                        when (resource) {
+                            is ApiResource.Loading -> {
+                                showLoading(true)
+                            }
+
+                            is ApiResource.Success -> {
+                                showLoading(false)
+                                currentSelectedImage = data
+                                currentUploadedImageName = resource.data
+                                isImagePicked = true
+                            }
+
+                            is ApiResource.Error -> {
+                                addErrorMessage(resource.message!!)
+                                showLoading(false)
+                            }
+                        }
+                    })
+            }
+
+            override fun setAlarm(hours: Int, minutes: Int, label: String) {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You set an alarm for $hours:$minutes with the label($label)"
+                )
+            }
+
+            override fun cancelAlarm() {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You canceled setting an alarm."
+                )
             }
         }
     }
@@ -379,5 +514,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        trainImages()
+        trainContacts()
     }
 }

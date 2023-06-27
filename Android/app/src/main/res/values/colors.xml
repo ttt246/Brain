@@ -9,7 +9,8 @@
     <color name="color_accent">#222222</color>
 
     <color name="bg_color_message_receive">#99DBA7</color>
-    <color name="bg_color_message_send">#FFC1FF</color>
+    <color name="bg_color_message_error">#FF4545</color>
+    <color name="bg_color_message_send">#ffffff</color>
 
     <color name="color_divider">#d0d0d0</color>
 

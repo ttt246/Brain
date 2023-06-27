@@ -95,7 +95,7 @@ class ChatToolsWidget(context: Context, parentActivity: Activity, attrs: Attribu
                         }
 
                         override fun onFailed(exception: Exception) {
-
+                            callback?.pickImage(false)
                         }
                     })
             }

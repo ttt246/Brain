@@ -13,35 +13,35 @@ object RoomRepository {
     private var imageDao = databaseHandler.imageDao()
     private var contactDao = databaseHandler.contactDao()
 
-    fun getAllImages(): MutableLiveData<List<ImageEntity>> {
+    suspend fun getAllImages(): MutableLiveData<List<ImageEntity>> {
         return MutableLiveData(imageDao.getAllData())
     }
 
-    fun insertImage(entity: ImageEntity) {
+    suspend fun insertImage(entity: ImageEntity) {
         imageDao.insert(entity)
     }
 
-    fun updateImage(entity: ImageEntity) {
+    suspend fun updateImage(entity: ImageEntity) {
         imageDao.update(entity)
     }
 
-    fun deleteImage(entity: ImageEntity) {
+    suspend fun deleteImage(entity: ImageEntity) {
         imageDao.delete(entity)
     }
 
-    fun getAllContacts(): MutableLiveData<List<ContactEntity>> {
+    suspend fun getAllContacts(): MutableLiveData<List<ContactEntity>> {
         return MutableLiveData(contactDao.getAllData())
     }
 
-    fun insertImage(entity: ContactEntity) {
+    suspend fun insertContact(entity: ContactEntity) {
         contactDao.insert(entity)
     }
 
-    fun updateImage(entity: ContactEntity) {
+    suspend fun updateContact(entity: ContactEntity) {
         contactDao.update(entity)
     }
 
-    fun deleteImage(entity: ContactEntity) {
+    suspend fun deleteContact(entity: ContactEntity) {
         contactDao.delete(entity)
     }
 }

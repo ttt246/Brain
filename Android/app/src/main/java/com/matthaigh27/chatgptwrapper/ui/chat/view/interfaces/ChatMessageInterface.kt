@@ -9,4 +9,6 @@ interface ChatMessageInterface {
     fun doVideoCall(phoneNumber: String)
     fun sendSmsWithPhoneNumber(phoneNumber: String)
     fun pickImage(isSuccess: Boolean, data: ByteArray? = null)
+    fun setAlarm(hours: Int, minutes:Int, label: String)
+    fun cancelAlarm()
 }
