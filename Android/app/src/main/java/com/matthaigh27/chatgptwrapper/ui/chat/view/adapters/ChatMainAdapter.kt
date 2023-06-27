@@ -121,6 +121,8 @@ class ChatMainAdapter(
 
                 data.content?.let { message ->
                     holder.txtMessage.text = message
+                    if(message.isEmpty())
+                        holder.txtMessage.visibility = View.GONE
                 } ?: run {
                     holder.txtMessage.visibility = View.GONE
                 }
@@ -138,6 +140,7 @@ class ChatMainAdapter(
 
     private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
         holder.itemLayout.visibility = View.VISIBLE
+        holder.itemLayout.removeAllViews()
         val index = holder.adapterPosition
 
         when (data.content) {
@@ -197,11 +200,8 @@ class ChatMainAdapter(
             }
 
             TYPE_WIDGET_SCHEDULE_ALARM -> {
-                var props = ScheduleAlarmProps()
-                data.data?.run {
-                    val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
-                    props = ScheduleAlarmProps.init(widgetDesc)
-                }
+                val widgetDesc = data.data!!.asJsonObject[PROPS_WIDGET_DESC].asString
+                val props = ScheduleAlarmProps.init(widgetDesc)
                 val scheduleAlarmWidget =
                     ScheduleAlarmWidget(context, props.time, props.label, props.repeat).apply {
                         this.callback = callbacks
