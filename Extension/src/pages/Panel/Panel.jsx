@@ -7,12 +7,12 @@ import './Panel.css';
 
 const {Footer, Content} = Layout;
 const confs = {
-    "openai_key": "string",
-    "pinecone_key": "string",
-    "pinecone_env": "string",
-    "firebase_key": "string",
+    "openai_key": "",
+    "pinecone_key": "",
+    "pinecone_env": "",
+    "firebase_key": "",
     "token": "",
-    "uuid": "",
+    "uuid": "extension-uuid",
     "settings": {
         "temperature": 0.6
     }

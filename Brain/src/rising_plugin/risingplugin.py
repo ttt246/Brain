@@ -117,8 +117,11 @@ def processLargeText(
             image_search=image_search,
             is_browser=is_browser,
         )
-        result = json.dumps(message["content"])
-        return parseJsonFromCompletion(result)
+        try:
+            return json.loads(message["content"])
+        except Exception as e:
+            result = json.dumps(message["content"])
+            return parseJsonFromCompletion(result)
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
         app.generate(messages=[{"role": "user", "content": first_query}])
@@ -174,8 +177,11 @@ def processLargeText(
                     image_search=image_search,
                     is_browser=is_browser,
                 )
-                result = json.dumps(message["content"])
-                return parseJsonFromCompletion(result)
+                try:
+                    return json.loads(message["content"])
+                except Exception as e:
+                    result = json.dumps(message["content"])
+                    return parseJsonFromCompletion(result)
         # out of for-loop
 
 

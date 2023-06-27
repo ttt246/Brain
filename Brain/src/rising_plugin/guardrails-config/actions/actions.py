@@ -114,12 +114,16 @@ async def general_question(query):
             else:
                 # """FALCON_7B:"""
                 result["content"] = falcon_llm.query(question=query)
-        return str(result)
+        return json.dumps(result)
     except ValueError as e:
         # Check sms and browser query
         if document_id in COMMAND_SMS_INDEXES:
-            return str({"program": "sms", "content": chain_data})
+            return json.dumps({"program": "sms", "content": chain_data})
         elif document_id in COMMAND_BROWSER_OPEN:
-            return str({"program": "browser", "content": "https://google.com"})
+            return json.dumps({"program": "browser", "content": "https://google.com"})
 
-        return str({"program": "message", "content": falcon_llm.query(question=query)})
+        if is_browser:
+            return json.dumps({"program": "ask_website", "content": ""})
+        return json.dumps(
+            {"program": "message", "content": falcon_llm.query(question=query)}
+        )
