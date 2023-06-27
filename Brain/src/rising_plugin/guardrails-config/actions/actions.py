@@ -92,6 +92,7 @@ async def general_question(query):
     page_content = json_query["page_content"]
     document_id = json_query["document_id"]
     setting = ReqModel(json_query["setting"])
+    is_browser = json_query["is_browser"]
 
     docs.append(Document(page_content=page_content, metadata=""))
     """ 1. calling gpt model to categorize for all message"""
@@ -108,8 +109,11 @@ async def general_question(query):
                 }
         """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":
-            """FALCON_7B:"""
-            result["content"] = falcon_llm.query(question=query)
+            if is_browser:
+                result["program"] = "ask_website"
+            else:
+                # """FALCON_7B:"""
+                result["content"] = falcon_llm.query(question=query)
         return str(result)
     except ValueError as e:
         # Check sms and browser query

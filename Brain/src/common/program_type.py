@@ -21,3 +21,4 @@ class ProgramType:
         SCROLL_BOTTOM = "scroll_bottom"
         SELECT_ITEM_DETAIL_INFO = "select_item_detail_info"
         SELECT_ITEM = "select_item"
+        MESSAGE = "message"

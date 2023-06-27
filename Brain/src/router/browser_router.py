@@ -6,6 +6,7 @@ from Brain.src.common.program_type import ProgramType
 from Brain.src.common.utils import parseUrlFromStr
 from Brain.src.firebase.firebase import firebase_admin_with_setting
 from Brain.src.model.requests.request_model import BrowserItem
+from Brain.src.model.requests.request_model import BrowserAsk
 from Brain.src.service.browser_service import BrowserService
 
 router = APIRouter()
@@ -58,21 +59,17 @@ def construct_blueprint_browser_api() -> APIRouter:
         )
 
     @router.post("/ask")
-    def get_item(data: BrowserItem):
+    def get_item(data: BrowserAsk):
         # firebase admin init
         try:
             setting, firebase_app = firebase_admin_with_setting(data)
         except BrainException as ex:
             return ex.get_response_exp()
 
-        item_link = ""
         try:
-            token = setting.token
-            uuid = setting.uuid
-
             # parsing contacts
             # train contact
-            item_link = browser_service.query_ask(items=data.items, query=data.prompt)
+            answer = browser_service.query_ask(items=data.items, query=data.prompt)
         except Exception as e:
             if isinstance(e, BrainException):
                 return e.get_response_exp()
@@ -81,8 +78,8 @@ def construct_blueprint_browser_api() -> APIRouter:
             200,
             "Getting an item in a browser successfully",
             assembler.to_result_format(
-                ProgramType.BrowserType.SELECT_ITEM,
-                parseUrlFromStr(item_link),
+                ProgramType.BrowserType.MESSAGE,
+                answer,
             ),
         )
 

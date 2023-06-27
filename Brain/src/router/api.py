@@ -76,13 +76,15 @@ def construct_blueprint_api() -> APIRouter:
         token = setting.token
         uuid = setting.uuid
         # check browser endpoint
-        if client_info.is_browser():
-            query = f"{query} in a web browser"
+        # if client_info.is_browser():
+        # query = f"{query} in a web browser"
+        is_browser = client_info.is_browser()
 
         result = getCompletion(
             query=query,
             setting=setting,
             firebase_app=firebase_app,
+            is_browser=is_browser,
         )
 
         # check contact querying

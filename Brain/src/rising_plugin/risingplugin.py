@@ -57,6 +57,7 @@ def llm_rails(
     firebase_app: firebase_admin.App,
     query: str,
     image_search: bool = True,
+    is_browser: bool = False,
 ) -> Any:
     """step 0: convert string to json"""
     index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
@@ -91,6 +92,7 @@ def llm_rails(
                     image_search=image_search,
                     page_content=page_content,
                     document_id=document_id,
+                    is_browser=is_browser,
                 ),
             }
         ]
@@ -104,6 +106,7 @@ def processLargeText(
     chunks: any,
     firebase_app: firebase_admin.App,
     image_search: bool = True,
+    is_browser: bool = False,
 ):
     if len(chunks) == 1:
         message = llm_rails(
@@ -112,6 +115,7 @@ def processLargeText(
             firebase_app=firebase_app,
             query=chunks[0],
             image_search=image_search,
+            is_browser=is_browser,
         )
         result = json.dumps(message["content"])
         return parseJsonFromCompletion(result)
@@ -146,6 +150,7 @@ def processLargeText(
                     firebase_app=firebase_app,
                     query=chunk_query,
                     image_search=image_search,
+                    is_browser=is_browser,
                 )
             else:
                 last_query = (
@@ -167,6 +172,7 @@ def processLargeText(
                     firebase_app=firebase_app,
                     query=last_query,
                     image_search=image_search,
+                    is_browser=is_browser,
                 )
                 result = json.dumps(message["content"])
                 return parseJsonFromCompletion(result)
@@ -178,6 +184,7 @@ def getCompletion(
     setting: ReqModel,
     firebase_app: firebase_admin.App,
     image_search: bool = True,
+    is_browser: bool = False,
 ):
     llm = get_llm(model=DEFAULT_GPT_MODEL, setting=setting).get_llm()
 
@@ -192,6 +199,7 @@ def getCompletion(
         chunks=chunks,
         image_search=image_search,
         firebase_app=firebase_app,
+        is_browser=is_browser,
     )
 
 
@@ -297,6 +305,7 @@ def rails_input_with_args(
     image_search: bool,
     page_content: str,
     document_id: str,
+    is_browser: bool,
 ) -> str:
     # convert json with params for rails.
     json_query_with_params = {
@@ -305,6 +314,7 @@ def rails_input_with_args(
         "page_content": page_content,
         "document_id": document_id,
         "setting": setting.to_json(),
+        "is_browser": is_browser,
     }
     return json.dumps(json_query_with_params)
 
