@@ -1,9 +1,9 @@
 package com.matthaigh27.chatgptwrapper.utils.helpers
 
 import com.google.gson.Gson
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.utils.Constants
-import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -19,7 +19,8 @@ object Converter {
 
                 val helpPromptModel = HelpPromptModel()
                 helpPromptModel.name = helpCommand.getString(Constants.FIELD_HELP_PROMPT_NAME)
-                helpPromptModel.description = helpCommand.getString(Constants.FIELD_HELP_PROMPT_DESCRIPTION)
+                helpPromptModel.description =
+                    helpCommand.getString(Constants.FIELD_HELP_PROMPT_DESCRIPTION)
                 helpPromptModel.prompt = helpCommand.getString(Constants.FIELD_HELP_PROMPT_PROMPT)
 
                 helpPromptModel.tags = ArrayList()
@@ -36,8 +37,11 @@ object Converter {
         return promptList
     }
 
-    fun helpPromptModelToString(model: HelpPromptModel): String {
-        val gson = Gson()
-        return gson.toJson(model)
+    fun stringToTime(strTime: String): Time {
+        val list = strTime.split(':')
+        val hour = list[0].toInt()
+        val minute = list[1].toInt()
+        val time = Time(hour, minute, 0)
+        return time
     }
 }

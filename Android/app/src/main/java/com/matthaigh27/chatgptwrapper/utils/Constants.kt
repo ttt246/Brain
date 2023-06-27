@@ -12,12 +12,14 @@ object Constants {
     val TYPE_RESPONSE_IMAGE = "image"
     val TYPE_RESPONSE_HELP_COMMAND = "help_command"
     val TYPE_RESPONSE_SMS = "sms"
+    val TYPE_RESPONSE_ALARM = "alarm"
     val TYPE_RESPONSE_CONTACT = "contact"
 
     val TYPE_WIDGET_SMS = "sms"
     val TYPE_WIDGET_HELP_PROMPT = "help_prompt"
     val TYPE_WIDGET_FEEDBACK = "feedback"
     val TYPE_WIDGET_SEARCH_CONTACT = "search_contact"
+    val TYPE_WIDGET_SCHEDULE_ALARM = "schedule_alarm"
 
     val HELP_COMMAND_ERROR_NO_MAIN = "no main command"
     val HELP_COMMAND_ERROR_NO_INVALID_FORMAT = "Invalid Command Format"
@@ -35,4 +37,9 @@ object Constants {
     val FIELD_HELP_PROMPT_TAGS = "tags"
 
     val PROPS_WIDGET_DESC = "widget description"
+
+    val TIME_OUT_CALL = 60L
+    val TIME_OUT_CONNECT = 60L
+    val TIME_OUT_READ = 60L
+    val TIME_OUT_WRITE = 60L
 }

@@ -2,7 +2,6 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,25 +12,24 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.SendSmsWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.ScheduleAlarmWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.SearchContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
-import com.matthaigh27.chatgptwrapper.utils.Constants
 import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_FEEDBACK
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
-import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContactModelById
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContacts
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
 import org.json.JSONArray
-import org.json.JSONObject
 
 class ChatMainAdapter(
     context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface
@@ -157,7 +155,7 @@ class ChatMainAdapter(
 
                 if (data.data != null) {
                     val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
-                    if(widgetDesc.isNotEmpty()) {
+                    if (widgetDesc.isNotEmpty()) {
                         sendSmsWidget.setPhoneNumber(widgetDesc)
                     }
                 }
@@ -196,6 +194,26 @@ class ChatMainAdapter(
                     }
                     holder.llSearchContact.addView(searchContactWidget)
                 }
+            }
+
+            TYPE_WIDGET_SCHEDULE_ALARM -> {
+                var props = ScheduleAlarmProps()
+                data.data?.run {
+                    val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
+                    props = ScheduleAlarmProps.init(widgetDesc)
+                }
+                val scheduleAlarmWidget =
+                    ScheduleAlarmWidget(context, props.time, props.label, props.repeat).apply {
+                        this.callback = callbacks
+                        this.hideListener = object : OnHideListener {
+                            override fun hide() {
+                                holder.itemLayout.visibility = View.GONE
+                                chatMessageList.removeAt(index)
+                                notifyItemRemoved(index)
+                            }
+                        }
+                    }
+                holder.itemLayout.addView(scheduleAlarmWidget)
             }
 
             else -> {

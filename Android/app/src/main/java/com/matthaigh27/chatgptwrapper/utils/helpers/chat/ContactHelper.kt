@@ -5,7 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.provider.ContactsContract
 import com.matthaigh27.chatgptwrapper.data.local.entity.ContactEntity
-import com.matthaigh27.chatgptwrapper.data.models.ContactModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.ContactModel
 import com.matthaigh27.chatgptwrapper.data.repository.RoomRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

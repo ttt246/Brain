@@ -7,14 +7,14 @@ import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
 @Dao
 interface ImageDao {
     @Insert
-    fun insert(image: ImageEntity)
+    suspend fun insert(image: ImageEntity)
 
     @Update
-    fun update(image: ImageEntity)
+    suspend fun update(image: ImageEntity)
 
     @Delete
-    fun delete(image: ImageEntity)
+    suspend fun delete(image: ImageEntity)
 
     @Query("SELECT * FROM images")
-    fun getAllData(): List<ImageEntity>
+    suspend fun getAllData(): List<ImageEntity>
 }

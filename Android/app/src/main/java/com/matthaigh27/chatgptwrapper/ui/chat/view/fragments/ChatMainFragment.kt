@@ -21,9 +21,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.ChatMessageModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
+import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.ui.chat.view.adapters.ChatMainAdapter
@@ -33,15 +35,17 @@ import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_NOEXIST_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
 import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALERT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_IMAGE
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MESSAGE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_SMS
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.utils.helpers.Converter
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.stringToHelpPromptList
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.getHelpCommandFromStr
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.isMainHelpCommand
@@ -49,6 +53,7 @@ import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromp
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptUsage
 import com.matthaigh27.chatgptwrapper.utils.helpers.ui.NoNewLineInputFilter
 import org.json.JSONArray
+import java.util.Calendar
 
 class ChatMainFragment : Fragment(), OnClickListener {
 
@@ -75,6 +80,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
     private var currentSelectedImage: ByteArray? = null
     private var currentUploadedImageName: String? = null
     private var isImagePicked: Boolean = false
+    private var showloadingCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -93,7 +99,10 @@ class ChatMainFragment : Fragment(), OnClickListener {
         initChatToolsWidget()
 
         fetchAllCommands()
+        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM)
     }
+
+
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
@@ -157,10 +166,14 @@ class ChatMainFragment : Fragment(), OnClickListener {
             imgLoading.startAnimation(loadingRotate)
             imgLoading.visibility = View.VISIBLE
             edtMessageInput?.isEnabled = false
+            showloadingCount++
         } else {
-            imgLoading.clearAnimation()
-            imgLoading.visibility = View.GONE
-            edtMessageInput?.isEnabled = true
+            showloadingCount--
+            if(showloadingCount == 0) {
+                imgLoading.clearAnimation()
+                imgLoading.visibility = View.GONE
+                edtMessageInput?.isEnabled = true
+            }
         }
     }
 
@@ -219,11 +232,15 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun trainContacts() {
-        viewModel.trainContacts()
+        viewModel.trainContacts().observe(viewLifecycleOwner, Observer { state ->
+            showLoading(state)
+        })
     }
 
     private fun trainImages() {
-
+        viewModel.trainImages().observe(viewLifecycleOwner, Observer { state ->
+            showLoading(state)
+        })
     }
 
     private fun openHelpPromptWidget(message: String) {
@@ -315,33 +332,12 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     showLoading(false)
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
-                        TYPE_RESPONSE_MESSAGE -> {
-                            addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
-                        }
-
-                        TYPE_RESPONSE_BROWSER -> {
-                            fetchResponseBrowser(apiResponse)
-                        }
-
-                        TYPE_RESPONSE_ALERT -> {
-
-                        }
-
-                        TYPE_RESPONSE_CONTACT -> {
-                            fetchResponseContact(apiResponse)
-                        }
-
-                        TYPE_RESPONSE_IMAGE -> {
-                            fetchResponseImage(apiResponse)
-                        }
-
-                        TYPE_RESPONSE_SMS -> {
-
-                        }
-
-                        else -> {
-
-                        }
+                        TYPE_RESPONSE_MESSAGE -> addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
+                        TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
+                        TYPE_RESPONSE_CONTACT -> fetchResponseContact(apiResponse)
+                        TYPE_RESPONSE_IMAGE -> fetchResponseImage(apiResponse)
+                        TYPE_RESPONSE_ALARM -> fetchResponseAlarm(apiResponse)
+                        else -> addMessage(TYPE_CHAT_RECEIVE, apiResponse!!.result.toString())
                     }
                 }
 
@@ -401,6 +397,21 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 content = "Contacts that you are looking for don't exist.",
             )
         }
+    }
+
+    private fun fetchResponseAlarm(apiResponse: ApiResponse) {
+        if(apiResponse.result.content.isJsonNull) {
+            addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
+            addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM)
+            return
+        }
+        val time: Time = Converter.stringToTime(apiResponse.result.content.asJsonObject.get("time").asString)
+        val label = apiResponse.result.content.asJsonObject.get("label").asString
+        val props = ScheduleAlarmProps(time, label)
+        val widgetDesc = JsonObject().apply {
+            this.addProperty(PROPS_WIDGET_DESC, props.toString())
+        }
+        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM, widgetDesc)
     }
 
     private fun initChatInterface() {
@@ -481,6 +492,13 @@ class ChatMainFragment : Fragment(), OnClickListener {
                             }
                         }
                     })
+            }
+
+            override fun setAlarm(hours: Int, minutes: Int, label: String) {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You set an alarm for $hours:$minutes with the label($label)"
+                )
             }
         }
     }

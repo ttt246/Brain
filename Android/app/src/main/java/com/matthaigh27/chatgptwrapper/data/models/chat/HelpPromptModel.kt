@@ -1,4 +1,4 @@
-package com.matthaigh27.chatgptwrapper.data.models
+package com.matthaigh27.chatgptwrapper.data.models.chat
 
 import com.google.gson.Gson
 

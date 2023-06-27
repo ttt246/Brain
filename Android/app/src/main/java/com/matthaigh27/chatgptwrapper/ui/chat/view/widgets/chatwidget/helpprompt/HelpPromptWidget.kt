@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 
