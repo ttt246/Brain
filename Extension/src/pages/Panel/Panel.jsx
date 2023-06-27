@@ -21,7 +21,7 @@ const confs = {
 const URL_BASE = 'https://ttt246-brain.hf.space/'
 const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
 const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
-const URL_ASK_WEBSITE = URL_BASE + 'browser/ask_website'
+const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
 
 let prompt = ""
 
@@ -93,85 +93,86 @@ const Panel = () => {
         }
         setQuestion("")
 
-        const data = sendRequest(params, URL_SEND_NOTIFICATION)
-        if (data.result === undefined || data.result == null) {
-            return
-        }
-
-        try {
-            if (data.result.program === undefined || data.result.program == null) {
-                addMessage(data.result, false)
+        sendRequest(params, URL_SEND_NOTIFICATION).then(data => {            
+            if (data.result === undefined || data.result == null) {
                 return
             }
 
-            let page = 0
-            const currentUrl = window.location.href
+            try {
+                if (data.result.program === undefined || data.result.program == null) {
+                    addMessage(data.result, false)
+                    return
+                }
 
-            switch (data.result.program) {
-                case "browser":
-                    addMessage(data.result.content, false)
-                    window.location.assign(data.result.content)
-                    break
-                case 'open_tab':
-                    addMessage("open tab", false)
-                    window.open('https://google.com/search?q=', '_blank', 'noreferrer')
-                    break
-                case 'open_tab_search':
-                    addMessage("open tab and search", false)
-                    window.open('https://google.com/search?q=' + data.result.content, '_blank', 'noreferrer')
-                    break
-                case 'close_tab':
-                    addMessage("close tab", false)
-                    window.close()
-                    break
-                case 'previous_page':
-                    if (page === 0) {
-                        page = 0
-                    } else {
-                        page -= 10
-                    }
+                let page = 0
+                const currentUrl = window.location.href
+                
+                switch (data.result.program) {
+                    case "browser":
+                        addMessage(data.result.content, false)
+                        window.location.assign(data.result.content)
+                        break
+                    case 'open_tab':
+                        addMessage("open tab", false)
+                        window.open('https://google.com/search?q=', '_blank', 'noreferrer')
+                        break
+                    case 'open_tab_search':
+                        addMessage("open tab and search", false)
+                        window.open('https://google.com/search?q=' + data.result.content, '_blank', 'noreferrer')
+                        break
+                    case 'close_tab':
+                        addMessage("close tab", false)
+                        window.close()
+                        break
+                    case 'previous_page':
+                        if (page === 0) {
+                            page = 0
+                        } else {
+                            page -= 10
+                        }
 
-                    addMessage("go to previous page", false)
-                    window.location.assign(currentUrl + '&start=' + page)
-                    break
-                case 'next_page':
-                    page += 10
+                        addMessage("go to previous page", false)
+                        window.location.assign(currentUrl + '&start=' + page)
+                        break
+                    case 'next_page':
+                        page += 10
 
-                    addMessage("go to next page", false)
-                    window.location.assign(currentUrl + '&start=' + page)
-                    break
-                case 'scroll_up':
-                    addMessage("scroll up", false)
-                    window.scrollBy(0, -300)
-                    break
-                case 'scroll_down':
-                    addMessage("scroll down", false)
-                    window.scrollBy(0, 300)
-                    break
-                case 'scroll_top':
-                    addMessage("scroll to top", false)
-                    window.scrollTo(0, 0)
-                    break
-                case 'scroll_bottom':
-                    addMessage("scroll to bottom", false)
-                    window.scrollTo(0, document.body.scrollHeight)
-                    break
-                case 'message':
-                    addMessage(data.result.content, false)
-                    break
-                case 'select_item_detail_info':
-                    addMessage("I need more detail info to select item", false)
-                    selectItem()
-                    break
-                case 'ask_website':
-                    askAboutCurrentWebsite()
-                    break
-                default:
-                    break
+                        addMessage("go to next page", false)
+                        window.location.assign(currentUrl + '&start=' + page)
+                        break
+                    case 'scroll_up':
+                        addMessage("scroll up", false)
+                        window.scrollBy(0, -300)
+                        break
+                    case 'scroll_down':
+                        addMessage("scroll down", false)
+                        window.scrollBy(0, 300)
+                        break
+                    case 'scroll_top':
+                        addMessage("scroll to top", false)
+                        window.scrollTo(0, 0)
+                        break
+                    case 'scroll_bottom':
+                        addMessage("scroll to bottom", false)
+                        window.scrollTo(0, document.body.scrollHeight)
+                        break
+                    case 'message':
+                        addMessage(data.result.content, false)
+                        break
+                    case 'select_item_detail_info':
+                        addMessage("I need more detail info to select item", false)
+                        selectItem()
+                        break
+                    case 'ask_website':
+                        askAboutCurrentWebsite()
+                        break
+                    default:
+                        break
+                }
+            } catch (e) {
+                throw e
             }
-        } catch (e) {
-            throw e
-        }
+        })
     }
 
     const selectItem = async () => {
@@ -180,8 +181,10 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeATags()
         }
-        const data = sendRequest(params, URL_BROWSER_ITEM)
-        window.open(data.result.content, '_blank', 'noreferrer')
+        sendRequest(params, URL_BROWSER_ITEM).then(data => {
+            window.open(data.result.content, '_blank', 'noreferrer')
+        }).catch(err => {       
+        })
     }
 
     const askAboutCurrentWebsite = async () => {
@@ -190,8 +193,10 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeWebsites()
         }
-        const data = sendRequest(params, URL_ASK_WEBSITE)
-        addMessage(data.result.content, false)
+        sendRequest(params, URL_ASK_WEBSITE).then(data => {
+            addMessage(data.result.content, false)            
+        }).catch(err => {            
+        })
     }
 
     /*
