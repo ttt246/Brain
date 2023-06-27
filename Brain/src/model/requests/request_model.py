@@ -186,6 +186,14 @@ class BrowserItem(BasicReq):
     prompt: str
 
 
+"""endpoint /browser/ask"""
+
+
+class BrowserAsk(BasicReq):
+    items: list[str]
+    prompt: str
+
+
 """endpoint /train"""
 
 

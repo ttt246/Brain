@@ -11,3 +11,12 @@ class BrowserService:
         User is trying to '{query}' and it includes the title of the item.
         Please return the link of best relatedness of the item with the title from the below data.\n {items}"""
         return getCompletionOnly(query=prompt_template)
+
+    def query_ask(self, items: list[str], query: str) -> str:
+        prompt_template = f"""
+        User is asking question related to website that users visit. The following is the user's question.
+        '{query}'.\n
+        Also the below data is list of sentence in the website.
+        '{items}' \n
+        Please provide me the proper answer.\n """
+        return getCompletionOnly(query=prompt_template)
