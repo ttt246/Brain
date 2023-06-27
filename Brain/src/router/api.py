@@ -96,10 +96,11 @@ def construct_blueprint_api() -> APIRouter:
                     uuid=uuid, search=result["content"]
                 )
                 result["content"] = str(contacts_results)
+            value = ""
+            if not client_info.is_browser():
+                notification = {"title": "alert", "content": json.dumps(result)}
+                state, value = cloud_message.send_message(notification, [token])
 
-            notification = {"title": "alert", "content": json.dumps(result)}
-
-            state, value = cloud_message.send_message(notification, [token])
             return assembler.to_response(200, value, result)
         except Exception as e:
             logger.error(
