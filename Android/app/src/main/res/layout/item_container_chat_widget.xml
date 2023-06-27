@@ -7,4 +7,16 @@
     android:layout_marginTop="@dimen/spacing_tiny"
     android:padding="@dimen/spacing_tiny">
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/ll_contacts_widget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+    </HorizontalScrollView>
+
 </FrameLayout>

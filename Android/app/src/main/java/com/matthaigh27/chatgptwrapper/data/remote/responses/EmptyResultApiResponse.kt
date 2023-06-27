@@ -1,10 +1,7 @@
 package com.matthaigh27.chatgptwrapper.data.remote.responses
 
-import com.google.gson.JsonElement
-
-data class ApiResponse (
+data class EmptyResultApiResponse(
     val status_code: Int,
     val message: List<String>,
-    val result: Result
+    val result: String
 )
-

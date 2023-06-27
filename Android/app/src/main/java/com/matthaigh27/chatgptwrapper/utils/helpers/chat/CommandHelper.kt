@@ -1,15 +1,11 @@
 package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
-import com.matthaigh27.chatgptwrapper.data.models.HelpCommandModel
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
-import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_JSON
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_INVALID_FORMAT
 import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_MAIN
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 
 object CommandHelper {
     fun isMainHelpCommand(model: HelpCommandModel): Boolean {

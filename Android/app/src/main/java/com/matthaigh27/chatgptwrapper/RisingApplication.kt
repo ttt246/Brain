@@ -3,6 +3,7 @@ package com.matthaigh27.chatgptwrapper
 import android.annotation.SuppressLint
 import android.app.Application
 import android.provider.Settings
+import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 

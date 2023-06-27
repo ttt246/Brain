@@ -1,6 +1,8 @@
 package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
 import android.content.ContentResolver
+import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -13,7 +15,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import com.matthaigh27.chatgptwrapper.RisingApplication
-import com.matthaigh27.chatgptwrapper.data.models.ImageModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.ImageModel
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -110,5 +112,16 @@ object ImageHelper {
         return listOfImages
     }
 
-
+    fun getLocalPathFromUri(context: Context, contentUri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+            val column_index: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
+        }
+    }
 }

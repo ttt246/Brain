@@ -10,8 +10,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
+import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 
 class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLayout(context),
     View.OnClickListener {
@@ -21,7 +22,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
     private var promptEditTextList: ArrayList<EditText>? = null
     private val promptModel: HelpPromptModel
     var callback: ChatMessageInterface? = null
-
+    var hideListener: OnHideListener? = null
 
     init {
         promptModel = model
@@ -70,6 +71,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
                 callback?.canceledHelpPrompt()
             }
         }
+        hideListener?.hide()
     }
 
     private fun outputCompletePrompt() {

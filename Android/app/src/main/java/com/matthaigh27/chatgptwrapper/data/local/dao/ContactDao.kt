@@ -7,14 +7,14 @@ import com.matthaigh27.chatgptwrapper.data.local.entity.ContactEntity
 @Dao
 interface ContactDao {
     @Insert
-    fun insert(contact: ContactEntity)
+    suspend fun insert(contact: ContactEntity)
 
     @Update
-    fun update(contact: ContactEntity)
+    suspend fun update(contact: ContactEntity)
 
     @Delete
-    fun delete(contact: ContactEntity)
+    suspend fun delete(contact: ContactEntity)
 
     @Query("SELECT * FROM contacts")
-    fun getAllData(): List<ContactEntity>
+    suspend fun getAllData(): List<ContactEntity>
 }

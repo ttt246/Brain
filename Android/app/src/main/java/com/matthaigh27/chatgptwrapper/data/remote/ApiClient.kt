@@ -1,6 +1,10 @@
 package com.matthaigh27.chatgptwrapper.data.remote
 
 import com.matthaigh27.chatgptwrapper.utils.Constants.API_BASE_URL
+import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_CALL
+import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_CONNECT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_READ
+import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_WRITE
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,10 +13,10 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
     private val client = OkHttpClient.Builder()
-        .callTimeout(240, TimeUnit.SECONDS)
-        .connectTimeout(240, TimeUnit.SECONDS)
-        .readTimeout(240, TimeUnit.SECONDS)
-        .writeTimeout(240, TimeUnit.SECONDS)
+        .callTimeout(TIME_OUT_CALL, TimeUnit.SECONDS)
+        .connectTimeout(TIME_OUT_CONNECT, TimeUnit.SECONDS)
+        .readTimeout(TIME_OUT_READ, TimeUnit.SECONDS)
+        .writeTimeout(TIME_OUT_WRITE, TimeUnit.SECONDS)
         .build()
 
     private val retrofit = Retrofit.Builder()

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
+import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 
 class SendSmsWidget(
     context: Context, attrs: AttributeSet? = null
@@ -24,6 +25,7 @@ class SendSmsWidget(
     private val btnCancel: Button
 
     var callback: ChatMessageInterface? = null
+    var hideListener: OnHideListener? = null
 
     init {
         inflate(context, R.layout.widget_send_sms, this)
@@ -47,23 +49,17 @@ class SendSmsWidget(
                 ).show()
                 return@setOnClickListener
             }
-            hide()
+            hideListener?.hide()
             callback?.sentSms(edtPhoneNumber.text.toString(), edtMessage.text.toString())
         }
 
         btnCancel.setOnClickListener {
-            hide()
+            hideListener?.hide()
             callback?.canceledSms()
         }
     }
 
     fun setPhoneNumber(phonenumber: String) {
         edtPhoneNumber.setText(phonenumber)
-    }
-
-    fun hide() {
-        this.visibility = View.GONE
-        edtMessage.setText("")
-        edtPhoneNumber.setText("")
     }
 }
