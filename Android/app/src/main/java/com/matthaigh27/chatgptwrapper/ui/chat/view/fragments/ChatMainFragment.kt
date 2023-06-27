@@ -99,7 +99,6 @@ class ChatMainFragment : Fragment(), OnClickListener {
         initChatToolsWidget()
 
         fetchAllCommands()
-        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM)
     }
 
 
@@ -110,7 +109,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private fun initLoadingRotate() {
         loadingRotate = RotateAnimation(/* fromDegrees = */ 0f, /* toDegrees = */
-            360f, /* pivotXType = */
+            720f, /* pivotXType = */
             Animation.RELATIVE_TO_SELF, /* pivotXValue = */
             0.5f, /* pivotYType = */
             Animation.RELATIVE_TO_SELF, /* pivotYValue = */
@@ -400,11 +399,6 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun fetchResponseAlarm(apiResponse: ApiResponse) {
-        if(apiResponse.result.content.isJsonNull) {
-            addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.toString())
-            addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM)
-            return
-        }
         val time: Time = Converter.stringToTime(apiResponse.result.content.asJsonObject.get("time").asString)
         val label = apiResponse.result.content.asJsonObject.get("label").asString
         val props = ScheduleAlarmProps(time, label)
@@ -498,6 +492,13 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 addMessage(
                     type = TYPE_CHAT_RECEIVE,
                     content = "You set an alarm for $hours:$minutes with the label($label)"
+                )
+            }
+
+            override fun cancelAlarm() {
+                addMessage(
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You canceled setting an alarm."
                 )
             }
         }

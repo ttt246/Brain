@@ -102,6 +102,7 @@ class ScheduleAlarmWidget(
             }
 
             R.id.btn_cancel -> {
+                callback?.cancelAlarm()
             }
         }
         hideListener?.hide()
