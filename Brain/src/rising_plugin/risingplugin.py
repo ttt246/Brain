@@ -105,8 +105,8 @@ def processLargeText(
     app: any,
     chunks: any,
     firebase_app: firebase_admin.App,
-    image_search: bool = True,
     is_browser: bool = False,
+    image_search: bool = True,
 ):
     if len(chunks) == 1:
         message = llm_rails(
@@ -183,8 +183,8 @@ def getCompletion(
     query: str,
     setting: ReqModel,
     firebase_app: firebase_admin.App,
-    image_search: bool = True,
     is_browser: bool = False,
+    image_search: bool = True,
 ):
     llm = get_llm(model=DEFAULT_GPT_MODEL, setting=setting).get_llm()
 
