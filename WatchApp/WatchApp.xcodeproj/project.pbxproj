@@ -9,12 +9,13 @@
 /* Begin PBXBuildFile section */
 		FE56FAE22A4C5810008410B4 /* WatchApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */; };
-		FE56FAE92A4C5810008410B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE82A4C5810008410B4 /* ContentView.swift */; };
 		FE56FAEB2A4C5814008410B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE56FAEA2A4C5814008410B4 /* Assets.xcassets */; };
 		FE56FAEE2A4C5814008410B4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE56FAED2A4C5814008410B4 /* Preview Assets.xcassets */; };
 		FE56FAF82A4C5814008410B4 /* WatchApp_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAF72A4C5814008410B4 /* WatchApp_Watch_AppTests.swift */; };
 		FE56FB022A4C5814008410B4 /* WatchApp_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FB012A4C5814008410B4 /* WatchApp_Watch_AppUITests.swift */; };
 		FE56FB042A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FB032A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift */; };
+		FE56FB142A4C80A5008410B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE82A4C5810008410B4 /* ContentView.swift */; };
+		FE673FCB2A4CDBF7003EF230 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FE673FCA2A4CDBF7003EF230 /* KeychainSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FE673FCB2A4CDBF7003EF230 /* KeychainSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +186,9 @@
 			dependencies = (
 			);
 			name = "WatchApp Watch App";
+			packageProductDependencies = (
+				FE673FCA2A4CDBF7003EF230 /* KeychainSwift */,
+			);
 			productName = "WatchApp Watch App";
 			productReference = FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -259,6 +264,9 @@
 				Base,
 			);
 			mainGroup = FE56FAD42A4C580F008410B4;
+			packageReferences = (
+				FE673FC92A4CDBF7003EF230 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+			);
 			productRefGroup = FE56FADC2A4C5810008410B4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -309,7 +317,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE56FAE92A4C5810008410B4 /* ContentView.swift in Sources */,
+				FE56FB142A4C80A5008410B4 /* ContentView.swift in Sources */,
 				FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -680,6 +688,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FE673FC92A4CDBF7003EF230 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FE673FCA2A4CDBF7003EF230 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FE673FC92A4CDBF7003EF230 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FE56FAD52A4C580F008410B4 /* Project object */;
 }
