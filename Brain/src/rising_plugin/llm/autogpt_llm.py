@@ -1,5 +1,8 @@
 """autogpt plugin with langchain"""
+import json
 
+import firebase_admin
+from firebase_admin import db
 from langchain.experimental import AutoGPT
 from langchain.chat_models import ChatOpenAI
 from langchain.experimental.autonomous_agents.autogpt.prompt_generator import (
@@ -28,7 +31,17 @@ import faiss
 class AutoGPTLLM:
     """autogpt run method to get the expected result"""
 
-    def run(self, agent: AutoGPT, goals: List[str]) -> str:
+    def run(
+        self,
+        agent: AutoGPT,
+        goals: List[str],
+        firebase_app: firebase_admin.App,
+        reference_link: str,
+    ) -> str:
+        """firebase realtime database init"""
+        ref = db.reference(reference_link, app=firebase_app)
+
+        """autogpt engine"""
         user_input = (
             "Determine which next command to use, "
             "and respond using the format specified above:"
@@ -46,7 +59,10 @@ class AutoGPTLLM:
                 memory=agent.memory,
                 user_input=user_input,
             )
+            # update the result with the assistant_reply in firebase realtime database
+            ref.push().set(json.loads(assistant_reply))
 
+            # update chat history in autogpt agent
             # Print Assistant thoughts
             print(assistant_reply)
             agent.full_message_history.append(HumanMessage(content=user_input))
@@ -91,12 +107,16 @@ class AutoGPTLLM:
 
             agent.memory.add_documents([Document(page_content=memory_to_add)])
             agent.full_message_history.append(SystemMessage(content=result))
+            # add result of the command
+            ref.push().set({"result": result})
 
     """function to manage auto-task achievement
     ex: query = write a weather report for SF today
     """
 
-    def ask_task(self, query: str):
+    def ask_task(
+        self, query: str, firebase_app: firebase_admin.App, reference_link: str
+    ):
         search = SerpAPIWrapper()
         tools = [
             Tool(
@@ -127,4 +147,9 @@ class AutoGPTLLM:
         )
         # Set verbose to be true
         agent.chain.verbose = True
-        self.run(agent, [query])
+        self.run(
+            agent=agent,
+            goals=[query],
+            firebase_app=firebase_app,
+            reference_link=reference_link,
+        )
