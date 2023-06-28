@@ -17,6 +17,7 @@ API_URL = "http://localhost:5000/file/swagger.json"
 # firebase
 FIREBASE_STORAGE_ROOT = "images/"
 FIREBASE_STORAGE_BUCKET = "test3-83ffc.appspot.com"
+FIREBASE_REALTIME_DATABASE = "https://test3-83ffc-default-rtdb.firebaseio.com/"
 
 # pinecone
 PINECONE_NAMESPACE = "risinglangchain-namespace"

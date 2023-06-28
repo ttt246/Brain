@@ -8,7 +8,7 @@ from firebase_admin import credentials
 from Brain.src.common.assembler import Assembler
 from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.http_response_codes import responses
-from Brain.src.common.utils import FIREBASE_STORAGE_BUCKET
+from Brain.src.common.utils import FIREBASE_STORAGE_BUCKET, FIREBASE_REALTIME_DATABASE
 from Brain.src.logs import logger
 from Brain.src.model.req_model import ReqModel
 from Brain.src.model.requests.request_model import BasicReq
@@ -30,7 +30,10 @@ def initialize_app(setting: ReqModel) -> firebase_admin.App:
         )
     return firebase_admin.initialize_app(
         get_firebase_cred(setting),
-        {"storageBucket": FIREBASE_STORAGE_BUCKET},
+        {
+            "storageBucket": FIREBASE_STORAGE_BUCKET,
+            "databaseURL": FIREBASE_REALTIME_DATABASE,
+        },
         name=app_name,
     )
 
