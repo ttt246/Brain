@@ -7,7 +7,7 @@
 
     <View
         android:id="@+id/divider_top"
-        style="@style/ThinHorizontalDividerStyle"
+        style="@style/HorizontalDividerStyle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,7 +49,7 @@
 
     <View
         android:id="@+id/divider_bottom"
-        style="@style/ThinHorizontalDividerStyle"
+        style="@style/HorizontalDividerStyle"
         app:layout_constraintTop_toTopOf="parent" />
 
 </LinearLayout>

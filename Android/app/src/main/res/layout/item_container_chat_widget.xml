@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fl_widget_message"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_tiny"
     android:padding="@dimen/spacing_tiny">
 
+    <FrameLayout
+        android:id="@+id/fl_widget_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <LinearLayout
-            android:id="@+id/ll_contacts_widget"
+            android:id="@+id/ll_horizontal_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone" />
+            android:visibility="visible" />
+
     </HorizontalScrollView>
 
 </FrameLayout>

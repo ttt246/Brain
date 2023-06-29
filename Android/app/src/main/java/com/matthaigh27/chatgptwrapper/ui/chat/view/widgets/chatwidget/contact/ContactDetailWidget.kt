@@ -40,19 +40,6 @@ class ContactDetailWidget(
 
         llPhones?.removeAllViews()
         txtDisplayName?.text = contactModel.displayName
-        contactModel.phoneNumbers.forEach { phoneNumber ->
-            val contactDetailItem = ContactDetailItem(context).apply {
-                this.callback = callback
-                this.setContactDetailItemInfo(phoneNumber, contactModel.displayName)
-                this.setVisibilityListener(object :
-                    ContactDetailItem.OnContactDetailVisibilityListener {
-                    override fun invisible() {
-                        this@ContactDetailWidget.dismiss()
-                    }
-                })
-            }
-            llPhones?.addView(contactDetailItem)
-        }
 
         btnEditContact?.setOnClickListener(this)
         imgAvatar = findViewById(R.id.img_avatar)
@@ -70,6 +57,23 @@ class ContactDetailWidget(
             .error(R.drawable.image_default_avatar) // Set error image
             .fallback(R.drawable.image_default_avatar) // Set fallback image
             .into(this)
+    }
+
+    override fun show() {
+        contactModel.phoneNumbers.forEach { phoneNumber ->
+            val contactDetailItem = ContactDetailItem(context).apply {
+                this.callback = this@ContactDetailWidget.callback
+                this.setContactDetailItemInfo(phoneNumber, contactModel.displayName)
+                this.setVisibilityListener(object :
+                    ContactDetailItem.OnContactDetailVisibilityListener {
+                    override fun invisible() {
+                        this@ContactDetailWidget.dismiss()
+                    }
+                })
+            }
+            llPhones?.addView(contactDetailItem)
+        }
+        super.show()
     }
 
     override fun onClick(view: View?) {
