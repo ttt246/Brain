@@ -45,6 +45,7 @@
                 android:textColor="@color/color_accent"
                 android:textSize="@dimen/font_normal"
                 android:ellipsize="marquee"
+                android:gravity="center"
                 android:singleLine="true"
                 android:marqueeRepeatLimit="marquee_forever"
                 app:layout_constraintEnd_toEndOf="@+id/civ_avatar"
