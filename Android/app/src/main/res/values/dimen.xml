@@ -67,6 +67,7 @@
     <dimen name="angel_header_bg_color_gradient">45</dimen>
 
     <dimen name="width_divider">1dp</dimen>
+    <dimen name="width_divider_thin">0.7dp</dimen>
 
     <dimen name="size_circle_button_chat_control">30dp</dimen>
     <dimen name="padding_circle_button_chat_control">7dp</dimen>
@@ -77,4 +78,6 @@
     <dimen name="height_avatar_contact_detail">240dp</dimen>
 
     <dimen name="size_image_view_chat_message">100dp</dimen>
+
+    <dimen name="width_widget_mail">200dp</dimen>
 </resources>

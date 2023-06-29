@@ -113,7 +113,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <View
-            style="@style/ThinHorizontalDividerStyle"
+            style="@style/HorizontalDividerStyle"
             android:layout_marginBottom="@dimen/spacing_small" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -138,7 +138,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <View style="@style/ThinHorizontalDividerStyle" />
+        <View style="@style/HorizontalDividerStyle" />
 
         <TextView
             android:id="@+id/btn_setting_save"

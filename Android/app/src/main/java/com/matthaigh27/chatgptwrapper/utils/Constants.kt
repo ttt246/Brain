@@ -14,12 +14,18 @@ object Constants {
     val TYPE_RESPONSE_SMS = "sms"
     val TYPE_RESPONSE_ALARM = "alarm"
     val TYPE_RESPONSE_CONTACT = "contact"
+    val TYPE_RESPONSE_MAIL_READ = "read_email"
+    val TYPE_RESPONSE_MAIL_WRITE = "write_email"
+    val TYPE_RESPONSE_MAIL_SEND = "send_email"
 
     val TYPE_WIDGET_SMS = "sms"
     val TYPE_WIDGET_HELP_PROMPT = "help_prompt"
     val TYPE_WIDGET_FEEDBACK = "feedback"
     val TYPE_WIDGET_SEARCH_CONTACT = "search_contact"
     val TYPE_WIDGET_SCHEDULE_ALARM = "schedule_alarm"
+    val TYPE_WIDGET_MAIL_READ = "mail_read"
+    val TYPE_WIDGET_MAIL_WRITE = "mail_write"
+    val TYPE_WIDGET_MAIL_SEND = "mail_send"
 
     val HELP_COMMAND_ERROR_NO_MAIN = "no main command"
     val HELP_COMMAND_ERROR_NO_INVALID_FORMAT = "Invalid Command Format"
