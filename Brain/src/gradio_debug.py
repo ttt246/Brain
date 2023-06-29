@@ -2,6 +2,7 @@
 import gradio as gr
 import requests
 import json
+from gradio.components import Textbox, Number
 
 DEFAULT_UUID = "c40a09075d11940f"
 
@@ -31,11 +32,16 @@ def gradio_send_notification(uuid: str, query: str):
 debug_send_notification = gr.Interface(
     fn=gradio_send_notification,
     inputs=[
-        gr.Textbox(
-            label="UUID", placeholder="Please input your UUID.", value=DEFAULT_UUID
+        Textbox(
+            label="UUID",
+            placeholder="Please input your UUID.",
+            value="c40a09075d11940f",
         ),
-        gr.Textbox(label="query", placeholder="Please input your prompt."),
+        Textbox(label="query", placeholder="Please input your prompt."),
     ],
-    outputs=[gr.Textbox(label="Result"), gr.Number(label="Status Code")],
+    outputs=[
+        Textbox(label="Result"),
+        Number(label="Status Code"),
+    ],
     allow_flagging="never",
 )
