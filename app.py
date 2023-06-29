@@ -32,11 +32,11 @@ app.include_router(construct_blueprint_train_api(), prefix="/train", tags=["ai_t
 
 # gradio
 
-CUSTOM_PATH = "/gradio"
-
-app = gr.mount_gradio_app(
-    app, debug_send_notification, path=f"{CUSTOM_PATH}/sendNotification"
-)
+# CUSTOM_PATH = "/gradio"
+#
+# app = gr.mount_gradio_app(
+#     app, debug_send_notification, path=f"{CUSTOM_PATH}/sendNotification"
+# )
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=7860)
