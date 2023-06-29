@@ -7,7 +7,6 @@ import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiReque
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
-import com.matthaigh27.chatgptwrapper.data.remote.responses.ImageRelatenessApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.TrainImageApiResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -21,7 +20,7 @@ interface ApiService {
     @POST("train/contacts")
     fun trainContacts(@Body request: TrainContactsApiRequest) : Call<EmptyResultApiResponse>
     @POST("image_relatedness")
-    fun getImageRelatedness(@Body request: ImageRelatednessApiRequest) : Call<ImageRelatenessApiResponse>
+    fun getImageRelatedness(@Body request: ImageRelatednessApiRequest) : Call<ApiResponse>
     @POST("uploadImage")
     fun trainImage(@Body request: TrainImageApiRequest) : Call<TrainImageApiResponse>
 }

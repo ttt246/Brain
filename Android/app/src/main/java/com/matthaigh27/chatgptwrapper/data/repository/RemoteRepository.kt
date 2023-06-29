@@ -8,7 +8,6 @@ import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiReque
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
-import com.matthaigh27.chatgptwrapper.data.remote.responses.ImageRelatenessApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.TrainImageApiResponse
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
@@ -112,14 +111,14 @@ object RemoteRepository {
 
     fun getImageRelatedness(
         request: ImageRelatednessApiRequest,
-        onSuccess: OnSuccess<ImageRelatenessApiResponse>,
+        onSuccess: OnSuccess<ApiResponse>,
         onFailure: OnFailure<String>
     ) {
         val call = apiService.getImageRelatedness(request)
 
-        call.enqueue(object : Callback<ImageRelatenessApiResponse> {
+        call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(
-                call: Call<ImageRelatenessApiResponse>, response: Response<ImageRelatenessApiResponse>
+                call: Call<ApiResponse>, response: Response<ApiResponse>
             ) {
                 response.body()?.let { data ->
                     onSuccess(data)
@@ -128,7 +127,7 @@ object RemoteRepository {
                 }
             }
 
-            override fun onFailure(call: Call<ImageRelatenessApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })

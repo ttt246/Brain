@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_mail_compose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/radius_big"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_tiny">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_mail_compose"
+                    android:textColor="@color/color_accent"
+                    android:textSize="@dimen/font_big"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/btn_send"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
+
+                <ImageView
+                    android:id="@+id/btn_attachment"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_attachment_48"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_send"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
+
+                <ImageView
+                    android:id="@+id/btn_draft"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_drafts"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_attachment"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
+
+                <ImageView
+                    android:id="@+id/btn_send_cancel"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_cancel_schedule_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_draft"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginVertical="@dimen/spacing_tiny" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_mail_to"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/text_mail_compose_to">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="@dimen/height_edittext_normal"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_normal" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/mail_chip_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:chipSpacingHorizontal="@dimen/spacing_tiny" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_mail_subject"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/text_mail_compose_subject">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_normal"
+                    android:singleLine="true"
+                    android:height="@dimen/height_edittext_normal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_mail_content"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/text_mail_compose_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_normal"
+                    android:minHeight="@dimen/height_edittext_normal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/attachment_chip_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:chipSpacingHorizontal="@dimen/spacing_tiny" />
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

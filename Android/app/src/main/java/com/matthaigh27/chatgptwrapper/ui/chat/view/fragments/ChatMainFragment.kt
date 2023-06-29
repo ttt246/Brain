@@ -39,8 +39,13 @@ import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_IMAGE
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_READ
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_SEND
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MESSAGE
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_READ
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
@@ -97,6 +102,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         initChatToolsWidget()
 
         fetchAllCommands()
+        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
     }
 
 
@@ -197,58 +203,6 @@ class ChatMainFragment : Fragment(), OnClickListener {
                         )
                     )
                     isImagePicked = false
-                    currentUploadedImageName?.let {
-                        viewModel.getImageRelatedness(it, content)
-                            .observe(viewLifecycleOwner, Observer { relatenessResource ->
-                                when (relatenessResource) {
-                                    is ApiResource.Loading -> {
-                                        showLoading(true)
-                                    }
-
-                                    is ApiResource.Success -> {
-                                        showLoading(false)
-                                        relatenessResource.data?.result?.content?.image_name?.let { imageName ->
-                                            viewModel.downloadImageFromFirebase(
-                                                imageName
-                                            ).observe(viewLifecycleOwner, Observer { resource ->
-                                                when (resource) {
-                                                    is ApiResource.Loading -> {
-                                                        showLoading(true)
-                                                    }
-
-                                                    is ApiResource.Success -> {
-                                                        addMessage(
-                                                            type = TYPE_CHAT_RECEIVE,
-                                                            content = relatenessResource.data.result.content.image_desc,
-                                                            data = null,
-                                                            hasImage = true,
-                                                            image = resource.data
-                                                        )
-                                                        showLoading(false)
-                                                    }
-                                                    is ApiResource.Error -> {
-                                                        addErrorMessage(resource.message!!)
-                                                        showLoading(false)
-                                                    }
-                                                }
-                                            })
-                                        } ?: run {
-                                            addMessage(
-                                                type = TYPE_CHAT_RECEIVE,
-                                                content = relatenessResource.data?.result?.content?.image_desc,
-                                            )
-                                        }
-                                    }
-
-                                    is ApiResource.Error -> {
-                                        showLoading(false)
-                                        addErrorMessage(relatenessResource.message!!)
-                                    }
-                                }
-                            })
-                    }
-                    currentUploadedImageName = null
-                    currentSelectedImage = null
                 } else {
                     addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
                     sendNotification(content)
@@ -265,7 +219,8 @@ class ChatMainFragment : Fragment(), OnClickListener {
         message: String
     ) {
         addMessage(
-            type = TYPE_CHAT_RECEIVE, content = message
+            type = TYPE_CHAT_RECEIVE,
+            content = message
         )
     }
 
@@ -380,13 +335,17 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
                         TYPE_RESPONSE_MESSAGE -> addMessage(
-                            TYPE_CHAT_RECEIVE, apiResponse.result.content.toString()
+                            TYPE_CHAT_RECEIVE,
+                            apiResponse.result.content.toString()
                         )
 
                         TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
                         TYPE_RESPONSE_CONTACT -> fetchResponseContact(apiResponse)
                         TYPE_RESPONSE_IMAGE -> fetchResponseImage(apiResponse)
                         TYPE_RESPONSE_ALARM -> fetchResponseAlarm(apiResponse)
+                        TYPE_RESPONSE_MAIL_READ -> fetchResponseMail(TYPE_RESPONSE_MAIL_READ)
+                        TYPE_RESPONSE_MAIL_WRITE -> fetchResponseMail(TYPE_RESPONSE_MAIL_WRITE)
+                        TYPE_RESPONSE_MAIL_SEND -> fetchResponseMail(TYPE_RESPONSE_MAIL_SEND)
                         else -> addMessage(TYPE_CHAT_RECEIVE, apiResponse!!.result.toString())
                     }
                 }
@@ -460,6 +419,19 @@ class ChatMainFragment : Fragment(), OnClickListener {
         addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SCHEDULE_ALARM, widgetDesc)
     }
 
+    private fun fetchResponseMail(type: String) {
+        when(type) {
+            TYPE_RESPONSE_MAIL_READ -> {
+                addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_READ)
+            }
+            TYPE_RESPONSE_MAIL_WRITE -> {
+                addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
+            }
+            TYPE_RESPONSE_MAIL_SEND -> {
+            }
+        }
+    }
+
     private fun initChatInterface() {
         chatMessageInterface = object : ChatMessageInterface {
             override fun sentSms(phoneNumber: String, message: String) {
@@ -478,25 +450,29 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun sentHelpPrompt(prompt: String) {
                 addMessage(
-                    type = TYPE_CHAT_SENT, content = prompt
+                    type = TYPE_CHAT_SENT,
+                    content = prompt
                 )
             }
 
             override fun canceledHelpPrompt() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE, content = "You canceled Help prompt."
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You canceled Help prompt."
                 )
             }
 
             override fun doVoiceCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE, content = "You made a voice call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You made a voice call to $phoneNumber"
                 )
             }
 
             override fun doVideoCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE, content = "You made a video call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You made a video call to $phoneNumber"
                 )
             }
 
@@ -505,15 +481,15 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     this.addProperty(PROPS_WIDGET_DESC, phoneNumber)
                 }
                 addMessage(
-                    type = TYPE_CHAT_WIDGET, content = TYPE_WIDGET_SMS, data = widgetDesc
+                    type = TYPE_CHAT_WIDGET,
+                    content = TYPE_WIDGET_SMS,
+                    data = widgetDesc
                 )
             }
 
             override fun pickImage(isSuccess: Boolean, data: ByteArray?) {
-                if (!isSuccess) {
+                if (!isSuccess)
                     addErrorMessage("Fail to pick image")
-                    return
-                }
                 viewModel.uploadImageToFirebase(data!!)
                     .observe(viewLifecycleOwner, Observer { resource ->
                         when (resource) {
@@ -545,7 +521,8 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun cancelAlarm() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE, content = "You canceled setting an alarm."
+                    type = TYPE_CHAT_RECEIVE,
+                    content = "You canceled setting an alarm."
                 )
             }
         }

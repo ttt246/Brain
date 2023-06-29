@@ -12,7 +12,6 @@ import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiReque
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
-import com.matthaigh27.chatgptwrapper.data.remote.responses.ImageRelatenessApiResponse
 import com.matthaigh27.chatgptwrapper.data.repository.FirebaseRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RoomRepository
@@ -206,8 +205,8 @@ class ChatViewModel : ViewModel() {
         return state
     }
 
-    fun getImageRelatedness(imageName: String, message: String): MutableLiveData<ApiResource<ImageRelatenessApiResponse>> {
-        val resource: MutableLiveData<ApiResource<ImageRelatenessApiResponse>> = MutableLiveData()
+    fun getImageRelatedness(imageName: String, message: String): MutableLiveData<ApiResource<ApiResponse>> {
+        val resource: MutableLiveData<ApiResource<ApiResponse>> = MutableLiveData()
         val request = ImageRelatednessApiRequest(
             image_name = imageName, message = message, confs = buildApiKeys()
         )
