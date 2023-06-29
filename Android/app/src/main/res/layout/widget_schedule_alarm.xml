@@ -57,7 +57,7 @@
 
               <com.google.android.material.textfield.TextInputLayout
                   android:id="@+id/txt_label"
-                  style="@style/SettingEditText"
+                  style="@style/CommonEditText"
                   android:layout_marginTop="@dimen/spacing_small"
                   android:layout_marginBottom="@dimen/spacing_tiny"
                   android:hint="label">

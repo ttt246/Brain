@@ -53,7 +53,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_uuid"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:enabled="false"
             android:hint="@string/label_setting_uuid">
@@ -66,7 +66,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_openai_key"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:hint="@string/label_setting_openai_key">
 
@@ -78,7 +78,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_pinecone_key"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:hint="@string/label_setting_pinecone_key">
 
@@ -90,7 +90,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_pinecone_env"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:layout_marginBottom="@dimen/spacing_tiny"
             android:hint="@string/label_setting_pinecone_env">
 
@@ -102,7 +102,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_firebase_key"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:hint="@string/label_setting_firebase_key"
             android:layout_marginBottom="@dimen/spacing_small">
 
@@ -118,7 +118,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/txt_temperature"
-            style="@style/SettingEditText"
+            style="@style/CommonEditText"
             android:layout_height="match_parent"
             android:hint="@string/label_setting_temperature">
 
