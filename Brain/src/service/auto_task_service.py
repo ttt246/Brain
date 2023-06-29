@@ -4,6 +4,8 @@ import firebase_admin
 from Brain.src.model.req_model import ReqModel
 from Brain.src.rising_plugin.llm.autogpt_llm import AutoGPTLLM
 import time
+import asyncio
+import threading
 
 
 class AutoTaskService:
@@ -21,9 +23,10 @@ class AutoTaskService:
             llm_name="autogpt", uuid=setting.uuid
         )
         # call autogpt
-        autogpt_llm.ask_task(
-            query=query, firebase_app=firebase_app, reference_link=reference_link
+        thread = threading.Thread(
+            target=autogpt_llm.ask_task, args=(query, firebase_app, reference_link)
         )
+        thread.start()
 
         return reference_link
 
