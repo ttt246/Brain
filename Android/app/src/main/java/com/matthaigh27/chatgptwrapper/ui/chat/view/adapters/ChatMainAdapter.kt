@@ -19,10 +19,12 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterfa
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.SendSmsWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.ScheduleAlarmWidget
-import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.SearchContactWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.ContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.MailWidget
 import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_READ
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
@@ -121,8 +123,6 @@ class ChatMainAdapter(
 
                 data.content?.let { message ->
                     holder.txtMessage.text = message
-                    if(message.isEmpty())
-                        holder.txtMessage.visibility = View.GONE
                 } ?: run {
                     holder.txtMessage.visibility = View.GONE
                 }
@@ -140,6 +140,7 @@ class ChatMainAdapter(
 
     private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
         holder.itemLayout.visibility = View.VISIBLE
+        holder.llHorizontalScroll.removeAllViews()
         holder.itemLayout.removeAllViews()
         val index = holder.adapterPosition
 
@@ -183,7 +184,7 @@ class ChatMainAdapter(
             }
 
             TYPE_WIDGET_SEARCH_CONTACT -> {
-                holder.llSearchContact.visibility = View.VISIBLE
+                holder.llHorizontalScroll.visibility = View.VISIBLE
 
                 val contacts = getContacts(context)
 
@@ -192,16 +193,19 @@ class ChatMainAdapter(
                     val contactId = contactIds[i].toString()
                     val contact = getContactModelById(contactId, contacts)
 
-                    val searchContactWidget = SearchContactWidget(context, contact).apply {
+                    val contactWidget = ContactWidget(context, contact).apply {
                         this.callback = callbacks
                     }
-                    holder.llSearchContact.addView(searchContactWidget)
+                    holder.llHorizontalScroll.addView(contactWidget)
                 }
             }
 
             TYPE_WIDGET_SCHEDULE_ALARM -> {
-                val widgetDesc = data.data!!.asJsonObject[PROPS_WIDGET_DESC].asString
-                val props = ScheduleAlarmProps.init(widgetDesc)
+                var props = ScheduleAlarmProps()
+                data.data?.run {
+                    val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
+                    props = ScheduleAlarmProps.init(widgetDesc)
+                }
                 val scheduleAlarmWidget =
                     ScheduleAlarmWidget(context, props.time, props.label, props.repeat).apply {
                         this.callback = callbacks
@@ -214,6 +218,17 @@ class ChatMainAdapter(
                         }
                     }
                 holder.itemLayout.addView(scheduleAlarmWidget)
+            }
+
+            TYPE_WIDGET_MAIL_READ -> {
+                holder.llHorizontalScroll.visibility = View.VISIBLE
+
+                for (i in 0 until 10) {
+                    val mailWidget = MailWidget(context).apply {
+                        this.callback = callbacks
+                    }
+                    holder.llHorizontalScroll.addView(mailWidget)
+                }
             }
 
             else -> {
@@ -238,11 +253,11 @@ class ChatMainAdapter(
     inner class ChatWidgetViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var itemLayout: FrameLayout
-        var llSearchContact: LinearLayout
+        var llHorizontalScroll: LinearLayout
 
         init {
             itemLayout = itemView.findViewById<View>(R.id.fl_widget_message) as FrameLayout
-            llSearchContact = itemView.findViewById<View>(R.id.ll_contacts_widget) as LinearLayout
+            llHorizontalScroll = itemView.findViewById<View>(R.id.ll_horizontal_scroll) as LinearLayout
         }
     }
 }
