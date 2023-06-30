@@ -18,6 +18,7 @@ from Brain.src.model.requests.request_model import (
     BasicReq,
     ClientInfo,
     get_client_info,
+    AutoTaskDelete,
 )
 from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
@@ -35,6 +36,7 @@ from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
+from Brain.src.service.auto_task_service import delete_db_data
 
 from fastapi import APIRouter, Depends
 
@@ -442,6 +444,44 @@ def construct_blueprint_api() -> APIRouter:
             return assembler.to_response(400, "Failed to delete contacts", "")
         return assembler.to_response(
             200, "Deleted all contacts from pinecone successfully", ""
+        )
+
+    """@generator.request_body(
+        {
+            "token": "String",
+            "uuid": "String",
+            "data": {
+                "reference_link": "test link",
+            },
+        }
+    )
+
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )
+
+    """
+
+    @router.post("/auto_task/delete")
+    def delete_data(data: AutoTaskDelete):
+        # firebase admin init
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return assembler.to_response(ex.code, ex.message, "")
+        try:
+            token = setting.token
+            uuid = setting.uuid
+
+            # parsing contacts
+            # train contact
+            delete_db_data(data.data.reference_link, firebase_app)
+        except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
+            return assembler.to_response(400, "Failed to delete data", "")
+        return assembler.to_response(
+            200, "Deleted data from real-time database of firebase", ""
         )
 
     return router
