@@ -11,8 +11,8 @@
     <string name="text_button_ok">OK</string>
     <string name="text_button_cancel">Cancel</string>
 
-    <string name="hint_text_sms_phone">#phone number</string>
-    <string name="hint_text_sms_message">#message</string>
+    <string name="hint_text_sms_phone">Phone Number</string>
+    <string name="hint_text_sms_message">Message</string>
 
     <string name="title_chat_widget">widget title</string>
     <string name="title_chat_widget_sms">SMS</string>

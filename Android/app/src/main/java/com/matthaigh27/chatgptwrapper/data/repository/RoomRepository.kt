@@ -5,6 +5,7 @@ import com.matthaigh27.chatgptwrapper.RisingApplication
 import com.matthaigh27.chatgptwrapper.data.local.AppDatabase
 import com.matthaigh27.chatgptwrapper.data.local.entity.ContactEntity
 import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
+import com.matthaigh27.chatgptwrapper.data.local.entity.SettingEntity
 
 
 object RoomRepository {
@@ -12,6 +13,7 @@ object RoomRepository {
 
     private var imageDao = databaseHandler.imageDao()
     private var contactDao = databaseHandler.contactDao()
+    private var settingDao = databaseHandler.settingDao()
 
     suspend fun getAllImages(): MutableLiveData<List<ImageEntity>> {
         return MutableLiveData(imageDao.getAllData())
@@ -43,5 +45,26 @@ object RoomRepository {
 
     suspend fun deleteContact(entity: ContactEntity) {
         contactDao.delete(entity)
+    }
+
+    suspend fun getAllSettings(): MutableLiveData<List<SettingEntity>> {
+        return MutableLiveData(settingDao.getAllData())
+    }
+
+    suspend fun getSettingByUUID(uuid: String): SettingEntity {
+        settingDao.getDataByUUID(uuid)
+        return settingDao.getDataByUUID(uuid)
+    }
+
+    suspend fun insertSetting(entity: SettingEntity) {
+        settingDao.insert(entity)
+    }
+
+    suspend fun updateSetting(entity: SettingEntity) {
+        settingDao.update(entity)
+    }
+
+    suspend fun deleteSetting(entity: SettingEntity) {
+        settingDao.delete(entity)
     }
 }

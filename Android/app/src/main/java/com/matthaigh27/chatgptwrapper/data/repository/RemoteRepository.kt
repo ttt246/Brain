@@ -1,17 +1,24 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
+import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
+import com.matthaigh27.chatgptwrapper.data.models.setting.SettingModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
+import com.matthaigh27.chatgptwrapper.data.remote.requests.BaseApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.ImageRelatednessApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.common.Keys
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
-import com.matthaigh27.chatgptwrapper.data.remote.responses.EmptyResultApiResponse
-import com.matthaigh27.chatgptwrapper.data.remote.responses.TrainImageApiResponse
+import com.matthaigh27.chatgptwrapper.data.remote.responses.results.CommonResult
+import com.matthaigh27.chatgptwrapper.data.remote.responses.results.HelpCommandResult
+import com.matthaigh27.chatgptwrapper.data.remote.responses.results.ImageRelatenessResult
+import com.matthaigh27.chatgptwrapper.data.remote.responses.results.TrainImageResult
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
-import com.matthaigh27.chatgptwrapper.utils.helpers.network.RequestFactory.buildBaseApiRequest
+import com.matthaigh27.chatgptwrapper.utils.helpers.chat.SettingHelper.emptySettingModel
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,13 +29,34 @@ import kotlin.coroutines.suspendCoroutine
 object RemoteRepository {
     private val apiService = ApiClient.apiService
 
-    fun getAllHelpCommands(
-        onSuccess: OnSuccess<ApiResponse>, onFailure: OnFailure<String>
-    ) {
-        val call = apiService.getAllHelpCommands(buildBaseApiRequest())
+    fun getKeys(): Keys{
+        RoomRepository
+        val settingModel = runBlocking {
+            val model = RoomRepository.getSettingByUUID(appContext.getUUID())
+            if(model == null) {
+                return@runBlocking emptySettingModel()
+            }
+            return@runBlocking SettingModel.init(model.setting)
+        }
+        val keys  = Keys(
+            uuid = appContext.getUUID(),
+            token = appContext.getFCMToken(),
+            openai_key = settingModel.openaiKey,
+            pinecone_env = settingModel.pineconeEnv,
+            pinecone_key = settingModel.pineconeKey,
+            firebase_key = settingModel.firebaseKey,
+            settings = settingModel.setting
+        )
+        return keys
+    }
 
-        call.enqueue(object : Callback<ApiResponse> {
-            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+    fun getAllHelpCommands(
+        onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>, onFailure: OnFailure<String>
+    ) {
+        val call = apiService.getAllHelpCommands(BaseApiRequest(getKeys()))
+
+        call.enqueue(object : Callback<ApiResponse<HelpCommandResult>> {
+            override fun onResponse(call: Call<ApiResponse<HelpCommandResult>>, response: Response<ApiResponse<HelpCommandResult>>) {
                 response.body()?.let { data ->
                     onSuccess(data)
                 } ?: run {
@@ -36,7 +64,7 @@ object RemoteRepository {
                 }
             }
 
-            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<HelpCommandResult>>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })
@@ -44,21 +72,21 @@ object RemoteRepository {
 
     fun sendNotification(
         request: NotificationApiRequest,
-        onSuccess: OnSuccess<ApiResponse>,
+        onSuccess: OnSuccess<ApiResponse<CommonResult>>,
         onFailure: OnFailure<String>
     ) {
         val call = apiService.sendNotification(request)
 
-        call.enqueue(object : Callback<ApiResponse> {
-            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+        call.enqueue(object : Callback<ApiResponse<CommonResult>> {
+            override fun onResponse(call: Call<ApiResponse<CommonResult>>, response: Response<ApiResponse<CommonResult>>) {
                 response.body()?.let { data ->
                     onSuccess(data)
                 } ?: run {
-                    onFailure(response.message())
+                    onFailure(response.errorBody().toString())
                 }
             }
 
-            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<CommonResult>>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })
@@ -66,14 +94,14 @@ object RemoteRepository {
 
     fun trainContacts(
         request: TrainContactsApiRequest,
-        onSuccess: OnSuccess<EmptyResultApiResponse>,
+        onSuccess: OnSuccess<ApiResponse<String>>,
         onFailure: OnFailure<String>
     ) {
         val call = apiService.trainContacts(request)
 
-        call.enqueue(object : Callback<EmptyResultApiResponse> {
+        call.enqueue(object : Callback<ApiResponse<String>> {
             override fun onResponse(
-                call: Call<EmptyResultApiResponse>, response: Response<EmptyResultApiResponse>
+                call: Call<ApiResponse<String>>, response: Response<ApiResponse<String>>
             ) {
                 response.body()?.let { data ->
                     onSuccess(data)
@@ -82,19 +110,19 @@ object RemoteRepository {
                 }
             }
 
-            override fun onFailure(call: Call<EmptyResultApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<String>>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })
     }
 
-    suspend fun trainImage(request: TrainImageApiRequest) : ApiResource<TrainImageApiResponse> = suspendCoroutine { continuation ->
+    suspend fun trainImage(request: TrainImageApiRequest) : ApiResource<ApiResponse<TrainImageResult>> = suspendCoroutine { continuation ->
 
         val call = apiService.trainImage(request)
 
-        call.enqueue(object : Callback<TrainImageApiResponse> {
+        call.enqueue(object : Callback<ApiResponse<TrainImageResult>> {
             override fun onResponse(
-                call: Call<TrainImageApiResponse>, response: Response<TrainImageApiResponse>
+                call: Call<ApiResponse<TrainImageResult>>, response: Response<ApiResponse<TrainImageResult>>
             ) {
                 response.body()?.let { data ->
                     continuation.resume(ApiResource.Success(data))
@@ -103,7 +131,7 @@ object RemoteRepository {
                 }
             }
 
-            override fun onFailure(call: Call<TrainImageApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<TrainImageResult>>, t: Throwable) {
                 continuation.resume(ApiResource.Error(t.message.toString()))
             }
         })
@@ -111,14 +139,14 @@ object RemoteRepository {
 
     fun getImageRelatedness(
         request: ImageRelatednessApiRequest,
-        onSuccess: OnSuccess<ApiResponse>,
+        onSuccess: OnSuccess<ApiResponse<ImageRelatenessResult>>,
         onFailure: OnFailure<String>
     ) {
         val call = apiService.getImageRelatedness(request)
 
-        call.enqueue(object : Callback<ApiResponse> {
+        call.enqueue(object : Callback<ApiResponse<ImageRelatenessResult>> {
             override fun onResponse(
-                call: Call<ApiResponse>, response: Response<ApiResponse>
+                call: Call<ApiResponse<ImageRelatenessResult>>, response: Response<ApiResponse<ImageRelatenessResult>>
             ) {
                 response.body()?.let { data ->
                     onSuccess(data)
@@ -127,7 +155,7 @@ object RemoteRepository {
                 }
             }
 
-            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+            override fun onFailure(call: Call<ApiResponse<ImageRelatenessResult>>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })

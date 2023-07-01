@@ -2,10 +2,10 @@ package com.matthaigh27.chatgptwrapper.utils.helpers.chat
 
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
-import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND
-import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
-import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_INVALID_FORMAT
-import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ERROR_NO_MAIN
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ALL
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ERROR_NO_INVALID_FORMAT
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ERROR_NO_MAIN
 
 object CommandHelper {
     fun isMainHelpCommand(model: HelpCommandModel): Boolean {

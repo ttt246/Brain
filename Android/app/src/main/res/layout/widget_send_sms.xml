@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -25,53 +25,82 @@
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_tiny">
 
-            <TextView
-                android:id="@+id/txt_keys_title"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_tiny"
-                android:text="@string/title_chat_widget_sms"
-                android:textColor="@color/color_accent"
-                android:textSize="@dimen/font_big"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/edt_phone_to_send"
-                style="@style/ChatCommonEditText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_edittext_normal"
-                android:hint="@string/hint_text_sms_phone"
-                app:layout_constraintTop_toBottomOf="@+id/txt_keys_title" />
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_chat_widget_sms"
+                    android:textColor="@color/color_accent"
+                    android:textSize="@dimen/font_big"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/edt_message"
-                style="@style/ChatCommonEditText"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/height_edittext_normal"
-                android:layout_marginTop="@dimen/spacing_tiny"
-                android:hint="@string/hint_text_sms_message"
-                app:layout_constraintTop_toBottomOf="@+id/edt_phone_to_send" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:gravity="end"
-                app:layout_constraintTop_toBottomOf="@+id/edt_message">
-
-                <Button
+                <ImageView
                     android:id="@+id/btn_ok"
-                    style="@style/ChatWidgetCommonButton"
-                    android:text="@string/text_button_ok" />
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
 
-                <Button
+                <ImageView
                     android:id="@+id/btn_cancel"
-                    style="@style/ChatWidgetCommonButton"
-                    android:text="@string/text_button_cancel" />
-            </LinearLayout>
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_cancel_schedule_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_ok"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginVertical="@dimen/spacing_tiny" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_phone_to_send"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/hint_text_sms_phone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_normal"
+                    android:singleLine="true"
+                    android:height="@dimen/height_edittext_normal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_message"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/hint_text_sms_message">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_normal"
+                    android:minHeight="@dimen/height_edittext_normal"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

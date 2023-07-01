@@ -28,29 +28,30 @@ import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmP
 import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
+import com.matthaigh27.chatgptwrapper.data.remote.responses.results.CommonResult
 import com.matthaigh27.chatgptwrapper.ui.chat.view.adapters.ChatMainAdapter
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.toolbar.ChatToolsWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
-import com.matthaigh27.chatgptwrapper.utils.Constants.ERROR_MSG_NOEXIST_COMMAND
-import com.matthaigh27.chatgptwrapper.utils.Constants.HELP_COMMAND_ALL
-import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_ALARM
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_BROWSER
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_CONTACT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_IMAGE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_READ
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_SEND
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MAIL_WRITE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_RESPONSE_MESSAGE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_READ
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_WRITE
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.ERROR_MSG_NOEXIST_COMMAND
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ALL
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_READ
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_WRITE
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SCHEDULE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SEARCH_CONTACT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_BROWSER
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_CONTACT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_IMAGE
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_READ
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_SEND
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_WRITE
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MESSAGE
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter
-import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.stringToHelpPromptList
+import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.arrayToHelpPromptList
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.getHelpCommandFromStr
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.isMainHelpCommand
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptItemUsage
@@ -102,7 +103,6 @@ class ChatMainFragment : Fragment(), OnClickListener {
         initChatToolsWidget()
 
         fetchAllCommands()
-        addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
     }
 
 
@@ -202,6 +202,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                             image = currentSelectedImage
                         )
                     )
+                    fetchImageRelateness(currentUploadedImageName!!, content)
                     isImagePicked = false
                 } else {
                     addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
@@ -235,13 +236,13 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private fun trainContacts() {
         viewModel.trainContacts().observe(viewLifecycleOwner, Observer { state ->
-            showLoading(state)
+
         })
     }
 
     private fun trainImages() {
         viewModel.trainImages().observe(viewLifecycleOwner, Observer { state ->
-            showLoading(state)
+
         })
     }
 
@@ -311,7 +312,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     showLoading(false)
                     resource.data?.let { data ->
                         helpPromptList =
-                            stringToHelpPromptList(data.result.content.asJsonArray.toString())
+                            arrayToHelpPromptList(data.result.content)
                     }
                 }
 
@@ -321,6 +322,33 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 }
             }
         })
+    }
+
+    private fun fetchImageRelateness(imageName: String, message: String) {
+        viewModel.getImageRelatedness(imageName, message)
+            .observe(viewLifecycleOwner, Observer { resource ->
+                when (resource) {
+                    is ApiResource.Loading -> {
+                        showLoading(true)
+                    }
+
+                    is ApiResource.Success -> {
+                        showLoading(false)
+                        addMessage(
+                            type = TYPE_CHAT_RECEIVE,
+                            content = resource.data?.description,
+                            data = null,
+                            hasImage = true,
+                            image = resource.data?.image
+                        )
+                    }
+
+                    is ApiResource.Error -> {
+                        showLoading(false)
+                        addErrorMessage(resource.message!!)
+                    }
+                }
+            })
     }
 
     private fun sendNotification(message: String) {
@@ -359,11 +387,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
         })
     }
 
-    private fun fetchResponseBrowser(apiResponse: ApiResponse) {
-        addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.url)
+    private fun fetchResponseBrowser(apiResponse: ApiResponse<CommonResult>) {
+        addMessage(TYPE_CHAT_RECEIVE, apiResponse.result.content.asString)
     }
 
-    private fun fetchResponseImage(apiResponse: ApiResponse) {
+    private fun fetchResponseImage(apiResponse: ApiResponse<CommonResult>) {
         val content = apiResponse.result.content.asJsonObject
         viewModel.downloadImageFromFirebase(
             content["image_name"].asString
@@ -392,7 +420,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         })
     }
 
-    private fun fetchResponseContact(apiResponse: ApiResponse) {
+    private fun fetchResponseContact(apiResponse: ApiResponse<CommonResult>) {
         val contactIds = JSONArray(apiResponse.result.content.asString.replace("'", "\""))
         if (contactIds.length() > 0) {
             addMessage(
@@ -408,7 +436,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         }
     }
 
-    private fun fetchResponseAlarm(apiResponse: ApiResponse) {
+    private fun fetchResponseAlarm(apiResponse: ApiResponse<CommonResult>) {
         val time: Time =
             Converter.stringToTime(apiResponse.result.content.asJsonObject.get("time").asString)
         val label = apiResponse.result.content.asJsonObject.get("label").asString
@@ -420,13 +448,15 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun fetchResponseMail(type: String) {
-        when(type) {
+        when (type) {
             TYPE_RESPONSE_MAIL_READ -> {
                 addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_READ)
             }
+
             TYPE_RESPONSE_MAIL_WRITE -> {
                 addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
             }
+
             TYPE_RESPONSE_MAIL_SEND -> {
             }
         }

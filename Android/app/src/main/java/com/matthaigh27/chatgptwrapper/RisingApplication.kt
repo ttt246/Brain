@@ -11,7 +11,6 @@ class RisingApplication : Application() {
 
     private var fcmToken: String = String()
     private var uuid: String = String()
-
     @SuppressLint("HardwareIds")
     override fun onCreate() {
         super.onCreate()
