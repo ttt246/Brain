@@ -39,10 +39,6 @@ All complex software including operating systems will need to be rewritten from 
 - Manipulate all browsers with user's input(tab, page, search, scroll, or etc) and it will follow you to go on the real website or blog what you are thinking of.
 
 ## 2. Installing / Getting started
-Install the latest version of rising-plugin package to use / custom something on what you want. 
-```
-pip install rising-plugin
-```
 #### 2.1 how to run on local
 It's a standard fastapi application so no configuration is needed beyond the included Procfile
 #### 2.2 Create firebase project
