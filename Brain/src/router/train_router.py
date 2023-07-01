@@ -157,4 +157,31 @@ def construct_blueprint_train_api() -> APIRouter:
             200, "deleted one document and train data successfully", result
         )
 
+    """@generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",            
+        }
+    )
+    @generator.response( status_code=200, schema={"message": "message", "result": {"document_id": "document_id"}} )"""
+
+    @router.post("/delete/all/vectors")
+    def delete_all_pinecone(data: BasicReq):
+        # parsing params
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return ex.get_response_exp()
+        # Services
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
+        try:
+            result = train_service.delete_all_training_from_pinecone()
+        except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
+            return assembler.to_response(400, "fail to delete one train", "")
+        return assembler.to_response(
+            200, "deleted one document and train data successfully", result
+        )
+
     return router
