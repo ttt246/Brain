@@ -1,11 +1,20 @@
 """auto task management to get the expected output"""
 import firebase_admin
+from firebase_admin import db
 
 from Brain.src.model.req_model import ReqModel
 from Brain.src.rising_plugin.llm.autogpt_llm import AutoGPTLLM
 import time
 import asyncio
 import threading
+
+"""delete data from real time database of firebase using reference link    
+"""
+
+
+def delete_db_data(reference_link: str, firebase_app: firebase_admin.App):
+    ref = db.reference(reference_link, app=firebase_app)
+    ref.delete()
 
 
 class AutoTaskService:

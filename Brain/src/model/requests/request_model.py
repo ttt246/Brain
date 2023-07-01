@@ -205,3 +205,13 @@ class Train(BasicReq):
     id: str
     data: TrainData
     status: str
+
+
+"""endpoint /auto_task/delete"""
+
+
+class AutoTaskDelete(BasicReq):
+    class Body(BaseModel):
+        reference_link: str
+
+    data: Body
