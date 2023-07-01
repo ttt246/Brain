@@ -30,7 +30,7 @@ If user said that compose, write, or create an sms message, please answer belowi
 If user said that search contact with its description such as display name or phone number, please answer belowing json format. {"program": "contact", "content": "description of the contact that user is going to search"}
 If user said that open a tab, go to a tab, or open a page, please answer belowing json format. {"program": "opentab", "content": ""}
 If user said that open a tab and search, go to a tab and search, or open a page and search, please answer belowing json format. {"program": "opentabsearch", "content": "keyword that user is going to search"}
-If user said that close a tab, please answer belowing json format. {"program": "close_tab", "content": ""}
+If user said that close a tab, please answer belowing json format. {"program": "closetab", "content": ""}
 If user said that launch a browser or open a browser, please answer belowing json format. {"program": "browser", "content": "https://google.com"}
 If user said that go to a previous page, or open a previous page, please answer belowing json format. {"program": "previouspage", "content": ""}
 If user said that go to a next page, or open a next page, please answer belowing json format. {"program": "nextpage", "content": ""}
