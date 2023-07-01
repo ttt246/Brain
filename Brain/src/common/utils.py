@@ -40,6 +40,10 @@ AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
+# actions flag :True -> Directly with Category_prompt
+ACTION_FLAG = True
+
+
 class ProgramType:
     BROWSER = "browser"
     ALERT = "alert"
@@ -47,6 +51,7 @@ class ProgramType:
     SMS = "sms"
     CONTACT = "contact"
     MESSAGE = "message"
+    AUTO_TASK = "autotask"
 
 
 # validate json format

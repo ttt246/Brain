@@ -28,6 +28,7 @@ from ..common.utils import (
     DEFAULT_GPT_MODEL,
     parseJsonFromCompletion,
     PINECONE_INDEX_NAME,
+    ACTION_FLAG,
 )
 from .image_embedding import (
     query_image_text,
@@ -59,30 +60,46 @@ def llm_rails(
     image_search: bool = True,
     is_browser: bool = False,
 ) -> Any:
-    """step 0: convert string to json"""
-    index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
-    train_service = TrainService(firebase_app=firebase_app, setting=setting)
+    if not ACTION_FLAG:
+        """step 0: convert string to json"""
+        index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
+        train_service = TrainService(firebase_app=firebase_app, setting=setting)
 
-    """step 1: handle with gpt-4"""
+        """step 1: handle with gpt-4"""
 
-    query_result = get_embed(data=query, setting=setting)
-    try:
-        relatedness_data = index.query(
-            vector=query_result,
-            top_k=1,
-            include_values=False,
-            namespace=train_service.get_pinecone_index_train_namespace(),
+        query_result = get_embed(data=query, setting=setting)
+        try:
+            relatedness_data = index.query(
+                vector=query_result,
+                top_k=1,
+                include_values=False,
+                namespace=train_service.get_pinecone_index_train_namespace(),
+            )
+        except Exception as ex:
+            raise BrainException(code=508, message=responses[508])
+        if len(relatedness_data["matches"]) == 0:
+            return str({"program": "message", "content": ""})
+        document_id = relatedness_data["matches"][0]["id"]
+
+        document = train_service.read_one_document(document_id)
+        page_content = document["page_content"]
+
+        return rails_app.generate(
+            messages=[
+                {
+                    "role": "user",
+                    "content": rails_input_with_args(
+                        setting=setting,
+                        query=query,
+                        image_search=image_search,
+                        page_content=page_content,
+                        document_id=document_id,
+                        is_browser=is_browser,
+                    ),
+                }
+            ]
         )
-    except Exception as ex:
-        raise BrainException(code=508, message=responses[508])
-    if len(relatedness_data["matches"]) == 0:
-        return str({"program": "message", "content": ""})
-    document_id = relatedness_data["matches"][0]["id"]
-
-    document = train_service.read_one_document(document_id)
-    page_content = document["page_content"]
-
-    message = rails_app.generate(
+    return rails_app.generate(
         messages=[
             {
                 "role": "user",
@@ -90,14 +107,11 @@ def llm_rails(
                     setting=setting,
                     query=query,
                     image_search=image_search,
-                    page_content=page_content,
-                    document_id=document_id,
                     is_browser=is_browser,
                 ),
             }
         ]
     )
-    return message
 
 
 def processLargeText(
@@ -309,9 +323,9 @@ def rails_input_with_args(
     setting: ReqModel,
     query: str,
     image_search: bool,
-    page_content: str,
-    document_id: str,
     is_browser: bool,
+    page_content: str = "",
+    document_id: str = "",
 ) -> str:
     # convert json with params for rails.
     json_query_with_params = {

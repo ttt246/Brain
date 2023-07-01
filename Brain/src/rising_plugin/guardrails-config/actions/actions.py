@@ -17,6 +17,7 @@ import os
 import json
 import numpy as np
 
+from Brain.src.service.auto_task_service import AutoTaskService
 from Brain.src.service.train_service import TrainService
 from langchain.docstore.document import Document
 
@@ -26,6 +27,7 @@ from Brain.src.common.utils import (
     COMMAND_BROWSER_OPEN,
     PINECONE_INDEX_NAME,
     DEFAULT_GPT_MODEL,
+    ACTION_FLAG,
 )
 from Brain.src.model.req_model import ReqModel
 from Brain.src.model.requests.request_model import BasicReq
@@ -45,6 +47,7 @@ from Brain.src.rising_plugin.llm.llms import (
     GPT_4,
     FALCON_7B,
     GPT_LLM_MODELS,
+    CATEGORY_PROMPT,
 )
 
 from Brain.src.rising_plugin.pinecone_engine import (
@@ -80,6 +83,8 @@ query is json string with below format
 async def general_question(query):
     """init falcon model"""
     falcon_llm = FalconLLM()
+    autotask_service = AutoTaskService()
+    document_id = ""
     docs = []
 
     """step 0-->: parsing parms from the json query"""
@@ -89,16 +94,23 @@ async def general_question(query):
         raise BrainException(BrainException.JSON_PARSING_ISSUE_MSG)
     query = json_query["query"]
     image_search = json_query["image_search"]
-    page_content = json_query["page_content"]
-    document_id = json_query["document_id"]
+
     setting = ReqModel(json_query["setting"])
     is_browser = json_query["is_browser"]
-
-    docs.append(Document(page_content=page_content, metadata=""))
-    """ 1. calling gpt model to categorize for all message"""
-    chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
-        input_documents=docs, question=query
-    )
+    if ACTION_FLAG:
+        docs.append(Document(page_content=CATEGORY_PROMPT, metadata=""))
+        # temperature shouldbe 0.
+        chain_data = get_llm_chain(
+            model=DEFAULT_GPT_MODEL, setting=setting, temperature=0.0
+        ).run(input_documents=docs, question=query)
+    else:
+        document_id = json_query["document_id"]
+        page_content = json_query["page_content"]
+        docs.append(Document(page_content=page_content, metadata=""))
+        """ 1. calling gpt model to categorize for all message"""
+        chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
+            input_documents=docs, question=query
+        )
     try:
         result = json.loads(chain_data)
         # check image query with only its text
@@ -110,10 +122,7 @@ async def general_question(query):
         """ 2. check program is message to handle it with falcon llm """
         if result["program"] == "message":
             if is_browser:
-                result["program"] = "ask_website"
-            else:
-                # """FALCON_7B:"""
-                result["content"] = falcon_llm.query(question=query)
+                result["program"] = "askwebsite"
         return json.dumps(result)
     except ValueError as e:
         # Check sms and browser query
@@ -123,7 +132,5 @@ async def general_question(query):
             return json.dumps({"program": "browser", "content": "https://google.com"})
 
         if is_browser:
-            return json.dumps({"program": "ask_website", "content": ""})
-        return json.dumps(
-            {"program": "message", "content": falcon_llm.query(question=query)}
-        )
+            return json.dumps({"program": "askwebsite", "content": ""})
+        return json.dumps({"program": "message", "content": chain_data})

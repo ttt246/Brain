@@ -30,6 +30,7 @@ from Brain.src.rising_plugin.image_embedding import embed_image_text, query_imag
 from Brain.src.logs import logger
 from Brain.src.model.basic_model import BasicModel
 from Brain.src.model.feedback_model import FeedbackModel
+from Brain.src.service.auto_task_service import AutoTaskService
 from Brain.src.service.command_service import CommandService
 from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
@@ -88,6 +89,13 @@ def construct_blueprint_api() -> APIRouter:
         # check contact querying
         try:
             contacts_service = ContactsService(setting=setting)
+            if result["program"] == ProgramType.AUTO_TASK:
+                auto_task_service = AutoTaskService()
+                result["content"] = auto_task_service.ask_task_with_autogpt(
+                    query=query, firebase_app=firebase_app, setting=setting
+                )
+                return assembler.to_response(200, "", result)
+
             if result["program"] == ProgramType.CONTACT:
                 # querying contacts to getting its expected results
                 contacts_results = contacts_service.query_contacts(

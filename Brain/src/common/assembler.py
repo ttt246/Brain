@@ -57,7 +57,7 @@ class Assembler:
 
     """mapping result type into json
     {
-        "program": sms | contacts | browser | select_item_detail_info, 
+        "program": sms | contacts | browser | selectitemdetailinfo, 
         "content": string
     }
     """
