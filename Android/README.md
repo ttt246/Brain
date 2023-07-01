@@ -23,7 +23,6 @@ All complex software including operating systems will need to be rewritten from 
 | Image Search System  | A user can search image on Android local storage |
 | Send SMS | If a user says that send SMS, mobile open SMS editor and a user can send SMS using the editor. |
 
-[[Rising Brain](https://github.com/ttt246/RisingBrain)]
 ### Run locally
 - Copy google-services.json into app folder of project
 
