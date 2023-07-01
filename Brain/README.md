@@ -27,8 +27,7 @@ All complex software including operating systems will need to be rewritten from 
 - 🌍 Support all web browsers to manipulate it automatically as its extension.
 - 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
 - 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
-
-[[Android Application](https://github.com/ttt246/RisingPhone)] [[Brrowser Extension](https://github.com/ttt246/Rising_Browser)] [[Rising Plugin](https://github.com/ttt246/Rising_Plugin)]
+- 
 #### 1.2 Feature
 
 - Chat with Rising AI as an assistant.
