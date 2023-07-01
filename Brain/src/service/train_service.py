@@ -148,6 +148,12 @@ class TrainService:
             setting=self.setting,
         )
 
+    def delete_all_training_from_pinecone(self) -> Any:
+        self.init_firestore()
+        return delete_all_pinecone(
+            namespace=self.get_pinecone_index_namespace(), setting=self.setting
+        )
+
     def get_pinecone_index_namespace(self) -> str:
         self.init_firestore()
         return get_pinecone_index_namespace(f"trains")
