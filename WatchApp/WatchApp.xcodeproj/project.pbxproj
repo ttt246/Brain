@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		FE56FAE22A4C5810008410B4 /* WatchApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */; };
-		FE56FAEB2A4C5814008410B4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE56FAEA2A4C5814008410B4 /* Assets.xcassets */; };
-		FE56FAEE2A4C5814008410B4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FE56FAED2A4C5814008410B4 /* Preview Assets.xcassets */; };
 		FE56FAF82A4C5814008410B4 /* WatchApp_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAF72A4C5814008410B4 /* WatchApp_Watch_AppTests.swift */; };
 		FE56FB022A4C5814008410B4 /* WatchApp_Watch_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FB012A4C5814008410B4 /* WatchApp_Watch_AppUITests.swift */; };
 		FE56FB042A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FB032A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift */; };
-		FE56FB142A4C80A5008410B4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE82A4C5810008410B4 /* ContentView.swift */; };
+		FE56FB142A4C80A5008410B4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE82A4C5810008410B4 /* ChatView.swift */; };
 		FE673FCB2A4CDBF7003EF230 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FE673FCA2A4CDBF7003EF230 /* KeychainSwift */; };
+		FE673FCE2A5022C9003EF230 /* ChatMessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE673FCD2A5022C9003EF230 /* ChatMessageRow.swift */; };
+		FE673FD02A504903003EF230 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE673FCF2A504903003EF230 /* SettingView.swift */; };
+		FE673FD32A504EAF003EF230 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE673FD22A504EAF003EF230 /* MainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,14 +61,15 @@
 		FE56FADB2A4C5810008410B4 /* WatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAppApp.swift; sourceTree = "<group>"; };
-		FE56FAE82A4C5810008410B4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		FE56FAEA2A4C5814008410B4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		FE56FAED2A4C5814008410B4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FE56FAE82A4C5810008410B4 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		FE56FAF32A4C5814008410B4 /* WatchApp Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchApp Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FAF72A4C5814008410B4 /* WatchApp_Watch_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp_Watch_AppTests.swift; sourceTree = "<group>"; };
 		FE56FAFD2A4C5814008410B4 /* WatchApp Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WatchApp Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FB012A4C5814008410B4 /* WatchApp_Watch_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp_Watch_AppUITests.swift; sourceTree = "<group>"; };
 		FE56FB032A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp_Watch_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FE673FCD2A5022C9003EF230 /* ChatMessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageRow.swift; sourceTree = "<group>"; };
+		FE673FCF2A504903003EF230 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		FE673FD22A504EAF003EF230 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,20 +122,12 @@
 		FE56FAE52A4C5810008410B4 /* WatchApp Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				FE673FCC2A502280003EF230 /* Components */,
+				FE673FD12A504913003EF230 /* Pages */,
+				FE673FD22A504EAF003EF230 /* MainView.swift */,
 				FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */,
-				FE56FAE82A4C5810008410B4 /* ContentView.swift */,
-				FE56FAEA2A4C5814008410B4 /* Assets.xcassets */,
-				FE56FAEC2A4C5814008410B4 /* Preview Content */,
 			);
 			path = "WatchApp Watch App";
-			sourceTree = "<group>";
-		};
-		FE56FAEC2A4C5814008410B4 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				FE56FAED2A4C5814008410B4 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		FE56FAF62A4C5814008410B4 /* WatchApp Watch AppTests */ = {
@@ -151,6 +145,23 @@
 				FE56FB032A4C5814008410B4 /* WatchApp_Watch_AppUITestsLaunchTests.swift */,
 			);
 			path = "WatchApp Watch AppUITests";
+			sourceTree = "<group>";
+		};
+		FE673FCC2A502280003EF230 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FE673FCD2A5022C9003EF230 /* ChatMessageRow.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		FE673FD12A504913003EF230 /* Pages */ = {
+			isa = PBXGroup;
+			children = (
+				FE673FCF2A504903003EF230 /* SettingView.swift */,
+				FE56FAE82A4C5810008410B4 /* ChatView.swift */,
+			);
+			path = Pages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,8 +302,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE56FAEE2A4C5814008410B4 /* Preview Assets.xcassets in Resources */,
-				FE56FAEB2A4C5814008410B4 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,7 +326,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE56FB142A4C80A5008410B4 /* ContentView.swift in Sources */,
+				FE673FCE2A5022C9003EF230 /* ChatMessageRow.swift in Sources */,
+				FE673FD02A504903003EF230 /* SettingView.swift in Sources */,
+				FE56FB142A4C80A5008410B4 /* ChatView.swift in Sources */,
+				FE673FD32A504EAF003EF230 /* MainView.swift in Sources */,
 				FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
