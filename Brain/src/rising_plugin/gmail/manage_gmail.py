@@ -103,8 +103,7 @@ def read_emails(
         page (int, optional): The index of the page result the function should resturn. Defaults to 0, the first page.
 
     Returns:
-        str: A list of dictionaries containing email details if there are any matching emails. Otherwise, returns
-             a string indicating that no matching emails were found.
+        str: A list of dictionaries containing email details if there are any matching emails.
     """
     email_sender = sender
     imap_folder = adjust_imap_folder_for_gmail(imap_folder, email_sender)
@@ -175,10 +174,17 @@ def read_emails(
 
     conn.logout()
     if not messages:
-        return (
-            f"There are no Emails in your folder `{imap_folder}` "
-            f"when searching with imap command `{imap_search_command}`"
+        messages.append(
+            {
+                "From": "",
+                "To": "",
+                "Date": "",
+                "CC": "",
+                "Subject": "",
+                "Message Body": "There are no Emails",
+            }
         )
+        return json.dumps(messages)
 
     # Confirm that integer parameters are the right type
     limit = int(limit)
@@ -200,9 +206,9 @@ def read_emails(
 
     # Return paginated indexes
     if start_index == end_index:
-        return [messages[start_index]]
+        return json.dumps([messages[start_index]])
     else:
-        return messages[start_index:end_index]
+        return json.dumps(messages[start_index:end_index])
 
 
 def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
