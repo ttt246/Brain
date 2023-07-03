@@ -14,14 +14,17 @@ from langchain.chains.question_answering import load_qa_chain
 from nemoguardrails.rails import LLMRails, RailsConfig
 
 from langchain.chat_models import ChatOpenAI
-
+from langchain.docstore.document import Document
 from firebase_admin import storage
 
 from .csv_embed import get_embed
-from .llm.llms import get_llm, GPT_4, FALCON_7B
+from .llm.falcon_llm import FalconLLM
+from .llm.llms import get_llm, GPT_4, FALCON_7B, get_llm_chain, CATEGORY_PROMPT
 from .pinecone_engine import init_pinecone
+from .rails_validate import validate_rails
 from ..common.brain_exception import BrainException
 from ..common.http_response_codes import responses
+from ..common.program_type import ProgramType
 from ..common.utils import (
     OPENAI_API_KEY,
     FIREBASE_STORAGE_ROOT,
@@ -29,6 +32,8 @@ from ..common.utils import (
     parseJsonFromCompletion,
     PINECONE_INDEX_NAME,
     ACTION_FLAG,
+    COMMAND_SMS_INDEXES,
+    COMMAND_BROWSER_OPEN,
 )
 from .image_embedding import (
     query_image_text,
@@ -36,6 +41,7 @@ from .image_embedding import (
 )
 from ..model.req_model import ReqModel
 from ..model.requests.request_model import BasicReq
+from ..service.auto_task_service import AutoTaskService
 from ..service.train_service import TrainService
 
 # Give the path to the folder containing the rails
@@ -60,6 +66,23 @@ def llm_rails(
     image_search: bool = True,
     is_browser: bool = False,
 ) -> Any:
+    # rails validation
+    rails_resp = rails_app.generate(
+        messages=[
+            {
+                "role": "user",
+                "content": query,
+            }
+        ]
+    )
+    if not validate_rails(rails_resp):
+        json_resp = json.loads(rails_resp["content"])
+        json_resp["program"] = ProgramType.MESSAGE
+        return json_resp
+
+    # querying
+    document_id = ""
+    page_content = ""
     if not ACTION_FLAG:
         """step 0: convert string to json"""
         index = init_pinecone(index_name=PINECONE_INDEX_NAME, setting=setting)
@@ -84,33 +107,13 @@ def llm_rails(
         document = train_service.read_one_document(document_id)
         page_content = document["page_content"]
 
-        return rails_app.generate(
-            messages=[
-                {
-                    "role": "user",
-                    "content": rails_input_with_args(
-                        setting=setting,
-                        query=query,
-                        image_search=image_search,
-                        page_content=page_content,
-                        document_id=document_id,
-                        is_browser=is_browser,
-                    ),
-                }
-            ]
-        )
-    return rails_app.generate(
-        messages=[
-            {
-                "role": "user",
-                "content": rails_input_with_args(
-                    setting=setting,
-                    query=query,
-                    image_search=image_search,
-                    is_browser=is_browser,
-                ),
-            }
-        ]
+    return ask_question(
+        query=query,
+        setting=setting,
+        is_browser=is_browser,
+        image_search=image_search,
+        document_id=document_id,
+        page_content=page_content,
     )
 
 
@@ -131,11 +134,7 @@ def processLargeText(
             image_search=image_search,
             is_browser=is_browser,
         )
-        try:
-            return json.loads(message["content"])
-        except Exception as e:
-            result = json.dumps(message["content"])
-            return parseJsonFromCompletion(result)
+        return message
     else:
         first_query = "The total length of the content that I want to send you is too large to send in only one piece.\nFor sending you that content, I will follow this rule:\n[START PART 1/10]\nThis is the content of the part 1 out of 10 in total\n[END PART 1/10]\nThen you just answer: 'Received part 1/10'\nAnd when I tell you 'ALL PART SENT', then you can continue processing the data and answering my requests."
         app.generate(messages=[{"role": "user", "content": first_query}])
@@ -191,11 +190,7 @@ def processLargeText(
                     image_search=image_search,
                     is_browser=is_browser,
                 )
-                try:
-                    return json.loads(message["content"])
-                except Exception as e:
-                    result = json.dumps(message["content"])
-                    return parseJsonFromCompletion(result)
+                return message
         # out of for-loop
 
 
@@ -337,6 +332,59 @@ def rails_input_with_args(
         "is_browser": is_browser,
     }
     return json.dumps(json_query_with_params)
+
+
+"""main method to handle basic query"""
+
+
+def ask_question(
+    query: str,
+    setting: ReqModel,
+    is_browser: bool,
+    image_search: bool,
+    document_id: str = "",
+    page_content: str = "",
+) -> Any:
+    """init falcon model"""
+    falcon_llm = FalconLLM()
+    autotask_service = AutoTaskService()
+    docs = []
+
+    if ACTION_FLAG:
+        docs.append(Document(page_content=CATEGORY_PROMPT, metadata=""))
+        # temperature shouldbe 0.
+        chain_data = get_llm_chain(
+            model=DEFAULT_GPT_MODEL, setting=setting, temperature=0.0
+        ).run(input_documents=docs, question=query)
+    else:
+        docs.append(Document(page_content=page_content, metadata=""))
+        """ 1. calling gpt model to categorize for all message"""
+        chain_data = get_llm_chain(model=DEFAULT_GPT_MODEL, setting=setting).run(
+            input_documents=docs, question=query
+        )
+    try:
+        result = json.loads(chain_data)
+        # check image query with only its text
+        if result["program"] == ProgramType.IMAGE:
+            if image_search:
+                result["content"] = {
+                    "image_name": query_image_text(result["content"], "", setting)
+                }
+        """ 2. check program is message to handle it with falcon llm """
+        if result["program"] == ProgramType.MESSAGE:
+            if is_browser:
+                result["program"] = ProgramType.BrowserType.ASK_WEBSITE
+        return result
+    except ValueError as e:
+        # Check sms and browser query
+        if document_id in COMMAND_SMS_INDEXES:
+            return {"program": ProgramType.SMS, "content": chain_data}
+        elif document_id in COMMAND_BROWSER_OPEN:
+            return {"program": ProgramType.BROWSER, "content": "https://google.com"}
+
+        if is_browser:
+            return {"program": ProgramType.BrowserType.ASK_WEBSITE, "content": ""}
+        return {"program": ProgramType.MESSAGE, "content": chain_data}
 
 
 def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:

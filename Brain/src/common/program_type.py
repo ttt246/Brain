@@ -8,6 +8,8 @@ class ProgramType:
     SMS = "sms"
     CONTACT = "contact"
     MESSAGE = "message"
+    AUTO_TASK = "autotask"
+    RAILS_OFF_TOPIC = "rails_off_topic"
 
     class BrowserType:
         OPEN_TAB = "opentab"
@@ -22,3 +24,4 @@ class ProgramType:
         SELECT_ITEM_DETAIL_INFO = "selectitemdetailinfo"
         SELECT_ITEM = "selectitem"
         MESSAGE = "message"
+        ASK_WEBSITE = "askwebsite"

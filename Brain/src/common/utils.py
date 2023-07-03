@@ -52,6 +52,7 @@ class ProgramType:
     CONTACT = "contact"
     MESSAGE = "message"
     AUTO_TASK = "autotask"
+    RAILS_OFF_TOPIC = "rails_off_topic"
 
 
 # validate json format
