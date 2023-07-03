@@ -231,8 +231,20 @@ const Panel = () => {
         return data
     }
 
+    /// Check if the user's system is in dark mode
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const isDarkMode = darkModeMediaQuery.matches;
+
+    const handleThemeChange = (e) => {
+        const isDarkMode = e.matches;
+        // Do something based on the new theme data
+    };
+
+    // Listen for changes in the theme data
+    darkModeMediaQuery.addEventListener('change', handleThemeChange);
+
     return (
-        <Layout className="main-layout">
+        <Layout className="main-layout" data-theme={isDarkMode ? 'dark': 'light'}>
             <div className="header">
                 <h4>RisingBrowser</h4>
             </div>
