@@ -62,35 +62,35 @@ class CommandRegistry:
                 "Search a image that #description",
                 ["#description"],
                 True,
-            ).__str_json__(),
+            ),
             Command(
                 "notification",
                 "send notification or alert",
                 "send that #notification",
                 ["#notification"],
                 True,
-            ).__str_json__(),
+            ),
             Command(
                 "sms",
                 "send a sms",
                 "",
                 [],
                 True,
-            ).__str_json__(),
+            ),
             Command(
                 "browsing",
                 "search browser",
                 "Search something that #description",
                 ["#description"],
                 True,
-            ).__str_json__(),
+            ),
             Command(
                 "social",
                 "search something in social",
                 "Search something in twitter or facebook that #description",
                 ["#description"],
                 True,
-            ).__str_json__(),
+            ),
         ]
 
     def get_all_commands(self) -> Any:
