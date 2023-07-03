@@ -28,7 +28,7 @@ All complex software including operating systems will need to be rewritten from 
 - 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
 - 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
 
-[[Android Application](https://github.com/ttt246/Brain/tree/main/Android)] [[Brrowser Extension](https://github.com/ttt246/Brain/tree/main/Extension)] [[Apple Watch](https://github.com/ttt246/Brain/tree/main/WatchApp)]
+[[Brain](https://github.com/ttt246/Brain)] [[Android Application](https://github.com/ttt246/Brain/tree/main/Android)] [[Brrowser Extension](https://github.com/ttt246/Brain/tree/main/Extension)] [[Apple Watch](https://github.com/ttt246/Brain/tree/main/WatchApp)]
 #### 1.2 Feature
 
 - Chat with Rising AI as an assistant.
