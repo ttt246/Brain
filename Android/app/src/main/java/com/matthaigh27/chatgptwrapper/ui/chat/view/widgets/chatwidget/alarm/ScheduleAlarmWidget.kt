@@ -2,6 +2,7 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -39,7 +40,7 @@ class ScheduleAlarmWidget(
     var hideListener: OnHideListener? = null
 
     init {
-        inflate(context, R.layout.widget_schedule_alarm, this)
+        LayoutInflater.from(context).inflate(R.layout.widget_schedule_alarm, this, true)
         this.context = context
         this.repeat = repeat
 

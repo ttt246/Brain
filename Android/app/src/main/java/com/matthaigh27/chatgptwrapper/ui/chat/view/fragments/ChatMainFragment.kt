@@ -14,7 +14,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -51,7 +50,7 @@ import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MESSAGE
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter
-import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.arrayToHelpPromptList
+import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.responseToHelpPromptList
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.getHelpCommandFromStr
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.isMainHelpCommand
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.makePromptItemUsage
@@ -84,7 +83,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
     private var currentSelectedImage: ByteArray? = null
     private var currentUploadedImageName: String? = null
     private var isImagePicked: Boolean = false
-    private var showloadingCount = 0
+    private var showLoadingCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -168,10 +167,10 @@ class ChatMainFragment : Fragment(), OnClickListener {
             imgLoading.startAnimation(loadingRotate)
             imgLoading.visibility = View.VISIBLE
             edtMessageInput?.isEnabled = false
-            showloadingCount++
+            showLoadingCount++
         } else {
-            showloadingCount--
-            if (showloadingCount == 0) {
+            showLoadingCount--
+            if (showLoadingCount == 0) {
                 imgLoading.clearAnimation()
                 imgLoading.visibility = View.GONE
                 edtMessageInput?.isEnabled = true
@@ -202,7 +201,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                             image = currentSelectedImage
                         )
                     )
-                    fetchImageRelateness(currentUploadedImageName!!, content)
+                    fetchImageRelatedness(currentUploadedImageName!!, content)
                     isImagePicked = false
                 } else {
                     addChatItemToList(ChatMessageModel(type, content, data, hasImage, image))
@@ -235,15 +234,39 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun trainContacts() {
-        viewModel.trainContacts().observe(viewLifecycleOwner, Observer { state ->
+        viewModel.trainContacts().observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is ApiResource.Loading -> {
+                    showLoading(true)
+                }
 
-        })
+                is ApiResource.Success -> {
+                    showLoading(false)
+                }
+
+                is ApiResource.Error -> {
+                    showLoading(false)
+                }
+            }
+        }
     }
 
     private fun trainImages() {
-        viewModel.trainImages().observe(viewLifecycleOwner, Observer { state ->
+        viewModel.trainImages().observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is ApiResource.Loading -> {
+                    showLoading(true)
+                }
 
-        })
+                is ApiResource.Success -> {
+                    showLoading(false)
+                }
+
+                is ApiResource.Error -> {
+                    showLoading(false)
+                }
+            }
+        }
     }
 
     private fun openHelpPromptWidget(message: String) {
@@ -302,7 +325,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
 
     private fun fetchAllCommands() {
-        viewModel.getAllHelpCommands().observe(viewLifecycleOwner, Observer { resource ->
+        viewModel.getAllHelpCommands().observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is ApiResource.Loading -> {
                     showLoading(true)
@@ -312,7 +335,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     showLoading(false)
                     resource.data?.let { data ->
                         helpPromptList =
-                            arrayToHelpPromptList(data.result.content)
+                            responseToHelpPromptList(data.result.content)
                     }
                 }
 
@@ -321,12 +344,12 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     addErrorMessage(resource.message!!)
                 }
             }
-        })
+        }
     }
 
-    private fun fetchImageRelateness(imageName: String, message: String) {
+    private fun fetchImageRelatedness(imageName: String, message: String) {
         viewModel.getImageRelatedness(imageName, message)
-            .observe(viewLifecycleOwner, Observer { resource ->
+            .observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is ApiResource.Loading -> {
                         showLoading(true)
@@ -348,11 +371,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
                         addErrorMessage(resource.message!!)
                     }
                 }
-            })
+            }
     }
 
     private fun sendNotification(message: String) {
-        viewModel.sendNotification(message).observe(viewLifecycleOwner, Observer { resource ->
+        viewModel.sendNotification(message).observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is ApiResource.Loading -> {
                     showLoading(true)
@@ -384,7 +407,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 }
             }
 
-        })
+        }
     }
 
     private fun fetchResponseBrowser(apiResponse: ApiResponse<CommonResult>) {
@@ -395,7 +418,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         val content = apiResponse.result.content.asJsonObject
         viewModel.downloadImageFromFirebase(
             content["image_name"].asString
-        ).observe(viewLifecycleOwner, Observer { resource ->
+        ).observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is ApiResource.Loading -> {
                     showLoading(true)
@@ -417,7 +440,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     showLoading(false)
                 }
             }
-        })
+        }
     }
 
     private fun fetchResponseContact(apiResponse: ApiResponse<CommonResult>) {
@@ -467,7 +490,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
             override fun sentSms(phoneNumber: String, message: String) {
                 addMessage(
                     type = TYPE_CHAT_RECEIVE,
-                    content = "You sent SMS with belowing content.\n\n " + "To: $phoneNumber\n " + "Message: $message",
+                    content = "You sent SMS with belong content.\n\n To: $phoneNumber\n Message: $message",
                 )
             }
 
@@ -521,7 +544,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 if (!isSuccess)
                     addErrorMessage("Fail to pick image")
                 viewModel.uploadImageToFirebase(data!!)
-                    .observe(viewLifecycleOwner, Observer { resource ->
+                    .observe(viewLifecycleOwner) { resource ->
                         when (resource) {
                             is ApiResource.Loading -> {
                                 showLoading(true)
@@ -539,7 +562,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                                 showLoading(false)
                             }
                         }
-                    })
+                    }
             }
 
             override fun setAlarm(hours: Int, minutes: Int, label: String) {
