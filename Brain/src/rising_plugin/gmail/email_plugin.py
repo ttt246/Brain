@@ -12,7 +12,7 @@ from email.message import EmailMessage
 from bs4 import BeautifulSoup
 
 
-class EmailManager:
+class EmailPlugin:
     def send_email(
         self, sender: str, pwd: str, to: str, subject: str, body: str, to_send: bool
     ) -> str:

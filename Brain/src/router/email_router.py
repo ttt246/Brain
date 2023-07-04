@@ -7,7 +7,7 @@ from Brain.src.common.brain_exception import BrainException
 from Brain.src.model.requests.request_model import (
     EmailReader,
 )
-from Brain.src.rising_plugin.gmail.manage_gmail import EmailManager
+from Brain.src.rising_plugin.gmail.email_plugin import EmailPlugin
 from Brain.src.firebase.firebase import firebase_admin_with_setting
 
 router = APIRouter()
@@ -60,7 +60,7 @@ def construct_blueprint_email_api() -> APIRouter:
                 imap_search_cmd = "(ALL)"
 
             # read emails
-            email_manager = EmailManager()
+            email_manager = EmailPlugin()
             result = email_manager.read_emails(
                 sender=data.data.sender,
                 pwd=data.data.pwd,
