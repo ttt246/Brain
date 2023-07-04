@@ -215,3 +215,10 @@ class AutoTaskDelete(BasicReq):
         reference_link: str
 
     data: Body
+
+
+"""endpoint : /contact/get_by_ids"""
+
+
+class GetContactsByIds(BasicReq):
+    contactIds: list[str]
