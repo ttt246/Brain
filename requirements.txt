@@ -3,6 +3,7 @@ replicate==0.8.1
 pytest==7.3.0
 async-timeout==4.0.2
 attrs==22.2.0
+beautifulsoup4==4.12.2
 black==23.3.0
 CacheControl==0.12.11
 cachetools==5.3.0
