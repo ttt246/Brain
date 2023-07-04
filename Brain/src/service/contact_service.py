@@ -138,7 +138,7 @@ class ContactsService:
         )
         contacts_doc_ref.delete()
 
-    def getContactsByIds(self, uuid: str, contactIds: list[str]) -> []:
+    def get_contacts_by_ids(self, uuid: str, contactIds: list[str]) -> []:
         phones_doc_ref = self.phones_ref.document(uuid)
         contacts_ref = phones_doc_ref.collection("contacts")
 

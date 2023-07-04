@@ -217,7 +217,7 @@ class AutoTaskDelete(BasicReq):
     data: Body
 
 
-"""endpoint : /contact/getbyIds"""
+"""endpoint : /contact/get_by_ids"""
 
 
 class GetContactsByIds(BasicReq):

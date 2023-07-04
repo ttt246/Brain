@@ -515,8 +515,8 @@ def construct_blueprint_api() -> APIRouter:
 
         """
 
-    @router.post("/contacts/getByIds")
-    def getContactsByIds(data: GetContactsByIds):
+    @router.post("/contacts/get_contacts_by_ids")
+    def get_contacts_by_ids(data: GetContactsByIds):
         try:
             setting, firebase_app = firebase_admin_with_setting(data)
         except BrainException as ex:
@@ -527,7 +527,7 @@ def construct_blueprint_api() -> APIRouter:
 
         result = ContactsService(
             firebase_app=firebase_app, setting=setting
-        ).getContactsByIds(uuid=uuid, contactIds=data.contactIds)
+        ).get_contacts_by_ids(uuid=uuid, contactIds=data.contactIds)
 
         return assembler.to_response(200, "Success to get contacts by uuid", result)
 
