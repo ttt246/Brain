@@ -12,11 +12,23 @@ from email.message import EmailMessage
 from bs4 import BeautifulSoup
 
 
-def send_email(sender: str, pwd: str, to: str, subject: str, body: str, to_send: bool) -> str:
-    return send_email_with_attachment_internal(sender, pwd, to, subject, body, None, None, to_send)
+def send_email(
+    sender: str, pwd: str, to: str, subject: str, body: str, to_send: bool
+) -> str:
+    return send_email_with_attachment_internal(
+        sender, pwd, to, subject, body, None, None, to_send
+    )
 
 
-def send_email_with_attachment(sender: str, pwd: str, to: str, subject: str, body: str, filename: str, to_send: bool) -> str:
+def send_email_with_attachment(
+    sender: str,
+    pwd: str,
+    to: str,
+    subject: str,
+    body: str,
+    filename: str,
+    to_send: bool,
+) -> str:
     attachment_path = filename
     attachment = os.path.basename(filename)
     return send_email_with_attachment_internal(
@@ -25,7 +37,14 @@ def send_email_with_attachment(sender: str, pwd: str, to: str, subject: str, bod
 
 
 def send_email_with_attachment_internal(
-        sender: str, pwd: str, to: str, title: str, message: str, attachment_path: str, attachment: str, to_send: bool
+    sender: str,
+    pwd: str,
+    to: str,
+    title: str,
+    message: str,
+    attachment_path: str,
+    attachment: str,
+    to_send: bool,
 ) -> str:
     """Send an email
 
@@ -87,8 +106,13 @@ def send_email_with_attachment_internal(
 
 
 def read_emails(
-        sender: str, pwd: str, imap_folder: str = "inbox", imap_search_command: str = "UNSEEN", limit: int = 5,
-        page: int = 1) -> str:
+    sender: str,
+    pwd: str,
+    imap_folder: str = "inbox",
+    imap_search_command: str = "UNSEEN",
+    limit: int = 5,
+    page: int = 1,
+) -> str:
     """Read emails from an IMAP mailbox.
 
     This function reads emails from a specified IMAP folder, using a given IMAP search command, limits, and page numbers.
@@ -197,7 +221,9 @@ def read_emails(
     page_count = len(messages) // limit + (len(messages) % limit > 0)
 
     if page < 1 or page > page_count:
-        raise ValueError("Error: The page value references a page that is not part of the results")
+        raise ValueError(
+            "Error: The page value references a page that is not part of the results"
+        )
 
     # Calculate paginated indexes
     start_index = len(messages) - (page * limit + 1)
@@ -221,7 +247,7 @@ def adjust_imap_folder_for_gmail(imap_folder: str, email_sender: str) -> str:
 
 
 def imap_open(
-        imap_folder: str, email_sender: str, email_password: str
+    imap_folder: str, email_sender: str, email_password: str
 ) -> imaplib.IMAP4_SSL:
     imap_server = os.getenv("EMAIL_IMAP_SERVER")
     conn = imaplib.IMAP4_SSL(imap_server)
@@ -282,7 +308,8 @@ def clean_email_body(email_body):
     """
 
     # If body is None, return an empty string
-    if email_body is None: email_body = ""
+    if email_body is None:
+        email_body = ""
 
     # Remove any HTML tags
     email_body = BeautifulSoup(email_body, "html.parser")
