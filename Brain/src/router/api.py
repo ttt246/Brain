@@ -515,7 +515,7 @@ def construct_blueprint_api() -> APIRouter:
 
         """
 
-    @router.post("/contacts/get_contacts_by_ids")
+    @router.post("/contacts/get_by_ids")
     def get_contacts_by_ids(data: GetContactsByIds):
         try:
             setting, firebase_app = firebase_admin_with_setting(data)
