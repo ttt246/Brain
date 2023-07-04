@@ -227,3 +227,10 @@ class EmailReader(BasicReq):
         imap_folder: str
 
     data: Body
+
+      
+"""endpoint : /contact/get_by_ids"""
+
+
+class GetContactsByIds(BasicReq):
+    contactIds: list[str]

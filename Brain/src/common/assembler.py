@@ -69,3 +69,18 @@ class Assembler:
 
     def to_req_model(self, basic_req: BasicReq.Confs) -> ReqModel:
         return ReqModel(basic_req.to_json())
+
+    """mapping data from a ContactModel into json
+    {
+        "contactId": int,
+        "displayName": string,
+        "phoneNumbers": [string]
+    }
+    """
+
+    def to_contact_result_format(self, contact: ContactModel) -> Any:
+        return {
+            "contactId": contact.contact_id,
+            "displayName": contact.display_name,
+            "phoneNumbers": contact.phone_numbers,
+        }
