@@ -11,6 +11,7 @@ from email.message import EmailMessage
 
 from bs4 import BeautifulSoup
 
+# email variables
 EMAIL_SMTP_HOST = "smtp.gmail.com"
 EMAIL_SMTP_PORT = 587
 EMAIL_IMAP_SERVER = "imap.gmail.com"
