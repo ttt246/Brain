@@ -82,5 +82,5 @@ class Assembler:
         return {
             "contactId": contact.contact_id,
             "displayName": contact.display_name,
-            "phoneNumbers": contact.phone_numbers
+            "phoneNumbers": contact.phone_numbers,
         }

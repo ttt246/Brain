@@ -15,10 +15,10 @@ class ClientInfo:
 
     def is_browser(self) -> bool:
         if (
-                self.browser == "Chrome"
-                or self.browser == "Firefox"
-                or self.browser == "Safari"
-                or self.browser == "Edge"
+            self.browser == "Chrome"
+            or self.browser == "Firefox"
+            or self.browser == "Safari"
+            or self.browser == "Edge"
         ):
             return True
         return False

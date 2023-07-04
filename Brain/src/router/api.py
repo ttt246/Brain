@@ -18,7 +18,8 @@ from Brain.src.model.requests.request_model import (
     BasicReq,
     ClientInfo,
     get_client_info,
-    AutoTaskDelete, GetContactsByIds,
+    AutoTaskDelete,
+    GetContactsByIds,
 )
 from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
@@ -61,7 +62,7 @@ def construct_blueprint_api() -> APIRouter:
 
     @router.post("/sendNotification")
     def send_notification(
-            data: Notification, client_info: ClientInfo = Depends(get_client_info)
+        data: Notification, client_info: ClientInfo = Depends(get_client_info)
     ):
         # firebase admin init
         try:
@@ -90,7 +91,9 @@ def construct_blueprint_api() -> APIRouter:
 
         # check contact querying
         try:
-            contacts_service = ContactsService(firebase_app=firebase_app, setting=setting)
+            contacts_service = ContactsService(
+                firebase_app=firebase_app, setting=setting
+            )
             if result["program"] == ProgramType.AUTO_TASK:
                 auto_task_service = AutoTaskService()
                 result["content"] = auto_task_service.ask_task_with_autogpt(
@@ -194,7 +197,7 @@ def construct_blueprint_api() -> APIRouter:
         try:
             # check about asking image description with trained data
             if query_image_ask(
-                    image_content=image_content, message=message, setting=setting
+                image_content=image_content, message=message, setting=setting
             ):
                 image_response["image_desc"] = image_content
             else:
@@ -413,7 +416,9 @@ def construct_blueprint_api() -> APIRouter:
             for contact in data.contacts:
                 contacts.append(assembler.to_contact_model(contact))
             # train contact
-            contacts_service = ContactsService(firebase_app=firebase_app, setting=setting)
+            contacts_service = ContactsService(
+                firebase_app=firebase_app, setting=setting
+            )
             contacts_service.train(uuid, contacts)
         except Exception as e:
             if isinstance(e, BrainException):
@@ -444,7 +449,9 @@ def construct_blueprint_api() -> APIRouter:
 
             # parsing contacts
             # train contact
-            contacts_service = ContactsService(firebase_app=firebase_app, setting=setting)
+            contacts_service = ContactsService(
+                firebase_app=firebase_app, setting=setting
+            )
             contacts_service.delete_all(uuid)
         except Exception as e:
             if isinstance(e, BrainException):
@@ -518,11 +525,10 @@ def construct_blueprint_api() -> APIRouter:
         token: str = setting.token
         uuid: str = setting.uuid
 
-        result = ContactsService(firebase_app=firebase_app, setting=setting).getContactsByIds(uuid=uuid,
-                                                                                              contactIds=data.contactIds)
+        result = ContactsService(
+            firebase_app=firebase_app, setting=setting
+        ).getContactsByIds(uuid=uuid, contactIds=data.contactIds)
 
-        return assembler.to_response(
-            200, "Success to get contacts by uuid", result
-        )
+        return assembler.to_response(200, "Success to get contacts by uuid", result)
 
     return router

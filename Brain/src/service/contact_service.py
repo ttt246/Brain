@@ -1,7 +1,6 @@
 """service to manage contacts"""
 from typing import List, Any
 
-import google
 
 from Brain.src.common.assembler import Assembler
 from Brain.src.model.req_model import ReqModel
@@ -114,7 +113,9 @@ class ContactsService:
         assembler = Assembler()
         data = assembler.to_contact_result_format(contact)
         phones_doc_ref = self.phones_ref.document(uuid)
-        contacts_doc_ref = phones_doc_ref.collection("contacts").document(contact.contact_id)
+        contacts_doc_ref = phones_doc_ref.collection("contacts").document(
+            contact.contact_id
+        )
         contacts_doc_ref.set(data)
 
     """update a contact into document which name is uuid in phone collections in firestore"""
@@ -123,14 +124,18 @@ class ContactsService:
         assembler = Assembler()
         data = assembler.to_contact_result_format(contact)
         phones_doc_ref = self.phones_ref.document(uuid)
-        contacts_doc_ref = phones_doc_ref.collection("contacts").document(contact.contact_id)
+        contacts_doc_ref = phones_doc_ref.collection("contacts").document(
+            contact.contact_id
+        )
         contacts_doc_ref.update(data)
 
     """delete a contact into document which name is uuid in phone collections in firestore"""
 
     def delete_one_contact(self, uuid: str, contact: ContactModel):
         phones_doc_ref = self.phones_ref.document(uuid)
-        contacts_doc_ref = phones_doc_ref.collection("contacts").document(contact.contact_id)
+        contacts_doc_ref = phones_doc_ref.collection("contacts").document(
+            contact.contact_id
+        )
         contacts_doc_ref.delete()
 
     def getContactsByIds(self, uuid: str, contactIds: list[str]) -> []:
