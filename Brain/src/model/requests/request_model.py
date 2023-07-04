@@ -215,3 +215,15 @@ class AutoTaskDelete(BasicReq):
         reference_link: str
 
     data: Body
+
+
+"""endpoint /read_emails"""
+
+
+class EmailReader(BasicReq):
+    class Body(BaseModel):
+        sender: str
+        pwd: str
+        imap_folder: str
+
+    data: Body
