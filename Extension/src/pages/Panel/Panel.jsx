@@ -1,9 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Divider, Input, Layout} from 'antd';
 import {SendOutlined} from '@ant-design/icons';
-import Message from './Message'
+import { onValue, ref } from "firebase/database";
 
+import Message from './Message'
 import './Panel.css';
+import db from '../../configs/firebasedb'
 
 const {Footer, Content} = Layout;
 const confs = {
@@ -18,6 +20,8 @@ const confs = {
     }
 }
 
+const URL_FIREBASE_REAL_TIME = "https://test3-83ffc-default-rtdb.firebaseio.com"
+
 const URL_BASE = 'https://ttt246-brain.hf.space/'
 const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
 const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
@@ -31,10 +35,6 @@ const Panel = () => {
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
 
-    /*
-     * methods for states in ui
-     * lifecycle methods
-     */
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
             addMessage(question, true);
@@ -166,6 +166,9 @@ const Panel = () => {
                     case 'askwebsite':
                         askAboutCurrentWebsite()
                         break
+                    case 'autotask':
+                        autoTask(data.result.content)
+                        break
                     default:
                         break
                 }
@@ -229,6 +232,18 @@ const Panel = () => {
                 data.push(content)
         })
         return data
+    }
+
+    const autoTask = (referenceUrl) => {
+        console.log('call autoTask function----------->', referenceUrl)
+        
+        const dbRef = ref(db, "/auto/autogpt_956a11be45cba4a4_1688452004960/-NZU_GbvZSA1Ghvbs-Qe");
+
+        onValue(dbRef, (snapshot) => {
+            console.log('res dat success======>')
+        }, (error) => {
+            console.error(error);
+        })
     }
 
     /// Check if the user's system is in dark mode
