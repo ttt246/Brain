@@ -556,15 +556,13 @@ def construct_blueprint_api() -> APIRouter:
                 return e.get_response_exp()
             return assembler.to_response(400, "Failed to read emails", "")
         return assembler.to_response(200, "", result)
-        )
 
-        
     """@generator.request_body(
             {
                 "token": "String",
                 "uuid": "String",
                 "contactIds": [
-                    String
+                    "String"
                 ]
             }
         )
@@ -590,6 +588,5 @@ def construct_blueprint_api() -> APIRouter:
         ).get_contacts_by_ids(uuid=uuid, contactIds=data.contactIds)
 
         return assembler.to_response(200, "Success to get contacts by uuid", result)
-
 
     return router

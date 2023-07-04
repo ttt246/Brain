@@ -228,7 +228,7 @@ class EmailReader(BasicReq):
 
     data: Body
 
-      
+
 """endpoint : /contact/get_by_ids"""
 
 
