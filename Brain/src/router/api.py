@@ -18,7 +18,7 @@ from Brain.src.model.requests.request_model import (
     BasicReq,
     ClientInfo,
     get_client_info,
-    AutoTaskDelete,
+    AutoTaskDelete, GetContactsByIds,
 )
 from Brain.src.rising_plugin.risingplugin import (
     getCompletion,
@@ -495,7 +495,10 @@ def construct_blueprint_api() -> APIRouter:
     """@generator.request_body(
             {
                 "token": "String",
-                "uuid": "String", 
+                "uuid": "String",
+                "contactIds": [
+                    String
+                ]
             }
         )
 
@@ -505,8 +508,8 @@ def construct_blueprint_api() -> APIRouter:
 
         """
 
-    @router.post("/contacts/getByUUID")
-    def getContactsByUUID(data: BasicReq):
+    @router.post("/contacts/getByIds")
+    def getContactsByIds(data: GetContactsByIds):
         try:
             setting, firebase_app = firebase_admin_with_setting(data)
         except BrainException as ex:
@@ -515,7 +518,8 @@ def construct_blueprint_api() -> APIRouter:
         token: str = setting.token
         uuid: str = setting.uuid
 
-        result = ContactsService(firebase_app=firebase_app, setting=setting).getContactsByUUID(uuid=uuid)
+        result = ContactsService(firebase_app=firebase_app, setting=setting).getContactsByIds(uuid=uuid,
+                                                                                              contactIds=data.contactIds)
 
         return assembler.to_response(
             200, "Success to get contacts by uuid", result

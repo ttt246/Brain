@@ -103,11 +103,13 @@ class ContactsService:
         return get_pinecone_index_namespace(f"{uuid}-contacts")
 
     """init firestore to save user's contacts"""
+
     def init_firestore(self):
         self.db = firestore.client(app=self.firebase_app)
         self.phones_ref = self.db.collection("phones")
 
     """create a contact into document which name is uuid in phone collections in firestore"""
+
     def create_one_contact(self, uuid: str, contact: ContactModel):
         assembler = Assembler()
         data = assembler.to_contact_result_format(contact)
@@ -116,6 +118,7 @@ class ContactsService:
         contacts_doc_ref.set(data)
 
     """update a contact into document which name is uuid in phone collections in firestore"""
+
     def update_one_contact(self, uuid: str, contact: ContactModel):
         assembler = Assembler()
         data = assembler.to_contact_result_format(contact)
@@ -124,19 +127,18 @@ class ContactsService:
         contacts_doc_ref.update(data)
 
     """delete a contact into document which name is uuid in phone collections in firestore"""
+
     def delete_one_contact(self, uuid: str, contact: ContactModel):
         phones_doc_ref = self.phones_ref.document(uuid)
         contacts_doc_ref = phones_doc_ref.collection("contacts").document(contact.contact_id)
         contacts_doc_ref.delete()
 
-
-
-    def getContactsByUUID(self, uuid: str) -> []:
+    def getContactsByIds(self, uuid: str, contactIds: list[str]) -> []:
         phones_doc_ref = self.phones_ref.document(uuid)
         contacts_ref = phones_doc_ref.collection("contacts")
 
         # Retrieve all documents in the 'contacts' sub-collection
-        contacts = contacts_ref.stream()
+        contacts = contacts_ref.where("contactId", "in", contactIds).stream()
 
         result = []
         # Iterate through the documents and print out their data
