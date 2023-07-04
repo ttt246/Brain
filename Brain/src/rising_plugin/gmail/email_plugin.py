@@ -11,6 +11,11 @@ from email.message import EmailMessage
 
 from bs4 import BeautifulSoup
 
+EMAIL_SMTP_HOST = "smtp.gmail.com"
+EMAIL_SMTP_PORT = 587
+EMAIL_IMAP_SERVER = "imap.gmail.com"
+EMAIL_SIGNATURE = "This was sent by Brain Service"
+
 
 class EmailPlugin:
     def send_email(
@@ -81,7 +86,7 @@ class EmailPlugin:
         msg["From"] = email_sender
         msg["To"] = to
 
-        signature = os.getenv("EMAIL_SIGNATURE")
+        signature = EMAIL_SIGNATURE
         if signature:
             message += f"\n{signature}"
 
@@ -99,8 +104,8 @@ class EmailPlugin:
                 )
 
         if to_send:
-            smtp_host = os.getenv("EMAIL_SMTP_HOST")
-            smtp_port = os.getenv("EMAIL_SMTP_PORT")
+            smtp_host = EMAIL_SMTP_HOST
+            smtp_port = EMAIL_SMTP_PORT
             # send email
             with smtplib.SMTP(host=smtp_host, port=smtp_port) as smtp:
                 smtp.ehlo()
@@ -272,7 +277,7 @@ class EmailPlugin:
     def imap_open(
         self, imap_folder: str, email_sender: str, email_password: str
     ) -> imaplib.IMAP4_SSL:
-        imap_server = os.getenv("EMAIL_IMAP_SERVER")
+        imap_server = EMAIL_IMAP_SERVER
         conn = imaplib.IMAP4_SSL(imap_server)
         conn.login(user=email_sender, password=email_password)
         conn.select(imap_folder)
