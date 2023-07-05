@@ -20,6 +20,8 @@ GPT_LLM_MODELS = [GPT_3_5_TURBO, GPT_4, GPT_4_32K]
 """exception message"""
 EXCEPTION_MSG = f"The model is not correct. It should be in {LLM_MODELS}"
 
+"""maximum auto achievement counter"""
+MAX_AUTO_THINKING = 10
 
 """prompt"""
 CATEGORY_PROMPT = """
@@ -99,3 +101,17 @@ def get_llm(
     elif model == FALCON_7B:
         llm = FalconLLM(temperature=temperature, max_new_tokens=max_new_tokens)
     return llm
+
+
+"""
+generate finish command and response for auto achievement
+"""
+
+
+def get_finish_command_for_auto_task() -> Any:
+    return {
+        "command": {
+            "args": {"response": "I have finished all my objectives."},
+            "name": "finish",
+        }
+    }

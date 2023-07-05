@@ -3,6 +3,7 @@ import os
 from typing import Any
 
 import firebase_admin
+from firebase_admin import db
 from firebase_admin import credentials
 
 from Brain.src.common.assembler import Assembler
@@ -62,3 +63,15 @@ def get_firebase_cred(setting: ReqModel):
     else:
         cred = json.loads(setting.firebase_key)
         return credentials.Certificate(cred)
+
+
+"""
+delete data from real time database of firebase using reference link    
+"""
+
+
+def delete_data_from_realtime(
+    reference_link: str, firebase_app: firebase_admin.App
+) -> None:
+    ref = db.reference(reference_link, app=firebase_app)
+    ref.delete()
