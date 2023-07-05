@@ -44,7 +44,6 @@
                 android:ellipsize="end"
                 android:maxLines="8"
                 android:minLines="8"
-                android:text="Hey friend Human vs Machine coder: Have you ever wondered how much a human coder costs per token output compared to a large language model (LLM)?\n Let's do some napkin math. 🧮Human Coder Costs Per Token:"
                 android:textColor="@color/color_accent"
                 android:textSize="@dimen/font_small"
                 android:textStyle="italic" />
