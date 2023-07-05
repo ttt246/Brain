@@ -209,3 +209,29 @@ def test_chat_rising(body):
 def test_train_contacts(body):
     response = client.post("/train/contacts", json=body)
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        (
+            {
+                "data": {
+                    "reference_link": "test link",
+                },
+                "confs": {
+                    "token": "test_token",
+                    "uuid": "test-uuid",
+                    "openai_key": "",
+                    "pinecone_key": "",
+                    "pinecone_env": "",
+                    "firebase_key": "",
+                    "settings": {"temperature": 0.6},
+                },
+            }
+        )
+    ],
+)
+def test_delete_data(body):
+    response = client.post("/auto_task/delete", json=body)
+    assert response.status_code == 200

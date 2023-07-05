@@ -112,19 +112,19 @@ const Panel = () => {
                         addMessage(data.result.content, false)
                         window.location.assign(data.result.content)
                         break
-                    case 'open_tab':
+                    case 'opentab':
                         addMessage("open tab", false)
                         window.open('https://google.com/search?q=', '_blank', 'noreferrer')
                         break
-                    case 'open_tab_search':
+                    case 'opentabsearch':
                         addMessage("open tab and search", false)
                         window.open('https://google.com/search?q=' + data.result.content, '_blank', 'noreferrer')
                         break
-                    case 'close_tab':
+                    case 'closetab':
                         addMessage("close tab", false)
                         window.close()
                         break
-                    case 'previous_page':
+                    case 'previouspage':
                         if (page === 0) {
                             page = 0
                         } else {
@@ -134,36 +134,36 @@ const Panel = () => {
                         addMessage("go to previous page", false)
                         window.location.assign(currentUrl + '&start=' + page)
                         break
-                    case 'next_page':
+                    case 'nextpage':
                         page += 10
 
                         addMessage("go to next page", false)
                         window.location.assign(currentUrl + '&start=' + page)
                         break
-                    case 'scroll_up':
+                    case 'scrollup':
                         addMessage("scroll up", false)
                         window.scrollBy(0, -300)
                         break
-                    case 'scroll_down':
+                    case 'scrolldown':
                         addMessage("scroll down", false)
                         window.scrollBy(0, 300)
                         break
-                    case 'scroll_top':
+                    case 'scrolltop':
                         addMessage("scroll to top", false)
                         window.scrollTo(0, 0)
                         break
-                    case 'scroll_bottom':
+                    case 'scrollbottom':
                         addMessage("scroll to bottom", false)
                         window.scrollTo(0, document.body.scrollHeight)
                         break
                     case 'message':
                         addMessage(data.result.content, false)
                         break
-                    case 'select_item_detail_info':
+                    case 'selectitemdetailinfo':
                         addMessage("I need more detail info to select item", false)
                         selectItem()
                         break
-                    case 'ask_website':
+                    case 'askwebsite':
                         askAboutCurrentWebsite()
                         break
                     default:
@@ -231,8 +231,20 @@ const Panel = () => {
         return data
     }
 
+    /// Check if the user's system is in dark mode
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const isDarkMode = darkModeMediaQuery.matches;
+
+    const handleThemeChange = (e) => {
+        const isDarkMode = e.matches;
+        // Do something based on the new theme data
+    };
+
+    // Listen for changes in the theme data
+    darkModeMediaQuery.addEventListener('change', handleThemeChange);
+
     return (
-        <Layout className="main-layout">
+        <Layout className="main-layout" data-theme={isDarkMode ? 'dark': 'light'}>
             <div className="header">
                 <h4>RisingBrowser</h4>
             </div>

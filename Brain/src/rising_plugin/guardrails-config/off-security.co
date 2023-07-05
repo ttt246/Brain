@@ -15,4 +15,4 @@ define flow
   bot explain cant off security
 
 define bot explain cant off security
-  '{"program": "message", "content": "Sorry, I cannot comment on anything which is relevant to the password or pin code."}'
+  '{"program": "rails_off_topic", "content": "Sorry, I cannot comment on anything which is relevant to the password or pin code."}'

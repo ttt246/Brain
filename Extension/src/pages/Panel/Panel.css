@@ -1,10 +1,21 @@
+[data-theme='light'] {
+  --font-color: #c9d1d9;
+  --theme-color: #333333;
+}
+
+[data-theme='dark'] {
+  --font-color: #aeafb2;
+  --theme-color: #0d0c0d;
+}
+
 .main-layout {
   display: flex;
   flex-direction: column;
   height: 350px; /* Set the height of the layout to be 100% of the viewport */
   width: 400px;
-  border-radius: 5px;
-  background-color: #f5f5f5dd;
+  border-radius: 10px;  
+  background-color: var(--theme-color);
+  color: var(--font-color);
 }
 
 .main-layout .ant-layout-content {
@@ -19,6 +30,7 @@
 .footer {
   padding: 10px;
   justify-self: end;
+  background-color: var(--theme-color);
 }
 
 .content {
@@ -44,4 +56,5 @@
 
 .divider {
   margin: 0;
+  background-color: grey;
 }

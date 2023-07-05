@@ -1,3 +1,13 @@
+[data-theme='light'] {
+    --send-theme-color: #0a164d;
+    --receive-theme-color: #0d0c0d;
+  }
+  
+  [data-theme='dark'] {
+    --send-theme-color: #0a164d;
+    --receive-theme-color: #333333;
+  }
+
 .message {
     display: flex;
     flex-direction: column;
@@ -7,20 +17,16 @@
 .message_sent {
     width: fit-content;
     padding: 5px;
-    border: #04c4f8 1px solid;
-    border-radius: 3px;
-    background-color: transparent;
-    color: #04c4f8;
+    border-radius: 5px;
+    background-color: var(--send-theme-color);
     align-self: end;
 }
 
 .message_received {
     width: fit-content;
     padding: 5px;
-    border: #bc0fdb 1px solid;
-    border-radius: 3px;
-    background-color: transparent;
-    color: #bc0fdb;
+    border-radius: 5px;
+    background-color: var(--receive-theme-color);
 }
 
 

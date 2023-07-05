@@ -205,3 +205,32 @@ class Train(BasicReq):
     id: str
     data: TrainData
     status: str
+
+
+"""endpoint /auto_task/delete"""
+
+
+class AutoTaskDelete(BasicReq):
+    class Body(BaseModel):
+        reference_link: str
+
+    data: Body
+
+
+"""endpoint /read_emails"""
+
+
+class EmailReader(BasicReq):
+    class Body(BaseModel):
+        sender: str
+        pwd: str
+        imap_folder: str
+
+    data: Body
+
+
+"""endpoint : /contact/get_by_ids"""
+
+
+class GetContactsByIds(BasicReq):
+    contactIds: list[str]

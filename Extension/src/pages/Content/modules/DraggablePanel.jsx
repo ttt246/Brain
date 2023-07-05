@@ -61,6 +61,8 @@ class DraggablePanel extends React.Component {
                     cursor: 'move',
                     right: 0, // Add this property
                     bottom: 0, // Add this property
+                    width: '400px',
+                    height: '350px'
                 }}
             >
                 <Panel />
