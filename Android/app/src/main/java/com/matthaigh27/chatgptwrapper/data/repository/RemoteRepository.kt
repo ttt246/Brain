@@ -31,13 +31,7 @@ object RemoteRepository {
 
     fun getKeys(): Keys{
         RoomRepository
-        val settingModel = runBlocking {
-            val model = RoomRepository.getSettingByUUID(appContext.getUUID())
-            if(model == null) {
-                return@runBlocking emptySettingModel()
-            }
-            return@runBlocking SettingModel.init(model.setting)
-        }
+        val settingModel = SharedPreferencesRepository.getConfig()
         val keys  = Keys(
             uuid = appContext.getUUID(),
             token = appContext.getFCMToken(),

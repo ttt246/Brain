@@ -6,17 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.matthaigh27.chatgptwrapper.data.local.dao.ContactDao
 import com.matthaigh27.chatgptwrapper.data.local.dao.ImageDao
-import com.matthaigh27.chatgptwrapper.data.local.dao.SettingDao
 import com.matthaigh27.chatgptwrapper.data.local.entity.ContactEntity
 import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
-import com.matthaigh27.chatgptwrapper.data.local.entity.SettingEntity
 
-@Database(entities = [ImageEntity::class, ContactEntity::class, SettingEntity::class], version = 1, exportSchema = false)
+@Database(entities = [ImageEntity::class, ContactEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun imageDao(): ImageDao
     abstract fun contactDao(): ContactDao
-    abstract fun settingDao(): SettingDao
 
     companion object {
         private val DATABASE_NAME = "RisingPhone"
