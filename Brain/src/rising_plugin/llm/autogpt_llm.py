@@ -27,6 +27,11 @@ from marshmallow import ValidationError
 
 import faiss
 
+from Brain.src.rising_plugin.llm.llms import (
+    MAX_AUTO_THINKING,
+    get_finish_command_for_auto_task,
+)
+
 
 class AutoGPTLLM:
     """autogpt run method to get the expected result"""
@@ -51,6 +56,12 @@ class AutoGPTLLM:
         while True:
             # Discontinue if continuous limit is reached
             loop_count += 1
+
+            # validation thinking counter
+            if loop_count == MAX_AUTO_THINKING:
+                # add finish command of the command
+                ref.push().set(get_finish_command_for_auto_task())
+                break
 
             # Send message to AI, get response
             assistant_reply = agent.chain.run(
