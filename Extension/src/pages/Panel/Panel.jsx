@@ -1,11 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Divider, Input, Layout} from 'antd';
 import {SendOutlined} from '@ant-design/icons';
-import { onValue, ref } from "firebase/database";
+import { getDatabase, onValue, ref } from "firebase/database";
 
 import Message from './Message'
 import './Panel.css';
-import db from '../../configs/firebasedb'
+import app from '../../configs/firebase-config'
 
 const {Footer, Content} = Layout;
 const confs = {
@@ -55,7 +55,6 @@ const Panel = () => {
         if (message === "") return;
 
         if (!type && !isLoading) {
-            console.log("delete loading")
             messages.pop()
         }
 
@@ -235,12 +234,43 @@ const Panel = () => {
     }
 
     const autoTask = (referenceUrl) => {
-        console.log('call autoTask function----------->', referenceUrl)
+        const refUrl = referenceUrl.slice(1)
         
-        const dbRef = ref(db, "/auto/autogpt_956a11be45cba4a4_1688452004960/-NZU_GbvZSA1Ghvbs-Qe");
+        // getting real time database
+        const db = getDatabase(app)
+        const dbRef = ref(db, refUrl);
 
-        onValue(dbRef, (snapshot) => {
-            console.log('res dat success======>')
+        // listen for data changes
+        onValue(dbRef, (snapshot) => {    
+            let data = []    
+            let result = [] 
+            let resultToStr = ""
+
+            // getting data object from real time database
+            if (snapshot.val() !== null && snapshot.val() !== undefined) {
+                data = Object.values(snapshot.val())
+            }
+
+            if (typeof data[data.length - 1] !== 'undefined' && data[data.length-1].hasOwnProperty('thoughts')) {
+                    result.push(data[data.length-1].thoughts)
+            } else if (typeof data[data.length - 1] !== 'undefined' && data[data.length-1].hasOwnProperty('result')) {
+                    result.push(data[data.length-1])
+            }
+
+            // convert json object to string
+            result?.map(item => {
+                if (item.hasOwnProperty('result')) {
+                    resultToStr += "result:" + item.result + "\n\n\n\n"
+                } else if (item.hasOwnProperty('criticism')) {
+                    resultToStr += "criticism:" + item.criticism + "\n" + 
+                        "plan" + item.plan + "\n" + 
+                        "reasoning" + item.reasoning + "\n" + 
+                        "speak" + item.speak + "\n" + 
+                        "text" + item.text + "\n\n"
+                }
+            })
+            
+            addMessage(resultToStr, false)
         }, (error) => {
             console.error(error);
         })
