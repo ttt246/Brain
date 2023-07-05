@@ -1,10 +1,10 @@
 package com.matthaigh27.chatgptwrapper.data.remote
 
-import com.matthaigh27.chatgptwrapper.utils.Constants.API_BASE_URL
-import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_CALL
-import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_CONNECT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_READ
-import com.matthaigh27.chatgptwrapper.utils.Constants.TIME_OUT_WRITE
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.API_BASE_URL
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.TIME_OUT_CALL
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.TIME_OUT_CONNECT
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.TIME_OUT_READ
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.TIME_OUT_WRITE
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

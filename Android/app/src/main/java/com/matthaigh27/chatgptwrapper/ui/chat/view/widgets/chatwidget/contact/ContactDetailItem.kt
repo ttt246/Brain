@@ -15,14 +15,13 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 
 class ContactDetailItem(
-    context: Context, attrs: AttributeSet? = null
+    private var context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs), View.OnClickListener {
     private lateinit var txtPhoneNumber: TextView
     private lateinit var txtPhoneType: TextView
     private var phoneNumber: String = ""
     private var userName: String = ""
 
-    private var context = context
     private var visibilityListener: OnContactDetailVisibilityListener? = null
     var callback: ChatMessageInterface? = null
 

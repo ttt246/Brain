@@ -22,12 +22,14 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.Sche
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.ContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.MailWidget
-import com.matthaigh27.chatgptwrapper.utils.Constants.PROPS_WIDGET_DESC
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_HELP_PROMPT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_MAIL_READ
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SCHEDULE_ALARM
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SEARCH_CONTACT
-import com.matthaigh27.chatgptwrapper.utils.Constants.TYPE_WIDGET_SMS
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.compose.ComposeMailWidget
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_READ
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_WRITE
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SCHEDULE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SEARCH_CONTACT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SMS
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContactModelById
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContacts
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
@@ -121,9 +123,9 @@ class ChatMainAdapter(
                 holder.imgMessage.visibility = View.VISIBLE
                 holder.imgMessage.setImageBitmap(bmp)
 
-                data.content?.let { message ->
-                    holder.txtMessage.text = message
-                } ?: run {
+                if (data.content != "" && data.content != null) {
+                    holder.txtMessage.text = data.content
+                } else {
                     holder.txtMessage.visibility = View.GONE
                 }
             }
@@ -231,6 +233,11 @@ class ChatMainAdapter(
                 }
             }
 
+            TYPE_WIDGET_MAIL_WRITE -> {
+                val composeMailWIdget = ComposeMailWidget(context)
+                holder.itemLayout.addView(composeMailWIdget)
+            }
+
             else -> {
                 holder.itemLayout.visibility = View.GONE
             }
@@ -257,7 +264,8 @@ class ChatMainAdapter(
 
         init {
             itemLayout = itemView.findViewById<View>(R.id.fl_widget_message) as FrameLayout
-            llHorizontalScroll = itemView.findViewById<View>(R.id.ll_horizontal_scroll) as LinearLayout
+            llHorizontalScroll =
+                itemView.findViewById<View>(R.id.ll_horizontal_scroll) as LinearLayout
         }
     }
 }
