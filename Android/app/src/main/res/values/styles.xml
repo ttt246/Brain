@@ -6,7 +6,7 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
-    <style name="SettingEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="CommonEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="boxStrokeWidth">@dimen/width_stroke_thin</item>
@@ -21,9 +21,15 @@
         <item name="android:padding">@dimen/padding_circle_button_chat_control</item>
     </style>
 
-    <style name="ThinHorizontalDividerStyle">
+    <style name="HorizontalDividerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/width_divider</item>
+        <item name="android:background">@color/color_divider</item>
+    </style>
+
+    <style name="ThinHorizontalDividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/width_divider_thin</item>
         <item name="android:background">@color/color_divider</item>
     </style>
 

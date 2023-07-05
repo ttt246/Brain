@@ -4,8 +4,8 @@
     <dimen name="font_huge">24sp</dimen>
     <dimen name="font_large">18sp</dimen>
     <dimen name="font_big">16sp</dimen>
-    <dimen name="font_normal">14sp</dimen>
-    <dimen name="font_small">12sp</dimen>
+    <dimen name="font_normal">13sp</dimen>
+    <dimen name="font_small">11sp</dimen>
     <dimen name="font_tiny">10sp</dimen>
 
     <!-- radius size -->
@@ -48,7 +48,7 @@
     <dimen name="size_elevation_big">8dp</dimen>
 
     <dimen name="height_edittext_tall">44dp</dimen>
-    <dimen name="height_edittext_normal">38dp</dimen>
+    <dimen name="height_edittext_normal">40dp</dimen>
     <dimen name="height_edittext_short">30dp</dimen>
 
     <dimen name="icon_size_small">10dp</dimen>
@@ -67,6 +67,7 @@
     <dimen name="angel_header_bg_color_gradient">45</dimen>
 
     <dimen name="width_divider">1dp</dimen>
+    <dimen name="width_divider_thin">0.7dp</dimen>
 
     <dimen name="size_circle_button_chat_control">30dp</dimen>
     <dimen name="padding_circle_button_chat_control">7dp</dimen>
@@ -77,4 +78,6 @@
     <dimen name="height_avatar_contact_detail">240dp</dimen>
 
     <dimen name="size_image_view_chat_message">100dp</dimen>
+
+    <dimen name="width_widget_mail">200dp</dimen>
 </resources>

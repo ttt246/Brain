@@ -19,6 +19,7 @@ from Brain.src.model.requests.request_model import (
     ClientInfo,
     get_client_info,
     AutoTaskDelete,
+    EmailReader,
     GetContactsByIds,
 )
 from Brain.src.rising_plugin.risingplugin import (
@@ -504,7 +505,7 @@ def construct_blueprint_api() -> APIRouter:
                 "token": "String",
                 "uuid": "String",
                 "contactIds": [
-                    String
+                    "String"
                 ]
             }
         )
@@ -513,7 +514,7 @@ def construct_blueprint_api() -> APIRouter:
             status_code=200, schema={"message": "message", "result": "test_result"}
         )
 
-        """
+    """
 
     @router.post("/contacts/get_by_ids")
     def get_contacts_by_ids(data: GetContactsByIds):

@@ -25,4 +25,10 @@
     <string name="label_setting_temperature">Temperature</string>
 
     <string name="text_setting_button_save">Save</string>
+
+    <string name="title_mail_compose">Compose</string>
+    <string name="text_mail_compose_to">To</string>
+    <string name="text_mail_compose_subject">Subject</string>
+    <string name="text_mail_compose_content">Content</string>
+
 </resources>

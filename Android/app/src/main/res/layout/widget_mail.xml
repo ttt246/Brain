@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_search_mail"
+        android:layout_width="@dimen/width_widget_mail"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/radius_normal"
+        app:cardElevation="@dimen/size_elevation_normal"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_tiny">
+
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/spacing_extra_micro"
+                android:text="Vercel"
+                android:textColor="@color/color_accent"
+                android:textSize="@dimen/font_small"
+                android:textStyle="bold|italic" />
+
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginVertical="@dimen/spacing_micro" />
+
+            <TextView
+                android:id="@+id/txt_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="8"
+                android:minLines="8"
+                android:text="Hey friend Human vs Machine coder: Have you ever wondered how much a human coder costs per token output compared to a large language model (LLM)?\n Let's do some napkin math. 🧮Human Coder Costs Per Token:"
+                android:textColor="@color/color_accent"
+                android:textSize="@dimen/font_small"
+                android:textStyle="italic" />
+
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginVertical="@dimen/spacing_micro" />
+
+            <TextView
+                android:id="@+id/txt_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jun 27"
+                android:textColor="@color/color_accent"
+                android:textSize="@dimen/font_tiny"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@+id/divider_bottom" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

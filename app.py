@@ -6,8 +6,9 @@ import uvicorn
 # from Brain.src.gradio_debug import debug_send_notification
 from Brain.src.router.browser_router import construct_blueprint_browser_api
 from Brain.src.router.train_router import construct_blueprint_train_api
-
+from Brain.src.router.email_router import construct_blueprint_email_api
 from Brain.src.router.api import construct_blueprint_api
+
 import gradio as gr
 import random
 import time
@@ -27,8 +28,8 @@ app.include_router(construct_blueprint_api(), tags=["ai_app"])
 app.include_router(
     construct_blueprint_browser_api(), prefix="/browser", tags=["ai_browser"]
 )
-
 app.include_router(construct_blueprint_train_api(), prefix="/train", tags=["ai_train"])
+app.include_router(construct_blueprint_email_api(), prefix="/email", tags=["ai_email"])
 
 # gradio
 
