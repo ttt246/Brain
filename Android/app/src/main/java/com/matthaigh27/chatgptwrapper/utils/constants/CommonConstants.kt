@@ -4,6 +4,7 @@ import com.matthaigh27.chatgptwrapper.BuildConfig
 
 object CommonConstants {
     val API_BASE_URL = BuildConfig.BASE_URL
+    val FIREBASE_DATABASE_URL = "https://test3-83ffc-default-rtdb.firebaseio.com"
 
     val HELP_COMMAND_ERROR_NO_MAIN = "no main command"
     val HELP_COMMAND_ERROR_NO_INVALID_FORMAT = "Invalid Command Format"

@@ -3,8 +3,15 @@ package com.matthaigh27.chatgptwrapper.ui.chat.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
+import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.ImageRelatenessModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.requests.ImageRelatednessApiRequest
@@ -14,10 +21,10 @@ import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.results.CommonResult
 import com.matthaigh27.chatgptwrapper.data.remote.responses.results.HelpCommandResult
-import com.matthaigh27.chatgptwrapper.data.remote.responses.results.ImageRelatenessResult
 import com.matthaigh27.chatgptwrapper.data.repository.FirebaseRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
 import com.matthaigh27.chatgptwrapper.data.repository.RoomRepository
+import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.FIREBASE_DATABASE_URL
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getChangedContacts
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContacts
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper.getBytesFromPath
@@ -223,7 +230,8 @@ class ChatViewModel : ViewModel() {
             FirebaseRepository.downloadImageWithName(
                 name = resultImageName,
                 onSuccess = { response ->
-                    resource.value = ApiResource.Success(ImageRelatenessModel(response, resultImageDesc))
+                    resource.value =
+                        ApiResource.Success(ImageRelatenessModel(response, resultImageDesc))
                 }, onFailure = { throwable ->
                     resource.value = ApiResource.Error(throwable)
                 }
@@ -232,6 +240,68 @@ class ChatViewModel : ViewModel() {
             resource.value = ApiResource.Error(throwable)
         })
 
+        return resource
+    }
+
+    fun getAutoTaskRealtimeData(referencePath: String): MutableLiveData<ApiResource<AutoTaskModel>> {
+        val resource: MutableLiveData<ApiResource<AutoTaskModel>> =
+            MutableLiveData()
+        val database = Firebase.database(FIREBASE_DATABASE_URL)
+        resource.value = ApiResource.Loading()
+        database.getReference(referencePath).addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                if (snapshot.exists()) {
+                    if(snapshot.value == null){
+                        return;
+                    }
+                    try {
+                        val data = snapshot.getValue<AutoTaskModel>()
+                        data?.let {
+                            data.command?.let { command ->
+                                if(command.name == "finish") {
+                                    resource.value = ApiResource.Success(data)
+                                } else {
+                                    resource.value = ApiResource.Loading(data)
+                                }
+                            }
+
+                        }
+                    } catch (exception: Exception) {
+                        resource.value = ApiResource.Error(exception.toString())
+                    }
+                }
+            }
+
+            override fun onChildChanged(
+                snapshot: DataSnapshot, previousChildName: String?
+            ) {
+                if (snapshot.exists()) {
+                    try {
+                        if(snapshot.value == null){
+                            return;
+                        }
+                        val data = snapshot.getValue<AutoTaskModel>()
+                        data?.let {
+                            data.command?.let { command ->
+                                if(command.name == "finish") {
+                                    resource.value = ApiResource.Success(data)
+                                } else {
+                                    resource.value = ApiResource.Loading(data)
+                                }
+                            }
+                        }
+                    } catch (exception: Exception) {
+                        resource.value = ApiResource.Error(exception.toString())
+                    }
+                }
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {
+                resource.value = ApiResource.Error(error.toException().toString())
+            }
+        })
         return resource
     }
 }

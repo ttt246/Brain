@@ -2,6 +2,7 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +18,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
@@ -42,6 +50,7 @@ import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TY
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SMS
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_AUTO_TASK
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_IMAGE
@@ -219,8 +228,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         message: String
     ) {
         addMessage(
-            type = TYPE_CHAT_RECEIVE,
-            content = message
+            type = TYPE_CHAT_RECEIVE, content = message
         )
     }
 
@@ -334,8 +342,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 is ApiResource.Success -> {
                     showLoading(false)
                     resource.data?.let { data ->
-                        helpPromptList =
-                            responseToHelpPromptList(data.result.content)
+                        helpPromptList = responseToHelpPromptList(data.result.content)
                     }
                 }
 
@@ -348,8 +355,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun fetchImageRelatedness(imageName: String, message: String) {
-        viewModel.getImageRelatedness(imageName, message)
-            .observe(viewLifecycleOwner) { resource ->
+        viewModel.getImageRelatedness(imageName, message).observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is ApiResource.Loading -> {
                         showLoading(true)
@@ -386,8 +392,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
                         TYPE_RESPONSE_MESSAGE -> addMessage(
-                            TYPE_CHAT_RECEIVE,
-                            apiResponse.result.content.toString()
+                            TYPE_CHAT_RECEIVE, apiResponse.result.content.toString()
                         )
 
                         TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
@@ -397,6 +402,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                         TYPE_RESPONSE_MAIL_READ -> fetchResponseMail(TYPE_RESPONSE_MAIL_READ)
                         TYPE_RESPONSE_MAIL_WRITE -> fetchResponseMail(TYPE_RESPONSE_MAIL_WRITE)
                         TYPE_RESPONSE_MAIL_SEND -> fetchResponseMail(TYPE_RESPONSE_MAIL_SEND)
+                        TYPE_RESPONSE_AUTO_TASK -> fetchResponseAutoTask(apiResponse)
                         else -> addMessage(TYPE_CHAT_RECEIVE, apiResponse!!.result.toString())
                     }
                 }
@@ -485,6 +491,43 @@ class ChatMainFragment : Fragment(), OnClickListener {
         }
     }
 
+    private fun fetchResponseAutoTask(apiResponse: ApiResponse<CommonResult>) {
+        val referenceUrl = apiResponse.result.content.asString
+        viewModel.getAutoTaskRealtimeData(
+            referenceUrl
+        ).observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is ApiResource.Loading -> {
+                    showLoading(true)
+                    resource.data?.let { data ->
+                        if(data.result == null) {
+                            data.thoughts?.let { thoughts ->
+                                addMessage(
+                                    type = TYPE_CHAT_RECEIVE,
+                                    content = thoughts.speak
+                                )
+                            }
+                        } else {
+                            addMessage(
+                                type = TYPE_CHAT_RECEIVE,
+                                content = data.result
+                            )
+                        }
+                    }
+                }
+
+                is ApiResource.Success -> {
+                    showLoading(false)
+                }
+
+                is ApiResource.Error -> {
+                    showLoading(false)
+                    addErrorMessage(resource.message!!)
+                }
+            }
+        }
+    }
+
     private fun initChatInterface() {
         chatMessageInterface = object : ChatMessageInterface {
             override fun sentSms(phoneNumber: String, message: String) {
@@ -503,29 +546,25 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun sentHelpPrompt(prompt: String) {
                 addMessage(
-                    type = TYPE_CHAT_SENT,
-                    content = prompt
+                    type = TYPE_CHAT_SENT, content = prompt
                 )
             }
 
             override fun canceledHelpPrompt() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You canceled Help prompt."
+                    type = TYPE_CHAT_RECEIVE, content = "You canceled Help prompt."
                 )
             }
 
             override fun doVoiceCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You made a voice call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE, content = "You made a voice call to $phoneNumber"
                 )
             }
 
             override fun doVideoCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You made a video call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE, content = "You made a video call to $phoneNumber"
                 )
             }
 
@@ -534,17 +573,13 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     this.addProperty(PROPS_WIDGET_DESC, phoneNumber)
                 }
                 addMessage(
-                    type = TYPE_CHAT_WIDGET,
-                    content = TYPE_WIDGET_SMS,
-                    data = widgetDesc
+                    type = TYPE_CHAT_WIDGET, content = TYPE_WIDGET_SMS, data = widgetDesc
                 )
             }
 
             override fun pickImage(isSuccess: Boolean, data: ByteArray?) {
-                if (!isSuccess)
-                    addErrorMessage("Fail to pick image")
-                viewModel.uploadImageToFirebase(data!!)
-                    .observe(viewLifecycleOwner) { resource ->
+                if (!isSuccess) addErrorMessage("Fail to pick image")
+                viewModel.uploadImageToFirebase(data!!).observe(viewLifecycleOwner) { resource ->
                         when (resource) {
                             is ApiResource.Loading -> {
                                 showLoading(true)
@@ -574,8 +609,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun cancelAlarm() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You canceled setting an alarm."
+                    type = TYPE_CHAT_RECEIVE, content = "You canceled setting an alarm."
                 )
             }
         }

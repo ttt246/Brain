@@ -13,4 +13,5 @@ object TypeResponseConstants {
     val TYPE_RESPONSE_MAIL_READ = "reademail"
     val TYPE_RESPONSE_MAIL_WRITE = "writeemail"
     val TYPE_RESPONSE_MAIL_SEND = "sendemail"
+    val TYPE_RESPONSE_AUTO_TASK = "autotask"
 }
