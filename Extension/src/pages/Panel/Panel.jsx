@@ -289,7 +289,11 @@ const Panel = () => {
             // delete database of firebase when finish auto task
             data?.map(item => {
                 if (item.hasOwnProperty('command') && item.command.name === 'finish') {
-                    deleteRtdInFirebase(referenceUrl)
+                    deleteRtdInFirebase(referenceUrl).then(() => {
+                        addMessage("Task is successfully completed!", false)
+                    }).catch(err => {
+                        console.error((err))
+                    })
                 }
             })
         }, (error) => {
