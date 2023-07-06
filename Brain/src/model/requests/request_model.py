@@ -229,6 +229,23 @@ class EmailReader(BasicReq):
     data: Body
 
 
+"""endpoint /send_email"""
+
+
+class EmailSender(BasicReq):
+    class Body(BaseModel):
+        sender: str
+        pwd: str
+        to: str
+        subject: str
+        body: str
+        to_send: bool
+        filename: str | None
+        file_content: str | None
+
+    data: Body
+
+
 """endpoint : /contact/get_by_ids"""
 
 
