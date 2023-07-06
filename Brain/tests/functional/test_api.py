@@ -244,8 +244,8 @@ def test_delete_data(body):
             {
                 "data": {
                     "sender": "test@gmail.com",
-                    "pwd": "use app password of your google account",
-                    "imap_folder": "inbox or drafts",
+                    "pwd": "password",
+                    "imap_folder": "inbox",
                 },
                 "confs": {
                     "token": "test_token",
@@ -274,11 +274,11 @@ def test_read_emails(body):
                     "sender": "testsender@gmail.com",
                     "pwd": "use app password of your google account",
                     "to": "testto@gmail.com",
-                    "subject": "title of email",
-                    "body": "email content",
-                    "to_send": "true or false whether send to inbox or drafts",
+                    "subject": "Test Send",
+                    "body": "Hi, This is test email.",
+                    "to_send": True,
                     "filename": "test.txt",
-                    "file_content": "string encoded with base64",
+                    "file_content": "SGVsbG8sIFdvcmxkIQ==",
                 },
                 "confs": {
                     "token": "test_token",
