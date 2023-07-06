@@ -15,9 +15,6 @@
 # .idea
 /.idea
 
-# config files
-/src/configs/
-
 # misc
 .DS_Store
 .env.local
