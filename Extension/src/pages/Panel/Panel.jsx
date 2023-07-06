@@ -5,7 +5,7 @@ import { getDatabase, onValue, ref } from "firebase/database";
 
 import Message from './Message'
 import './Panel.css';
-import app from '../../configs/firebase-config'
+import app from './FirebaseApp/firebase-app'
 
 const {Footer, Content} = Layout;
 const confs = {
