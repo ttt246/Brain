@@ -20,12 +20,11 @@ const confs = {
     }
 }
 
-const URL_FIREBASE_REAL_TIME = "https://test3-83ffc-default-rtdb.firebaseio.com"
-
 const URL_BASE = 'https://ttt246-brain.hf.space/'
 const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
 const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
 const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
+const URL_DELETE_RTD = URL_BASE + 'auto_task/delete'
 
 let prompt = ""
 
@@ -201,6 +200,21 @@ const Panel = () => {
         })
     }
 
+    const deleteRtdInFirebase = async (refLink) => {
+        const params = {
+            "confs": confs,
+            "data": {
+                "reference_link": refLink
+            }
+        }
+
+        sendRequest(params, URL_DELETE_RTD).then(data => {
+            console.log(data.result)
+        }).catch(err => {   
+            console.error(err)         
+        })
+    }
+
     /*
      * methods for scraping websites
      */
@@ -259,18 +273,25 @@ const Panel = () => {
 
             // convert json object to string
             result?.map(item => {
-                if (item.hasOwnProperty('result')) {
-                    resultToStr += "result:" + item.result + "\n\n\n\n"
-                } else if (item.hasOwnProperty('criticism')) {
+                if (item.hasOwnProperty('criticism')) {
                     resultToStr += "criticism:" + item.criticism + "\n" + 
-                        "plan" + item.plan + "\n" + 
-                        "reasoning" + item.reasoning + "\n" + 
-                        "speak" + item.speak + "\n" + 
-                        "text" + item.text + "\n\n"
+                        "plan: " + item.plan + "\n" +
+                        "reasoning: " + item.reasoning + "\n" +
+                        "speak: " + item.speak + "\n" +
+                        "text: " + item.text
+                } else if (item.hasOwnProperty('result')) {
+                    resultToStr += "result: " + item.result + "\n"
                 }
             })
             
             addMessage(resultToStr, false)
+
+            // delete database of firebase when finish auto task
+            data?.map(item => {
+                if (item.hasOwnProperty('command') && item.command.name === 'finish') {
+                    deleteRtdInFirebase(referenceUrl)
+                }
+            })
         }, (error) => {
             console.error(error);
         })
@@ -278,11 +299,10 @@ const Panel = () => {
 
     /// Check if the user's system is in dark mode
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const isDarkMode = darkModeMediaQuery.matches;
+    let isDarkMode = darkModeMediaQuery.matches;
 
     const handleThemeChange = (e) => {
-        const isDarkMode = e.matches;
-        // Do something based on the new theme data
+        isDarkMode = e.matches;
     };
 
     // Listen for changes in the theme data
