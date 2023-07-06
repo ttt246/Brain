@@ -235,3 +235,64 @@ def test_train_contacts(body):
 def test_delete_data(body):
     response = client.post("/auto_task/delete", json=body)
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        (
+            {
+                "data": {
+                    "sender": "test@gmail.com",
+                    "pwd": "use app password of your google account",
+                    "imap_folder": "inbox or drafts",
+                },
+                "confs": {
+                    "token": "test_token",
+                    "uuid": "test-uuid",
+                    "openai_key": "",
+                    "pinecone_key": "",
+                    "pinecone_env": "",
+                    "firebase_key": "",
+                    "settings": {"temperature": 0.6},
+                },
+            }
+        )
+    ],
+)
+def test_read_emails(body):
+    response = client.post("/email/read_emails", json=body)
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        (
+            {
+                "data": {
+                    "sender": "testsender@gmail.com",
+                    "pwd": "use app password of your google account",
+                    "to": "testto@gmail.com",
+                    "subject": "title of email",
+                    "body": "email content",
+                    "to_send": "true or false whether send to inbox or drafts",
+                    "filename": "test.txt",
+                    "file_content": "string encoded with base64",
+                },
+                "confs": {
+                    "token": "test_token",
+                    "uuid": "test-uuid",
+                    "openai_key": "",
+                    "pinecone_key": "",
+                    "pinecone_env": "",
+                    "firebase_key": "",
+                    "settings": {"temperature": 0.6},
+                },
+            }
+        )
+    ],
+)
+def test_send_email(body):
+    response = client.post("/email/send_email", json=body)
+    assert response.status_code == 200

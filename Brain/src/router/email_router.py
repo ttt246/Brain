@@ -119,6 +119,10 @@ def construct_blueprint_email_api() -> APIRouter:
                     to_send=data.data.to_send,
                 )
             else:
+                file_name = email_manager.write_attachment(
+                    filename=data.data.filename, file_content=data.data.file_content
+                )
+
                 result += email_manager.send_email_with_attachment(
                     sender=data.data.sender,
                     pwd=data.data.pwd,
@@ -126,8 +130,9 @@ def construct_blueprint_email_api() -> APIRouter:
                     subject=data.data.subject,
                     body=data.data.body,
                     to_send=data.data.to_send,
-                    filename=data.data.filename,
+                    filename=file_name,
                 )
+
         except Exception as e:
             if isinstance(e, BrainException):
                 return e.get_response_exp()
