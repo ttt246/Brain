@@ -6,20 +6,9 @@ import { getDatabase, onValue, ref } from "firebase/database";
 import Message from './Message'
 import './Panel.css';
 import app from './FirebaseApp/firebase-app'
+import * as confs from '../../configs/rising-config.json'
 
 const {Footer, Content} = Layout;
-const confs = {
-    "openai_key": "",
-    "pinecone_key": "",
-    "pinecone_env": "",
-    "firebase_key": "",
-    "token": "",
-    "uuid": "extension-uuid",
-    "settings": {
-        "temperature": 0.6
-    }
-}
-
 const URL_BASE = 'https://ttt246-brain.hf.space/'
 const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
 const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
