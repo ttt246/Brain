@@ -19,7 +19,6 @@ from Brain.src.model.requests.request_model import (
     ClientInfo,
     get_client_info,
     AutoTaskDelete,
-    EmailReader,
     GetContactsByIds,
 )
 from Brain.src.rising_plugin.risingplugin import (

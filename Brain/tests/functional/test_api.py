@@ -235,3 +235,64 @@ def test_train_contacts(body):
 def test_delete_data(body):
     response = client.post("/auto_task/delete", json=body)
     assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        (
+            {
+                "data": {
+                    "sender": "test@gmail.com",
+                    "pwd": "password",
+                    "imap_folder": "inbox",
+                },
+                "confs": {
+                    "token": "test_token",
+                    "uuid": "test-uuid",
+                    "openai_key": "",
+                    "pinecone_key": "",
+                    "pinecone_env": "",
+                    "firebase_key": "",
+                    "settings": {"temperature": 0.6},
+                },
+            }
+        )
+    ],
+)
+def test_read_emails(body):
+    response = client.post("/email/read_emails", json=body)
+    assert response.status_code == 200
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        (
+            {
+                "data": {
+                    "sender": "testsender@gmail.com",
+                    "pwd": "use app password of your google account",
+                    "to": "testto@gmail.com",
+                    "subject": "Test Send",
+                    "body": "Hi, This is test email.",
+                    "to_send": True,
+                    "filename": "test.txt",
+                    "file_content": "SGVsbG8sIFdvcmxkIQ==",
+                },
+                "confs": {
+                    "token": "test_token",
+                    "uuid": "test-uuid",
+                    "openai_key": "",
+                    "pinecone_key": "",
+                    "pinecone_env": "",
+                    "firebase_key": "",
+                    "settings": {"temperature": 0.6},
+                },
+            }
+        )
+    ],
+)
+def test_send_email(body):
+    response = client.post("/email/send_email", json=body)
+    assert response.status_code == 200

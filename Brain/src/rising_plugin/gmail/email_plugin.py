@@ -6,6 +6,7 @@ import os
 import re
 import smtplib
 import time
+import base64
 from email.header import decode_header
 from email.message import EmailMessage
 
@@ -15,7 +16,7 @@ from bs4 import BeautifulSoup
 EMAIL_SMTP_HOST = "smtp.gmail.com"
 EMAIL_SMTP_PORT = 587
 EMAIL_IMAP_SERVER = "imap.gmail.com"
-EMAIL_SIGNATURE = "This was sent by Brain Service"
+EMAIL_SIGNATURE = "This was sent by Rising Brain"
 
 
 class EmailPlugin:
@@ -357,3 +358,10 @@ class EmailPlugin:
         email_body = re.sub(r"http\S+", "", email_body)
 
         return email_body
+
+    def write_attachment(self, filename: str, file_content: str) -> str:
+        file_content = base64.b64decode(file_content).decode("utf-8")
+        file = open(filename, "w")
+        file.write(file_content)
+        file.close()
+        return filename
