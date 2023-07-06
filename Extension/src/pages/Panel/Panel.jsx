@@ -1,27 +1,19 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Divider, Input, Layout} from 'antd';
 import {SendOutlined} from '@ant-design/icons';
-import Message from './Message'
+import { getDatabase, onValue, ref } from "firebase/database";
 
+import Message from './Message'
 import './Panel.css';
+import app from './FirebaseApp/firebase-app'
+import * as confs from '../../configs/rising-config.json'
 
 const {Footer, Content} = Layout;
-const confs = {
-    "openai_key": "",
-    "pinecone_key": "",
-    "pinecone_env": "",
-    "firebase_key": "",
-    "token": "",
-    "uuid": "extension-uuid",
-    "settings": {
-        "temperature": 0.6
-    }
-}
-
 const URL_BASE = 'https://ttt246-brain.hf.space/'
 const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
 const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
 const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
+const URL_DELETE_RTD = URL_BASE + 'auto_task/delete'
 
 let prompt = ""
 
@@ -31,10 +23,6 @@ const Panel = () => {
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
 
-    /*
-     * methods for states in ui
-     * lifecycle methods
-     */
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
             addMessage(question, true);
@@ -55,7 +43,6 @@ const Panel = () => {
         if (message === "") return;
 
         if (!type && !isLoading) {
-            console.log("delete loading")
             messages.pop()
         }
 
@@ -166,6 +153,9 @@ const Panel = () => {
                     case 'askwebsite':
                         askAboutCurrentWebsite()
                         break
+                    case 'autotask':
+                        autoTask(data.result.content)
+                        break
                     default:
                         break
                 }
@@ -196,6 +186,21 @@ const Panel = () => {
         sendRequest(params, URL_ASK_WEBSITE).then(data => {
             addMessage(data.result.content, false)            
         }).catch(err => {            
+        })
+    }
+
+    const deleteRtdInFirebase = async (refLink) => {
+        const params = {
+            "confs": confs,
+            "data": {
+                "reference_link": refLink
+            }
+        }
+
+        sendRequest(params, URL_DELETE_RTD).then(data => {
+            console.log(data.result)
+        }).catch(err => {   
+            console.error(err)         
         })
     }
 
@@ -231,13 +236,66 @@ const Panel = () => {
         return data
     }
 
+    const autoTask = (referenceUrl) => {
+        const refUrl = referenceUrl.slice(1)
+        
+        // getting real time database
+        const db = getDatabase(app)
+        const dbRef = ref(db, refUrl);
+
+        // listen for data changes
+        onValue(dbRef, (snapshot) => {    
+            let data = []    
+            let result = [] 
+            let resultToStr = ""
+
+            // getting data object from real time database
+            if (snapshot.val() !== null && snapshot.val() !== undefined) {
+                data = Object.values(snapshot.val())
+            }
+
+            if (typeof data[data.length - 1] !== 'undefined' && data[data.length-1].hasOwnProperty('thoughts')) {
+                    result.push(data[data.length-1].thoughts)
+            } else if (typeof data[data.length - 1] !== 'undefined' && data[data.length-1].hasOwnProperty('result')) {
+                    result.push(data[data.length-1])
+            }
+
+            // convert json object to string
+            result?.map(item => {
+                if (item.hasOwnProperty('criticism')) {
+                    resultToStr += "criticism:" + item.criticism + "\n" + 
+                        "plan: " + item.plan + "\n" +
+                        "reasoning: " + item.reasoning + "\n" +
+                        "speak: " + item.speak + "\n" +
+                        "text: " + item.text
+                } else if (item.hasOwnProperty('result')) {
+                    resultToStr += "result: " + item.result + "\n"
+                }
+            })
+            
+            addMessage(resultToStr, false)
+
+            // delete database of firebase when finish auto task
+            data?.map(item => {
+                if (item.hasOwnProperty('command') && item.command.name === 'finish') {
+                    deleteRtdInFirebase(referenceUrl).then(() => {
+                        addMessage("Task is successfully completed!", false)
+                    }).catch(err => {
+                        console.error((err))
+                    })
+                }
+            })
+        }, (error) => {
+            console.error(error);
+        })
+    }
+
     /// Check if the user's system is in dark mode
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const isDarkMode = darkModeMediaQuery.matches;
+    let isDarkMode = darkModeMediaQuery.matches;
 
     const handleThemeChange = (e) => {
-        const isDarkMode = e.matches;
-        // Do something based on the new theme data
+        isDarkMode = e.matches;
     };
 
     // Listen for changes in the theme data
