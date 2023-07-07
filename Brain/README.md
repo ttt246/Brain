@@ -11,49 +11,77 @@ pinned: false
 license: other
 ---
 
-# RisingBrain
-WIP: This codebase is under active development and recently opened to the public. 
+# 🧠 RisingBrain: Your Future-Forward AI-Powered OS 🚀
 
-All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. In our OS, a AI will manage all apps via plugins, which can be prompted by the user. Our plugins can run as an openai plugin, or in our backend.
-
-## 1. Description
-
-#### 1.1 Achievement
 <p align='center'>
-  <img align='center' src='assets/img/desc.png' width='100%' />
+  <img align='center' src='assets/img/logo.png' width='70%' />
+    <p align='center'>🧠 <b>RisingBrain</b>: Your Future-Forward AI-Powered OS 🚀</p>
 </p>
 
-- 📱 Support for mobile devices to manage all apps via plugin as its launcher.
-- 🌍 Support all web browsers to manipulate it automatically as its extension.
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
-- 
-#### 1.2 Feature
+**Notice:** *This codebase is under active development and has been recently made public. Please expect frequent updates.*
 
-- Chat with Rising AI as an assistant.
-- Search something from browser(which installed in your device) with user's input without any additional behaviour automatically. 
-- Search an image what you want for with its similar image or its description as user's prompt.
-- Search a contact automatically and guide a user to have a call or Sms when they want.
-- Manage contacts automatically and let a user going to any contact with its name or number. 
-- Manipulate all browsers with user's input(tab, page, search, scroll, or etc) and it will follow you to go on the real website or blog what you are thinking of.
+<p>Are you tired of your dull and monotonous operating system? Say hello to <b>RisingBrain</b>!</p>
+<p>Our project is aimed at revolutionizing how complex software, including operating systems, leverage machine learning. Imagine an OS where an AI manages all apps via fun and interactive plugins, operating as OpenAI plugins or within our backend.</p>
+Sounds exciting?😂 Let's dive into it! 🏊‍♂️
 
-## 2. Installing / Getting started
-#### 2.1 how to run on local
-It's a standard fastapi application so no configuration is needed beyond the included Procfile
-#### 2.2 Create firebase project
-Create firebase project and take its credentials named .json from Google Cloude IAM. 
-#### 2.3 Get Heroku Api key
-Deploy it to Heroku in CI/CD automatically whenever there are some changes in main or develop branch.
-#### 2.4 Set Github Secrets With its Access Keys
-All credentials including openai, replicate and pinecone are shared with Github Secrets to be referenced by Unit Tests of CI/CD on its building
+## 1. Look What We've Achieved! 🏆
 
-## Contributing
-Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
+<p align='center'>
+  <img align='center' src='assets/img/instruction.png' width='88%' />
+  <img align='center' src='assets/img/android_desc.png' width='100%' />
+  <img align='center' src='assets/img/extension&watch.png' width='88%' />
+</p>
 
- 1. **Fork** the repo on GitHub
- 2. **Clone** the project to your own machine
- 3. **Commit** changes to your own branch
- 4. **Push** your work back up to your fork
- 5. Submit a **Pull request** so that we can review your changes
+Key features of **RisingBrain** that will make you fall in love with your OS all over again:
 
-NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+- 📱 **Mobile-First Attitude**: 
+    - **Say hello🙋‍♀️ to your intelligent OS** with a smart chat interface that can control all your phone apps via conversational prompts. Powered by state-of-the-art language models like <a href="https://openai.com/research/gpt-4">GPT-4</a>, <a href="https://autogpt.net/">AutoGPT</a>, <a href="https://huggingface.co/blog/falcon">Falcon</a>, <a href="https://huggingface.co/spaces/NeuralInternet/BabyAGI">BabyAGI</a>, <a href="https://en.wikipedia.org/wiki/BERT_(language_model)">BERT</a>, <a href="https://huggingface.co/docs/transformers/model_doc/t5">T5</a> and more, our chatbot is a league apart!
+    - **Control is in your hands🖐**: Manage contacts, images, audio, videos, documents, and even your browsers like <em>Chrome</em>, <em>Firefox</em>, and <em>Safari</em> all from a single app.
+    - **Real-time data at your fingertip👆**: Whether it's news, weather, financial status, or sending emails - we've got you covered.
+    - **Confused with text images or need answers based on PDFs?** Our robust <a href="https://www.onlineocr.net/">OCR</a> functionality is at your service.
+    - **Backend? Your choice**: You decide where to route the backend - set up and manage a range of cloud services like <a href="https://openai.com/">OpenAI</a> and <a href="https://firebase.google.com/">Firebase</a>.
+    - Available on both **Android and iOS**, it's also geared to manage your calendar and alarms. Ultimate ease, don't you think😉?
+- 🌍 **Universal Browser Extension**: 
+    - Meet your new web companion, compatible with browsers like <em>Chrome</em>, <em>Safari</em>, <em>Firefox</em>, etc. Not just for general chat, it's adept at handling several browser functionalities based on your prompts.
+    - Tasks?🤨 Consider them done: From sending emails, booking tables, scheduling appointments, to calendar management - it does it all!
+- ⌚ **Apple to the Rescue**: 
+    - Your favorite general chat is now on Apple Watch. Better yet, it enables you to control your Android app, including contacts and images.
+    - Never be apart: Left your phone at home? No worries👌, control your Android phone right through the app on your Apple Watch – even find contacts!
+
+<p align="center">
+<b><em>How to access us</em></b>:  <a href="https://github.com/ttt246/Brain/tree/main/Brain">Brain🧠</a> | <a href="https://github.com/ttt246/Brain/tree/main/Android">Android Application📱</a> | <a href="https://github.com/ttt246/Brain/tree/main/Extension">Browser Extension🔍</a> | <a href="https://github.com/ttt246/Brain/tree/main/WatchApp">Apple Watch⌚</a>
+</p>
+
+## 2. Functionalities You Need to Check Out 🚀
+
+**RisingBrain** doesn't just look good, it's super smart too! Here's what it can do:
+
+- 📱 **Android App**: 
+    - **Cosy Convos**: Simplify life with general chats with our Rising AI.
+    - **Swift Browsing**: Swiftly access any piece of information on the internet within seconds.
+    - **Image Hunt**: Search for images effortlessly using visual references or descriptive prompts.
+    - **Momentary Contact Search**: Get in touch with any contact quickly and efficiently.
+    - **Text on the Go**: Send SMS messages instantly without leaving your current app environment.
+    - **Up-to-the-Minute** Notifications: Set alarms for appointments or deadlines and let us remind you.
+    - **Email Made Easy**: Compose and send emails seamlessly right from our interface.
+    - **Backend Configuration**: Modify backend settings as needed for an optimized user experience.
+    - **Never Miss a Beat**: Real-time data updations to keep you at the forefront of information.
+- ➡️ **Browser Extension**:
+    - **Tailored Chats**: Enjoy meaningful conversations with Rising AI, customized based on current website's data.
+    - **Controlling the Browser**: Perform actions like opening new tabs, searching the web, scrolling to top/bottom, navigating to next/previous page, or selecting items.
+    - **Seamless Reservations**: Booking a table at your favourite restaurant is just a command away!
+    - **Gmail Integration**: Get your emails sent directly from your current browsing interface.
+- ⌚ **Apple Watch App**:
+    - **Chit-Chats Anywhere**: Have the luxury of general chats with Rising AI right from your wrist.
+    - **Android Abode**: Control your Android device, performing actions like searching contacts or images without reaching for your phone.
+
+## 3. Contributing 💪
+We appreciate your interest in enhancing our work! Please respect the style and contribution guidelines of every project when submitting patches and additions. Our general Git workflow of choice is "fork-and-pull".
+
+ 1. **Fork** the repository on GitHub
+ 2. **Clone** your fork to your machine
+ 3. **Commit** the changes to your personal branch
+ 4. **Push** these updates back to your fork
+ 5. Don't forget to submit a **Pull Request** for us to study your contributions.
+
+NOTE: Sync with "upstream" to have the latest updates before you make a pull request!
