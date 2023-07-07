@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'com.matthaigh27.chatgptwrapper'
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.matthaigh27.chatgptwrapper"
         minSdk 28
-        targetSdk 33
+        targetSdk 32
         versionCode 1
         versionName "1.6"
 
