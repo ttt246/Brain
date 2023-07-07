@@ -4,12 +4,8 @@ from firebase_admin import db
 from collections import deque
 from typing import Dict, List, Optional, Any
 
-from langchain import LLMChain, OpenAI, PromptTemplate
+from langchain import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.llms import BaseLLM
-from langchain.vectorstores.base import VectorStore
-from pydantic import BaseModel, Field
-from langchain.chains.base import Chain
 from langchain.experimental import BabyAGI
 
 from langchain.vectorstores import FAISS

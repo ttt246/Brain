@@ -5,6 +5,7 @@ from Brain.src.common.brain_exception import BrainException
 from Brain.src.common.utils import ProgramType, DEFAULT_GPT_MODEL
 from Brain.src.firebase.firebase import (
     firebase_admin_with_setting,
+    delete_data_from_realtime,
 )
 from Brain.src.model.image_model import ImageModel
 from Brain.src.model.requests.request_model import (
@@ -32,13 +33,13 @@ from Brain.src.rising_plugin.image_embedding import embed_image_text, query_imag
 from Brain.src.logs import logger
 from Brain.src.model.basic_model import BasicModel
 from Brain.src.model.feedback_model import FeedbackModel
+from Brain.src.service.BabyAGIService import BabyAGIService
 from Brain.src.service.auto_task_service import AutoTaskService
 from Brain.src.service.command_service import CommandService
 from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
-from Brain.src.service.auto_task_service import delete_db_data
 
 from fastapi import APIRouter, Depends
 
@@ -96,7 +97,7 @@ def construct_blueprint_api() -> APIRouter:
             )
             if result["program"] == ProgramType.AUTO_TASK:
                 auto_task_service = AutoTaskService()
-                result["content"] = auto_task_service.ask_task_with_autogpt(
+                result["content"] = auto_task_service.ask_task_with_llm(
                     query=query, firebase_app=firebase_app, setting=setting
                 )
                 return assembler.to_response(200, "", result)
@@ -490,7 +491,7 @@ def construct_blueprint_api() -> APIRouter:
 
             # parsing contacts
             # train contact
-            delete_db_data(data.data.reference_link, firebase_app)
+            delete_data_from_realtime(data.data.reference_link, firebase_app)
         except Exception as e:
             if isinstance(e, BrainException):
                 return e.get_response_exp()
@@ -498,6 +499,26 @@ def construct_blueprint_api() -> APIRouter:
         return assembler.to_response(
             200, "Deleted data from real-time database of firebase", ""
         )
+
+    @router.post("/auto_task/babyagi")
+    def autotask_babyagi(
+        data: Notification, client_info: ClientInfo = Depends(get_client_info)
+    ):
+        # firebase admin init
+        try:
+            setting, firebase_app = firebase_admin_with_setting(data)
+        except BrainException as ex:
+            return assembler.to_response(ex.code, ex.message, "")
+        try:
+            babyagi_service = BabyAGIService()
+            reference_link = babyagi_service.ask_task_with_llm(
+                query=data.message, firebase_app=firebase_app, setting=setting
+            )
+            return assembler.to_response(200, "", reference_link)
+        except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
+            return assembler.to_response(400, "Failed to handle it with BabyAGI", "")
 
     """@generator.request_body(
             {
