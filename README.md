@@ -11,7 +11,7 @@ pinned: false
 license: other
 ---
 
-# 🧠 RisingBrain: Your Future-Forward AI-Powered OS 🚀
+## 🧠 RisingBrain: Your Future-Forward AI-Powered OS 🚀
 
 <p align='center'>
   <img align='center' src='Brain/assets/img/logo.png' width='70%' />
