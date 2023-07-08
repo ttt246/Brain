@@ -392,7 +392,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
                         TYPE_RESPONSE_MESSAGE -> addMessage(
-                            TYPE_CHAT_RECEIVE, apiResponse.result.content.toString()
+                            TYPE_CHAT_RECEIVE, apiResponse.result.content.asString
                         )
 
                         TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
