@@ -498,7 +498,6 @@ class ChatMainFragment : Fragment(), OnClickListener {
         ).observe(viewLifecycleOwner) { resource ->
             when (resource) {
                 is ApiResource.Loading -> {
-                    showLoading(true)
                     resource.data?.let { data ->
                         if(data.result == null) {
                             data.thoughts?.let { thoughts ->
@@ -517,12 +516,10 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 }
 
                 is ApiResource.Success -> {
-                    showLoading(false)
+                    addMessage(TYPE_CHAT_RECEIVE, "Task is finished.")
                 }
 
                 is ApiResource.Error -> {
-                    showLoading(false)
-                    addErrorMessage(resource.message!!)
                 }
             }
         }

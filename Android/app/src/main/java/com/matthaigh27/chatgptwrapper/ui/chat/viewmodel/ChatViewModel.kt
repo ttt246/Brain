@@ -251,9 +251,6 @@ class ChatViewModel : ViewModel() {
         database.getReference(referencePath).addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 if (snapshot.exists()) {
-                    if(snapshot.value == null){
-                        return;
-                    }
                     try {
                         val data = snapshot.getValue<AutoTaskModel>()
                         data?.let {
@@ -263,6 +260,9 @@ class ChatViewModel : ViewModel() {
                                 } else {
                                     resource.value = ApiResource.Loading(data)
                                 }
+                            }
+                            data.result?.let {
+                                resource.value = ApiResource.Loading(data)
                             }
 
                         }
@@ -277,9 +277,6 @@ class ChatViewModel : ViewModel() {
             ) {
                 if (snapshot.exists()) {
                     try {
-                        if(snapshot.value == null){
-                            return;
-                        }
                         val data = snapshot.getValue<AutoTaskModel>()
                         data?.let {
                             data.command?.let { command ->
@@ -288,6 +285,9 @@ class ChatViewModel : ViewModel() {
                                 } else {
                                     resource.value = ApiResource.Loading(data)
                                 }
+                            }
+                            data.result?.let {
+                                resource.value = ApiResource.Loading(data)
                             }
                         }
                     } catch (exception: Exception) {
