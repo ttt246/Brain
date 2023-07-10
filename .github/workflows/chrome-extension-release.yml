@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dist
-          path: ./build/*
+          path: build/
 
   release:
     needs: build
