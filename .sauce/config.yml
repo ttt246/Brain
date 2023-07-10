@@ -26,8 +26,8 @@ suites:
     projectName: risingland
     testMatch:
       - 01 Send Notification
-#      - 02 Upload Image
-#      - 03 Image Relatedness
+      - 02 Upload Image
+      - 03 Image Relatedness
       - 04 Add Feedback
       - 05 Get Feedback
       - 06 Get Commands
