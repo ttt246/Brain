@@ -5,12 +5,21 @@ define user ask capabilities
   "tell me about you"
   "How can I use your help?"
 
+def user ask on topic
+  "read email"
+  "send sms"
+
 define flow
   user ask capabilities
   bot inform capabilities
 
 define bot inform capabilities
   '{"program": "message", "content": "I am an Rising AI assistant which helps answer questions based on a given knowledge base."}'
+
+define flow
+  user ask on topic
+  $result = execute general_question(query=$last_user_message)
+  bot $result
 
 define flow
   priority 0.9
