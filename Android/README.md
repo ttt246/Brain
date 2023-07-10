@@ -1,6 +1,4 @@
 # 🌍 RisingBrain-Android:Your AI OS Companion 📱
-[![Android CI Develop](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
-[![Android CI](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
 
 Venture into the future of artificial intelligence with **RisingBrain Android**- an essential component of 🧠RisingBrain🧠 
 
@@ -30,14 +28,14 @@ Written in [Kotlin](https://kotlinlang.org/).***
 
 |             Title              |                                                  Description                                                   |                             ScreenShot                             |
 |:------------------------------:|:--------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------:|
-| Around-the-Clock Conversations |                                        Enjoy casual chats with Rising AI, right from your Android device.                                         |  <img src="assets/img/general.png" width="270px" height="550px"/>  |
-|        Quick Web Tours         |      Experience swift and accurate browsing based on your interests or queries.      |  <img src="assets/img/browser.png" width="270px" height="550px"/>  |
-|        Picture Perfect         |                                Hunt for images using visual cues or descriptions with our smart image search.                                |   <img src="assets/img/image.png" width="270px" height="550px"/>   |
-|    Stay Connected, Swiftly     |         Find contacts and initiate calls or text messages without extra effort.         |  <img src="assets/img/contact.png" width="270px" height="550px"/>  |
-|      On-Time, Every Time       | Set timely reminders and never miss an important event with our alarm feature. |   <img src="assets/img/alarm.png" width="270px" height="550px"/>   |
-|         Swift Emailing         |                Send emails instantly, without having to switch between apps.                 |    <img src="assets/img/sms.png" width="270px" height="550px"/>    |
-|    Configured Just for You     |                    Modify backend settings as preferred for an optimized user experience.                    |  <img src="assets/img/setting.png" width="270px" height="550px"/>  |
-|         Real-Time Data         |                                 Stay updated with real-time data reflecting in your responses.                                  | <img src="assets/img/real-time.png" width="270px" height="550px"/> |
+| Around-the-Clock Conversations |                                        Enjoy casual chats with Rising AI, right from your Android device.                                         |  <img src="assets/img/general.png" width="270px" height="530px"/>  |
+|        Quick Web Tours         |      Experience swift and accurate browsing based on your interests or queries.      |  <img src="assets/img/browser.png" width="270px" height="530px"/>  |
+|        Picture Perfect         |                                Hunt for images using visual cues or descriptions with our smart image search.                                |   <img src="assets/img/image.png" width="270px" height="530px"/>   |
+|    Stay Connected, Swiftly     |         Find contacts and initiate calls or text messages without extra effort.         |  <img src="assets/img/contact.png" width="270px" height="530px"/>  |
+|      On-Time, Every Time       | Set timely reminders and never miss an important event with our alarm feature. |   <img src="assets/img/alarm.png" width="270px" height="530px"/>   |
+|         Swift Emailing         |                Send emails instantly, without having to switch between apps.                 |    <img src="assets/img/sms.png" width="270px" height="530px"/>    |
+|    Configured Just for You     |                    Modify backend settings as preferred for an optimized user experience.                    |  <img src="assets/img/setting.png" width="270px" height="530px"/>  |
+|         Real-Time Data         |                                 Stay updated with real-time data reflecting in your responses.                                  | <img src="assets/img/real-time.png" width="270px" height="530px"/> |
 
 ## Compatibility 🤝
 Our Android app is designed with a broad compatibility range, supporting various Android versions. Regardless of the device you own, RisingBrain Android ensures a seamless, advanced, and user-centric experience.
