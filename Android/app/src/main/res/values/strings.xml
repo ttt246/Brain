@@ -27,8 +27,13 @@
     <string name="text_setting_button_save">Save</string>
 
     <string name="title_mail_compose">Compose</string>
+    <string name="title_mail_read">Read Mail</string>
     <string name="text_mail_compose_to">To</string>
+    <string name="text_mail_compose_from">From</string>
+    <string name="text_mail_compose_password">Password</string>
     <string name="text_mail_compose_subject">Subject</string>
     <string name="text_mail_compose_content">Content</string>
+    <string name="text_mail_inbox">Inbox</string>
+    <string name="text_mail_draft">Draft</string>
 
 </resources>

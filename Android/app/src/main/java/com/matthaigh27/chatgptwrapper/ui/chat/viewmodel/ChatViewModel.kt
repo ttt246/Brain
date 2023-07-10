@@ -13,9 +13,14 @@ import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
 import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.ImageRelatenessModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.MailModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ComposeMailApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ComposeMailData
 import com.matthaigh27.chatgptwrapper.data.remote.requests.ImageRelatednessApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ReadMailApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ReadMailData
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
@@ -243,6 +248,68 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    fun readMails(
+        from: String,
+        password: String,
+        imapFolder: String
+    ): MutableLiveData<ApiResource<ArrayList<MailModel>>> {
+        val resource: MutableLiveData<ApiResource<ArrayList<MailModel>>> =
+            MutableLiveData()
+        val request = ReadMailApiRequest(
+            data = ReadMailData(
+                sender = from,
+                pwd = password,
+                imap_folder = imapFolder
+            ), confs = RemoteRepository.getKeys()
+        )
+        resource.value = ApiResource.Loading()
+
+        RemoteRepository.readEmails(request, onSuccess = { apiResponse ->
+            resource.value =
+                ApiResource.Success(apiResponse.result)
+        }, onFailure = { throwable ->
+            resource.value = ApiResource.Error(throwable)
+        })
+
+        return resource
+    }
+
+    fun sendMail(
+        sender: String,
+        pwd: String,
+        to: String,
+        subject: String,
+        body: String,
+        to_send: Boolean,
+        filename: String,
+        file_content: String
+    ): MutableLiveData<ApiResource<String>> {
+        val resource: MutableLiveData<ApiResource<String>> =
+            MutableLiveData()
+        val request = ComposeMailApiRequest(
+            data = ComposeMailData(
+                sender = sender,
+                pwd = pwd,
+                to = to,
+                subject = subject,
+                body = body,
+                to_send = to_send,
+                filename = filename,
+                file_content = file_content
+            ), confs = RemoteRepository.getKeys()
+        )
+        resource.value = ApiResource.Loading()
+
+        RemoteRepository.sendEmail(request, onSuccess = { apiResponse ->
+            resource.value =
+                ApiResource.Success(apiResponse.result)
+        }, onFailure = { throwable ->
+            resource.value = ApiResource.Error(throwable)
+        })
+
+        return resource
+    }
+
     /**
      * This function is used to retrieve real-time data for the auto task.
      * Whenever data in the Firebase real-time database changes,
@@ -260,7 +327,7 @@ class ChatViewModel : ViewModel() {
                         val data = snapshot.getValue<AutoTaskModel>()
                         data?.let {
                             data.command?.let { command ->
-                                if(command.name == "finish") {
+                                if (command.name == "finish") {
                                     resource.value = ApiResource.Success(data)
                                 } else {
                                     resource.value = ApiResource.Loading(data)
@@ -285,7 +352,7 @@ class ChatViewModel : ViewModel() {
                         val data = snapshot.getValue<AutoTaskModel>()
                         data?.let {
                             data.command?.let { command ->
-                                if(command.name == "finish") {
+                                if (command.name == "finish") {
                                     resource.value = ApiResource.Success(data)
                                 } else {
                                     resource.value = ApiResource.Loading(data)

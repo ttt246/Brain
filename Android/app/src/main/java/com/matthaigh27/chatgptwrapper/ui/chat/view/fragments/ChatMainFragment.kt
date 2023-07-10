@@ -23,6 +23,8 @@ import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chat.MailModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.MailsProps
 import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
 import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
@@ -36,6 +38,7 @@ import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.ERROR_MSG_
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ALL
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAILS
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_READ
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SCHEDULE_ALARM
@@ -499,14 +502,12 @@ class ChatMainFragment : Fragment(), OnClickListener {
                         if (data.result == null) {
                             data.thoughts?.let { thoughts ->
                                 addMessage(
-                                    type = TYPE_CHAT_RECEIVE,
-                                    content = thoughts.speak
+                                    type = TYPE_CHAT_RECEIVE, content = thoughts.speak
                                 )
                             }
                         } else {
                             addMessage(
-                                type = TYPE_CHAT_RECEIVE,
-                                content = data.result
+                                type = TYPE_CHAT_RECEIVE, content = data.result
                             )
                         }
                     }
@@ -605,6 +606,76 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 addMessage(
                     type = TYPE_CHAT_RECEIVE, content = "You canceled setting an alarm."
                 )
+            }
+
+            override fun readMail(from: String, password: String, imap_folder: String) {
+                viewModel.readMails(from, password, imap_folder)
+                    .observe(viewLifecycleOwner) { resource ->
+                        when (resource) {
+                            is ApiResource.Loading -> {
+                                showLoading(true)
+                            }
+
+                            is ApiResource.Success -> {
+                                showLoading(false)
+                                val props = MailsProps(resource.data!!)
+                                val widgetDesc = JsonObject().apply {
+                                    this.addProperty(PROPS_WIDGET_DESC, props.toString())
+                                }
+                                addMessage(
+                                    type = TYPE_CHAT_WIDGET,
+                                    content = TYPE_WIDGET_MAILS,
+                                    data = widgetDesc
+                                )
+                            }
+
+                            is ApiResource.Error -> {
+                                addErrorMessage(resource.message!!)
+                                showLoading(false)
+                            }
+                        }
+                    }
+            }
+
+            override fun sendMail(
+                from: String,
+                password: String,
+                to: String,
+                subject: String,
+                body: String,
+                isInbox: Boolean,
+                filename: String,
+                fileContent: String
+            ) {
+                viewModel.sendMail(
+                    sender = from,
+                    pwd = password,
+                    to = to,
+                    subject = subject,
+                    body = body,
+                    to_send = isInbox,
+                    filename = filename,
+                    file_content = fileContent
+                ).observe(viewLifecycleOwner) { resource ->
+                    when (resource) {
+                        is ApiResource.Loading -> {
+                            showLoading(true)
+                        }
+
+                        is ApiResource.Success -> {
+                            showLoading(false)
+                        }
+
+                        is ApiResource.Error -> {
+                            addErrorMessage(resource.message!!)
+                            showLoading(false)
+                        }
+                    }
+                }
+            }
+
+            override fun readMailInDetail(mail: MailModel) {
+
             }
         }
     }

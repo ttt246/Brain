@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.MailsProps
 import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
@@ -22,9 +23,11 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.Sche
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.ContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.MailWidget
-import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.compose.ComposeMailWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ReadMailWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ComposeMailWidget
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAILS
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_READ
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SCHEDULE_ALARM
@@ -222,19 +225,46 @@ class ChatMainAdapter(
                 holder.itemLayout.addView(scheduleAlarmWidget)
             }
 
-            TYPE_WIDGET_MAIL_READ -> {
+            TYPE_WIDGET_MAILS -> {
                 holder.llHorizontalScroll.visibility = View.VISIBLE
+                val props = data.data?.run {
+                    val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
+                    MailsProps.init(widgetDesc)
+                }
 
-                for (i in 0 until 10) {
-                    val mailWidget = MailWidget(context).apply {
+                props?.mails?.forEach { mail->
+                    val mailWidget = MailWidget(context, mail).apply {
                         this.callback = callbacks
                     }
                     holder.llHorizontalScroll.addView(mailWidget)
                 }
             }
 
+            TYPE_WIDGET_MAIL_READ -> {
+                val readMailWidget = ReadMailWidget(context).apply {
+                    this.callback = callbacks
+                    this.hideListener = object : OnHideListener {
+                        override fun hide() {
+                            holder.itemLayout.visibility = View.GONE
+                            chatMessageList.removeAt(index)
+                            notifyItemRemoved(index)
+                        }
+                    }
+                }
+                holder.itemLayout.addView(readMailWidget)
+            }
+
             TYPE_WIDGET_MAIL_WRITE -> {
-                val composeMailWIdget = ComposeMailWidget(context)
+                val composeMailWIdget = ComposeMailWidget(context).apply {
+                    this.callback = callbacks
+                    this.hideListener = object : OnHideListener {
+                        override fun hide() {
+                            holder.itemLayout.visibility = View.GONE
+                            chatMessageList.removeAt(index)
+                            notifyItemRemoved(index)
+                        }
+                    }
+                }
                 holder.itemLayout.addView(composeMailWIdget)
             }
 
