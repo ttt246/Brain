@@ -243,6 +243,11 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to retrieve real-time data for the auto task.
+     * Whenever data in the Firebase real-time database changes,
+     * the data is converted to the AutoTaskModel and sent back to the View.
+     */
     fun getAutoTaskRealtimeData(referencePath: String): MutableLiveData<ApiResource<AutoTaskModel>> {
         val resource: MutableLiveData<ApiResource<AutoTaskModel>> =
             MutableLiveData()

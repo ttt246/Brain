@@ -29,6 +29,10 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun requestPermissions() {
+        /**
+         * In mobile phones that use Google API 33 or higher, the permission for reading external storage
+         * is disabled because the phones don't support the feature.
+         */
         permissions = if(Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
             arrayOf(
                 Manifest.permission.SEND_SMS,

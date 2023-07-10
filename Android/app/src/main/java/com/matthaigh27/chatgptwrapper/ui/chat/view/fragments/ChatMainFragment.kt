@@ -2,7 +2,6 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,16 +17,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
-import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
@@ -356,28 +348,28 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
     private fun fetchImageRelatedness(imageName: String, message: String) {
         viewModel.getImageRelatedness(imageName, message).observe(viewLifecycleOwner) { resource ->
-                when (resource) {
-                    is ApiResource.Loading -> {
-                        showLoading(true)
-                    }
+            when (resource) {
+                is ApiResource.Loading -> {
+                    showLoading(true)
+                }
 
-                    is ApiResource.Success -> {
-                        showLoading(false)
-                        addMessage(
-                            type = TYPE_CHAT_RECEIVE,
-                            content = resource.data?.description,
-                            data = null,
-                            hasImage = true,
-                            image = resource.data?.image
-                        )
-                    }
+                is ApiResource.Success -> {
+                    showLoading(false)
+                    addMessage(
+                        type = TYPE_CHAT_RECEIVE,
+                        content = resource.data?.description,
+                        data = null,
+                        hasImage = true,
+                        image = resource.data?.image
+                    )
+                }
 
-                    is ApiResource.Error -> {
-                        showLoading(false)
-                        addErrorMessage(resource.message!!)
-                    }
+                is ApiResource.Error -> {
+                    showLoading(false)
+                    addErrorMessage(resource.message!!)
                 }
             }
+        }
     }
 
     private fun sendNotification(message: String) {
@@ -491,6 +483,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
         }
     }
 
+    /**
+     * This function is implemented to fetch the AutoTask data from the Firebase Realtime Database.
+     * If the 'result' property is present, its value will be displayed.
+     * if not, then the value of the 'thoughts' property will be exhibited.
+     */
     private fun fetchResponseAutoTask(apiResponse: ApiResponse<CommonResult>) {
         val referenceUrl = apiResponse.result.content.asString
         viewModel.getAutoTaskRealtimeData(
@@ -499,7 +496,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
             when (resource) {
                 is ApiResource.Loading -> {
                     resource.data?.let { data ->
-                        if(data.result == null) {
+                        if (data.result == null) {
                             data.thoughts?.let { thoughts ->
                                 addMessage(
                                     type = TYPE_CHAT_RECEIVE,
@@ -577,24 +574,24 @@ class ChatMainFragment : Fragment(), OnClickListener {
             override fun pickImage(isSuccess: Boolean, data: ByteArray?) {
                 if (!isSuccess) addErrorMessage("Fail to pick image")
                 viewModel.uploadImageToFirebase(data!!).observe(viewLifecycleOwner) { resource ->
-                        when (resource) {
-                            is ApiResource.Loading -> {
-                                showLoading(true)
-                            }
+                    when (resource) {
+                        is ApiResource.Loading -> {
+                            showLoading(true)
+                        }
 
-                            is ApiResource.Success -> {
-                                showLoading(false)
-                                currentSelectedImage = data
-                                currentUploadedImageName = resource.data
-                                isImagePicked = true
-                            }
+                        is ApiResource.Success -> {
+                            showLoading(false)
+                            currentSelectedImage = data
+                            currentUploadedImageName = resource.data
+                            isImagePicked = true
+                        }
 
-                            is ApiResource.Error -> {
-                                addErrorMessage(resource.message!!)
-                                showLoading(false)
-                            }
+                        is ApiResource.Error -> {
+                            addErrorMessage(resource.message!!)
+                            showLoading(false)
                         }
                     }
+                }
             }
 
             override fun setAlarm(hours: Int, minutes: Int, label: String) {

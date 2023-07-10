@@ -1,6 +1,8 @@
 package com.matthaigh27.chatgptwrapper.data.models.chat
 
-import javax.annotation.ParametersAreNullableByDefault
+/**
+ * This class denotes a model to store AutoTask data in Firebase realtime database.
+ */
 
 data class AutoTaskModel(
     val command: Command? = null,
