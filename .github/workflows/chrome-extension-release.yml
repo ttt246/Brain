@@ -37,6 +37,9 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Extension
 
     steps:
       - name: Checkout
