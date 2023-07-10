@@ -3,6 +3,7 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.matthaigh27.chatgptwrapper.R
@@ -14,12 +15,7 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.fragments.ChatMainFragment
 class ChatActivity : BaseActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 1
-    private val PERMISSIONS = arrayOf(
-        Manifest.permission.SEND_SMS,
-        Manifest.permission.READ_CONTACTS,
-        Manifest.permission.CALL_PHONE,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    )
+    private lateinit var permissions: Array<String>
     private val CONFIRM_MESSAGE =
         "This app requires SMS, Contacts and Phone " +
                 "permissions to function properly. " +
@@ -33,7 +29,25 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun requestPermissions() {
-        val notGrantedPermissions = PERMISSIONS.filter {
+        /**
+         * In mobile phones that use Google API 33 or higher, the permission for reading external storage
+         * is disabled because the phones don't support the feature.
+         */
+        permissions = if(Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            arrayOf(
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.CALL_PHONE
+            )
+        } else {
+            arrayOf(
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+        }
+        val notGrantedPermissions = permissions.filter {
             checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
         }
 

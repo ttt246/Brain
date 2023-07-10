@@ -2,6 +2,7 @@ package com.matthaigh27.chatgptwrapper.data.repository
 
 import com.google.firebase.storage.FirebaseStorage
 import com.google.protobuf.Empty
+import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess

@@ -42,6 +42,7 @@ import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TY
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SEARCH_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SMS
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_ALARM
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_AUTO_TASK
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_BROWSER
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_CONTACT
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_IMAGE
@@ -219,8 +220,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
         message: String
     ) {
         addMessage(
-            type = TYPE_CHAT_RECEIVE,
-            content = message
+            type = TYPE_CHAT_RECEIVE, content = message
         )
     }
 
@@ -334,8 +334,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                 is ApiResource.Success -> {
                     showLoading(false)
                     resource.data?.let { data ->
-                        helpPromptList =
-                            responseToHelpPromptList(data.result.content)
+                        helpPromptList = responseToHelpPromptList(data.result.content)
                     }
                 }
 
@@ -348,30 +347,29 @@ class ChatMainFragment : Fragment(), OnClickListener {
     }
 
     private fun fetchImageRelatedness(imageName: String, message: String) {
-        viewModel.getImageRelatedness(imageName, message)
-            .observe(viewLifecycleOwner) { resource ->
-                when (resource) {
-                    is ApiResource.Loading -> {
-                        showLoading(true)
-                    }
+        viewModel.getImageRelatedness(imageName, message).observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is ApiResource.Loading -> {
+                    showLoading(true)
+                }
 
-                    is ApiResource.Success -> {
-                        showLoading(false)
-                        addMessage(
-                            type = TYPE_CHAT_RECEIVE,
-                            content = resource.data?.description,
-                            data = null,
-                            hasImage = true,
-                            image = resource.data?.image
-                        )
-                    }
+                is ApiResource.Success -> {
+                    showLoading(false)
+                    addMessage(
+                        type = TYPE_CHAT_RECEIVE,
+                        content = resource.data?.description,
+                        data = null,
+                        hasImage = true,
+                        image = resource.data?.image
+                    )
+                }
 
-                    is ApiResource.Error -> {
-                        showLoading(false)
-                        addErrorMessage(resource.message!!)
-                    }
+                is ApiResource.Error -> {
+                    showLoading(false)
+                    addErrorMessage(resource.message!!)
                 }
             }
+        }
     }
 
     private fun sendNotification(message: String) {
@@ -386,8 +384,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     val apiResponse = resource.data
                     when (apiResponse?.result?.program) {
                         TYPE_RESPONSE_MESSAGE -> addMessage(
-                            TYPE_CHAT_RECEIVE,
-                            apiResponse.result.content.toString()
+                            TYPE_CHAT_RECEIVE, apiResponse.result.content.asString
                         )
 
                         TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
@@ -397,6 +394,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                         TYPE_RESPONSE_MAIL_READ -> fetchResponseMail(TYPE_RESPONSE_MAIL_READ)
                         TYPE_RESPONSE_MAIL_WRITE -> fetchResponseMail(TYPE_RESPONSE_MAIL_WRITE)
                         TYPE_RESPONSE_MAIL_SEND -> fetchResponseMail(TYPE_RESPONSE_MAIL_SEND)
+                        TYPE_RESPONSE_AUTO_TASK -> fetchResponseAutoTask(apiResponse)
                         else -> addMessage(TYPE_CHAT_RECEIVE, apiResponse!!.result.toString())
                     }
                 }
@@ -485,6 +483,45 @@ class ChatMainFragment : Fragment(), OnClickListener {
         }
     }
 
+    /**
+     * This function is implemented to fetch the AutoTask data from the Firebase Realtime Database.
+     * If the 'result' property is present, its value will be displayed.
+     * if not, then the value of the 'thoughts' property will be exhibited.
+     */
+    private fun fetchResponseAutoTask(apiResponse: ApiResponse<CommonResult>) {
+        val referenceUrl = apiResponse.result.content.asString
+        viewModel.getAutoTaskRealtimeData(
+            referenceUrl
+        ).observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                is ApiResource.Loading -> {
+                    resource.data?.let { data ->
+                        if (data.result == null) {
+                            data.thoughts?.let { thoughts ->
+                                addMessage(
+                                    type = TYPE_CHAT_RECEIVE,
+                                    content = thoughts.speak
+                                )
+                            }
+                        } else {
+                            addMessage(
+                                type = TYPE_CHAT_RECEIVE,
+                                content = data.result
+                            )
+                        }
+                    }
+                }
+
+                is ApiResource.Success -> {
+                    addMessage(TYPE_CHAT_RECEIVE, "Task is finished.")
+                }
+
+                is ApiResource.Error -> {
+                }
+            }
+        }
+    }
+
     private fun initChatInterface() {
         chatMessageInterface = object : ChatMessageInterface {
             override fun sentSms(phoneNumber: String, message: String) {
@@ -503,29 +540,25 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun sentHelpPrompt(prompt: String) {
                 addMessage(
-                    type = TYPE_CHAT_SENT,
-                    content = prompt
+                    type = TYPE_CHAT_SENT, content = prompt
                 )
             }
 
             override fun canceledHelpPrompt() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You canceled Help prompt."
+                    type = TYPE_CHAT_RECEIVE, content = "You canceled Help prompt."
                 )
             }
 
             override fun doVoiceCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You made a voice call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE, content = "You made a voice call to $phoneNumber"
                 )
             }
 
             override fun doVideoCall(phoneNumber: String) {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You made a video call to $phoneNumber"
+                    type = TYPE_CHAT_RECEIVE, content = "You made a video call to $phoneNumber"
                 )
             }
 
@@ -534,35 +567,31 @@ class ChatMainFragment : Fragment(), OnClickListener {
                     this.addProperty(PROPS_WIDGET_DESC, phoneNumber)
                 }
                 addMessage(
-                    type = TYPE_CHAT_WIDGET,
-                    content = TYPE_WIDGET_SMS,
-                    data = widgetDesc
+                    type = TYPE_CHAT_WIDGET, content = TYPE_WIDGET_SMS, data = widgetDesc
                 )
             }
 
             override fun pickImage(isSuccess: Boolean, data: ByteArray?) {
-                if (!isSuccess)
-                    addErrorMessage("Fail to pick image")
-                viewModel.uploadImageToFirebase(data!!)
-                    .observe(viewLifecycleOwner) { resource ->
-                        when (resource) {
-                            is ApiResource.Loading -> {
-                                showLoading(true)
-                            }
+                if (!isSuccess) addErrorMessage("Fail to pick image")
+                viewModel.uploadImageToFirebase(data!!).observe(viewLifecycleOwner) { resource ->
+                    when (resource) {
+                        is ApiResource.Loading -> {
+                            showLoading(true)
+                        }
 
-                            is ApiResource.Success -> {
-                                showLoading(false)
-                                currentSelectedImage = data
-                                currentUploadedImageName = resource.data
-                                isImagePicked = true
-                            }
+                        is ApiResource.Success -> {
+                            showLoading(false)
+                            currentSelectedImage = data
+                            currentUploadedImageName = resource.data
+                            isImagePicked = true
+                        }
 
-                            is ApiResource.Error -> {
-                                addErrorMessage(resource.message!!)
-                                showLoading(false)
-                            }
+                        is ApiResource.Error -> {
+                            addErrorMessage(resource.message!!)
+                            showLoading(false)
                         }
                     }
+                }
             }
 
             override fun setAlarm(hours: Int, minutes: Int, label: String) {
@@ -574,8 +603,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
 
             override fun cancelAlarm() {
                 addMessage(
-                    type = TYPE_CHAT_RECEIVE,
-                    content = "You canceled setting an alarm."
+                    type = TYPE_CHAT_RECEIVE, content = "You canceled setting an alarm."
                 )
             }
         }
