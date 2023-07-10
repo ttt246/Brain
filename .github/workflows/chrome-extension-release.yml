@@ -36,6 +36,7 @@ jobs:
 
   release:
     needs: build
+    permissions: write-all
     runs-on: ubuntu-latest
     defaults:
       run:
