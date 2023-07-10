@@ -62,7 +62,7 @@ Key features of **RisingBrain** that will make you fall in love with your OS all
     - **Image Hunt**: Search for images effortlessly using visual references or descriptive prompts.
     - **Momentary Contact Search**: Get in touch with any contact quickly and efficiently.
     - **Text on the Go**: Send SMS messages instantly without leaving your current app environment.
-    - **Up-to-the-Minute** Notifications: Set alarms for appointments or deadlines and let us remind you.
+    - **Up-to-the-Minute Notifications**: Set alarms for appointments or deadlines and let us remind you.
     - **Email Made Easy**: Compose and send emails seamlessly right from our interface.
     - **Backend Configuration**: Modify backend settings as needed for an optimized user experience.
     - **Never Miss a Beat**: Real-time data updations to keep you at the forefront of information.

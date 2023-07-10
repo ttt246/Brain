@@ -1,47 +1,54 @@
-# RisingAndroid
+# 🌍 RisingBrain-Android:Your AI OS Companion 📱
 [![Android CI Develop](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=develop)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
 [![Android CI](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml/badge.svg?branch=main)](https://github.com/ttt246/RisingPhone/actions/workflows/android.yml)
 
-All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. In our OS, a AI will manage all apps via plugins, which can be prompted by the user. Our plugins can run as an openai plugin, or in our backend.
+Venture into the future of artificial intelligence with **RisingBrain Android**- an essential component of 🧠RisingBrain🧠 
 
-### RisingPhone
+We bring the revolutionary AI-powered OS right at your fingertips with our Android application.
+This Android counterpart ensures you get all the smart features of RisingBrain OS on your smartphone. 
+
+Let's dive into the specifics!😆
+
+## Getting Started 🏁
 
 <p align='center'>
-  <img align='center' src='assets/img/desc.png' width='100%' />
+  <img align='center' src='assets/img/desc.png' width='100%'>
+</p>
+<p align="center">
+    <img src="assets/img/architecture.png" width="92%">
 </p>
 
-- 📱 Support for mobile devices to manage all apps via plugin as its launcher.
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
+This application has built with **MVVM architecture pattern**. (Using Android Architecture Components).
 
-### Features
+Repository Pattern, to abstract the source of data in the application.
+Using of View Model, Live Data and data binding.
 
-| Title  | Description  |
-| ------------ | ------------ |
-| General Chat | Users can chat with AI plugins. |
-| Open Browser Automatically |  If a user is going to open browser, the app opens browser and search what a user wants automatically |
-| Image Search System  | A user can search image on Android local storage |
-| Send SMS | If a user says that send SMS, mobile open SMS editor and a user can send SMS using the editor. |
+***The Application utilizes such popular libraries as: [Room](https://developer.android.com/training/data-storage/room), [OkHttp](https://github.com/square/okhttp), [Retrofit](https://github.com/square/retrofit), [Glide](https://github.com/bumptech/glide), etc.
+Written in [Kotlin](https://kotlinlang.org/).***
 
-### Run locally
-- Copy google-services.json into app folder of project
+## Features 💫
 
-### CI/CD
-- set google-services.json to github secrets
+|             Title              |                                                  Description                                                   |                             ScreenShot                             |
+|:------------------------------:|:--------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------:|
+| Around-the-Clock Conversations |                                        Enjoy casual chats with Rising AI, right from your Android device.                                         |  <img src="assets/img/general.png" width="270px" height="550px"/>  |
+|        Quick Web Tours         |      Experience swift and accurate browsing based on your interests or queries.      |  <img src="assets/img/browser.png" width="270px" height="550px"/>  |
+|        Picture Perfect         |                                Hunt for images using visual cues or descriptions with our smart image search.                                |   <img src="assets/img/image.png" width="270px" height="550px"/>   |
+|    Stay Connected, Swiftly     |         Find contacts and initiate calls or text messages without extra effort.         |  <img src="assets/img/contact.png" width="270px" height="550px"/>  |
+|      On-Time, Every Time       | Set timely reminders and never miss an important event with our alarm feature. |   <img src="assets/img/alarm.png" width="270px" height="550px"/>   |
+|         Swift Emailing         |                Send emails instantly, without having to switch between apps.                 |    <img src="assets/img/sms.png" width="270px" height="550px"/>    |
+|    Configured Just for You     |                    Modify backend settings as preferred for an optimized user experience.                    |  <img src="assets/img/setting.png" width="270px" height="550px"/>  |
+|         Real-Time Data         |                                 Stay updated with real-time data reflecting in your responses.                                  | <img src="assets/img/real-time.png" width="270px" height="550px"/> |
 
+## Compatibility 🤝
+Our Android app is designed with a broad compatibility range, supporting various Android versions. Regardless of the device you own, RisingBrain Android ensures a seamless, advanced, and user-centric experience.
 
-### Test
-- Unit Test
-- Instrumented Test
+## Contributing 💪
+We appreciate your interest in enhancing our work! Please respect the style and contribution guidelines of every project when submitting patches and additions. Our general Git workflow of choice is "fork-and-pull".
 
-### Contributing
+ 1. **Fork** the repository on GitHub
+ 2. **Clone** your fork to your machine
+ 3. **Commit** the changes to your personal branch
+ 4. **Push** these updates back to your fork
+ 5. Don't forget to submit a **Pull Request** for us to study your contributions.
 
-Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
-
- 1. **Fork** the repo on GitHub
- 2. **Clone** the project to your own machine
- 3. **Commit** changes to your own branch
- 4. **Push** your work back up to your fork
- 5. Submit a **Pull request** so that we can review your changes
-
-NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+NOTE: Sync with "upstream" to have the latest updates before you make a pull request!
