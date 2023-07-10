@@ -7,7 +7,7 @@ This folder contains an example test, and is composed of the following elements:
 - `input.yaml`: Sets variables that will provided to test.
 - `unit.yaml`: Sets the steps to perform while executing the test.
 
-You can also get familiar with our test script syntax by following our [Synthax Documentation](https://github.com/saucelabs/saucectl-apix-example/blob/main/docs/README.md).
+You can also get familiar with our test script syntax by following our [Synthax Documentation](https://github.com/saucelabs/saucectl-apitest-example/blob/main/README.md).
 
 ## Details
 
@@ -17,6 +17,3 @@ That might help in adding some abstraction:
 
 - Use the same test against different API domains (e.g. staging vs production)
 - Use multiple input set and test different endpoints
-
-## More about `input.yaml` syntax
-More details about the syntax used in this file can be found [here](https://github.com/saucelabs/saucectl-apix-example/blob/main/docs/README.md#input-inputyaml)
