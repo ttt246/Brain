@@ -23,6 +23,7 @@ Welcome to the heartbeat of **RisingBrain**, our main backend component. ⚽ Kic
 The first step involves setting up the necessary environment. You'll need two files:
 
 1. **Firebase Credential JSON file**: Place your firebase_credential.json in the following directory:
+
 <p align="center">
   <img src="assets/img/firebase_credential.png" width="88%"/>
   <p align="center">[Project Directory]/Brain/firebase_credential.json</p>
