@@ -359,9 +359,16 @@ class EmailPlugin:
 
         return email_body
 
-    def write_attachment(self, filename: str, file_content: str) -> str:
+    def write_attachment(self, filename: str, file_content: str) -> (str, str):
+        # create folder for temporarily saving attached file
+        milliseconds = int(time.time() * 1000)
+        file_path = f"Brain/assets/{milliseconds}/{filename}"
+        file_directory = f"Brain/assets/{milliseconds}"
+        os.mkdir(file_directory)
+
+        # file write
         file_content = base64.b64decode(file_content).decode("utf-8")
-        file = open(filename, "w")
+        file = open(file_path, "w")
         file.write(file_content)
         file.close()
-        return filename
+        return file_path, file_directory

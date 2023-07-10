@@ -1,5 +1,5 @@
 import json
-
+import shutil
 from fastapi import APIRouter
 
 from Brain.src.common.assembler import Assembler
@@ -119,7 +119,7 @@ def construct_blueprint_email_api() -> APIRouter:
                     to_send=data.data.to_send,
                 )
             else:
-                file_name = email_manager.write_attachment(
+                file_name, file_directory = email_manager.write_attachment(
                     filename=data.data.filename, file_content=data.data.file_content
                 )
 
@@ -132,6 +132,8 @@ def construct_blueprint_email_api() -> APIRouter:
                     to_send=data.data.to_send,
                     filename=file_name,
                 )
+
+                shutil.rmtree(file_directory)
 
         except Exception as e:
             if isinstance(e, BrainException):
