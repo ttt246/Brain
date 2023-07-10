@@ -1,4 +1,4 @@
-name: Extension Release
+name: Chrome Extension Release
 on:
   push:
     paths:
@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dist
-          path: Extension/build/*
+          path: ./build/*
 
   release:
     needs: build
