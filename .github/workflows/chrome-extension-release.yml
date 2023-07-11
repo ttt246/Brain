@@ -36,6 +36,8 @@ jobs:
 
       - name: Compress with zip
         run: |
+          ls
+          pwd
           zip -r chrome-extension.zip ./build/*
 
       - name: Upload Artifact
