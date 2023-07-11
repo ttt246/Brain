@@ -480,10 +480,11 @@ class ChatMainFragment : Fragment(), OnClickListener {
             }
 
             TYPE_RESPONSE_MAIL_WRITE -> {
-                addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
+
             }
 
             TYPE_RESPONSE_MAIL_SEND -> {
+                addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_MAIL_WRITE)
             }
         }
     }

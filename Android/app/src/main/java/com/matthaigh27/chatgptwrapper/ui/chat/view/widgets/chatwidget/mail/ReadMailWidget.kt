@@ -47,6 +47,9 @@ class ReadMailWidget(
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.btn_send -> {
+                val from  = edtMailFrom.editText?.text.toString()
+                val password = edtMailPassword.editText?.text.toString()
+                if(from == "" || password == "") return
                 val imapFolder = if (swhMailType.isChecked) "inbox" else "draft"
                 callback?.readMail(
                     from = edtMailFrom.editText?.text.toString(),
@@ -59,5 +62,6 @@ class ReadMailWidget(
                 hideListener?.hide()
             }
         }
+        hideListener?.hide()
     }
 }

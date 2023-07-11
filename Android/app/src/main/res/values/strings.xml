@@ -16,6 +16,7 @@
 
     <string name="title_chat_widget">widget title</string>
     <string name="title_chat_widget_sms">SMS</string>
+    <string name="title_chat_widget_set_alarm">Set an alarm</string>
 
     <string name="label_setting_uuid">uuid</string>
     <string name="label_setting_openai_key">OpenAI Key</string>

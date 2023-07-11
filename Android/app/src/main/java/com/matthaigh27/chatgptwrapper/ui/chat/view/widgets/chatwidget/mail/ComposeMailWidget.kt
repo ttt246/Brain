@@ -1,13 +1,16 @@
 package com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -34,6 +37,8 @@ class ComposeMailWidget(
     private var attachmentChipGroup: ChipGroup
 
     var hideListener: OnHideListener? = null
+
+//    private val REQUEST_CODE_LOCAL_STORAGE = 1
 
     init {
         LayoutInflater.from(context).inflate(R.layout.widget_mail_compose, this, true)
@@ -104,8 +109,45 @@ class ComposeMailWidget(
             }
 
             R.id.btn_attachment -> {
-
+//                val choice = arrayOf("Local Storage", "Google Drive")
+//                val builder = AlertDialog.Builder(context)
+//                builder.setItems(choice) { dialog, which ->
+//                    when (which) {
+//                        0 -> selectFileFromLocalStorage()
+//                        1 -> selectFileFromGoogleDrive()
+//                    }
+//                }
+//                builder.show()
             }
         }
     }
+
+//    fun selectFileFromLocalStorage() {
+//        val intent = Intent(Intent.ACTION_GET_CONTENT)
+//        intent.type = "*/*"
+//        startActivityForResult(intent, REQUEST_CODE_LOCAL_STORAGE)
+//    }
+//
+//    fun selectFileFromGoogleDrive() {
+//        val intent = driveClient.newOpenFileActivityIntentBuilder()
+//            .setMimeType(new String[] {"text/plain"})
+//            .build();
+//        startActivityForResult(intent, REQUEST_CODE_GOOGLE_DRIVE);
+//    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        if (requestCode == REQUEST_CODE_LOCAL_STORAGE && resultCode == Activity.RESULT_OK && data != null) {
+//            fileName = data.data
+//        }
+//    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        // handle onActivityResult for local storage
+//        if (requestCode == REQUEST_CODE_GOOGLE_DRIVE && resultCode == Activity.RESULT_OK && data != null) {
+//            val driveId = data.getParcelableExtra<DriveId>(OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID);
+//            // use this driveId to handle file
+//        }
+//    }
 }

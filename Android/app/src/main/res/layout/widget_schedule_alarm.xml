@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_sms"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -24,71 +24,96 @@
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_tiny">
 
-          <LinearLayout
-              android:id="@+id/cl_main"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              app:layout_constraintTop_toTopOf="parent"
-              >
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-              <LinearLayout
-                  android:id="@+id/ll_time"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_marginBottom="@dimen/spacing_tiny">
+                <TextView
+                    android:id="@+id/txt_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_chat_widget_set_alarm"
+                    android:textColor="@color/color_accent"
+                    android:textSize="@dimen/font_big"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                  <TimePicker
-                      android:id="@+id/time_picker"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:timePickerMode="clock" />
+                <ImageView
+                    android:id="@+id/btn_ok"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
 
-              </LinearLayout>
+                <ImageView
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="@dimen/size_button_normal"
+                    android:layout_height="@dimen/size_button_normal"
+                    android:padding="@dimen/spacing_tiny"
+                    android:src="@drawable/ic_cancel_schedule_send"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_title"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_ok"
+                    app:layout_constraintTop_toTopOf="@+id/txt_title"
+                    app:tint="@color/color_accent" />
 
-              <LinearLayout
-                  android:id="@+id/ll_repeat"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:layout_marginBottom="@dimen/spacing_tiny"
-                  android:visibility="gone"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-              <com.google.android.material.textfield.TextInputLayout
-                  android:id="@+id/txt_label"
-                  style="@style/CommonEditText"
-                  android:layout_marginTop="@dimen/spacing_small"
-                  android:layout_marginBottom="@dimen/spacing_tiny"
-                  android:hint="label">
-
-                  <com.google.android.material.textfield.TextInputEditText
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content" />
-
-              </com.google.android.material.textfield.TextInputLayout>
-
-          </LinearLayout>
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginVertical="@dimen/spacing_tiny" />
 
             <LinearLayout
+                android:id="@+id/cl_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:gravity="end"
-                app:layout_constraintTop_toBottomOf="@+id/cl_main">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_ok"
-                    style="@style/ChatWidgetCommonButton"
-                    android:text="@string/text_button_ok" />
+                <LinearLayout
+                    android:id="@+id/ll_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_tiny"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_cancel"
-                    style="@style/ChatWidgetCommonButton"
-                    android:text="@string/text_button_cancel" />
+                    <TimePicker
+                        android:id="@+id/time_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:timePickerMode="clock" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_repeat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_tiny"
+                    android:orientation="horizontal"
+                    android:visibility="gone" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txt_label"
+                    style="@style/CommonEditText"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_tiny"
+                    android:hint="label">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
