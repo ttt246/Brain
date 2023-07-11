@@ -30,12 +30,12 @@ def construct_blueprint_email_api() -> APIRouter:
 
         @generator.response(
             status_code=200, schema={"message": "message", "result": [{
-                "From": "testfrom@test.com",
-                "To": "test@gmail.com",
-                "Date": "Tue, 04 Jul 2023 12:55:19 +0000",
-                "CC": "",
-                "Subject": "subject",
-                "Message Body": "message"
+                "from": "testfrom@test.com",
+                "to": "test@gmail.com",
+                "date": "Tue, 04 Jul 2023 12:55:19 +0000",
+                "cc": "",
+                "subject": "subject",
+                "body": "message"
             }]}
         )
 

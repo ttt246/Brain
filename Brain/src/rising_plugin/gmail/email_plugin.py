@@ -219,12 +219,12 @@ class EmailPlugin:
 
                     messages.append(
                         {
-                            "From": from_address,
-                            "To": to_address,
-                            "Date": date,
-                            "CC": cc,
-                            "Subject": subject,
-                            "Message Body": body,
+                            "from": from_address,
+                            "to": to_address,
+                            "date": date,
+                            "cc": cc,
+                            "subject": subject,
+                            "body": body,
                         }
                     )
 
@@ -232,12 +232,12 @@ class EmailPlugin:
         if not messages:
             messages.append(
                 {
-                    "From": "",
-                    "To": "",
-                    "Date": "",
-                    "CC": "",
-                    "Subject": "",
-                    "Message Body": "There are no Emails",
+                    "from": "",
+                    "to": "",
+                    "date": "",
+                    "cc": "",
+                    "subject": "",
+                    "body": "There are no Emails",
                 }
             )
             return json.dumps(messages)
