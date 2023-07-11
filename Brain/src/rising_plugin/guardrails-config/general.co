@@ -4,8 +4,13 @@ define user ask capabilities
   "tell me what you can do"
   "tell me about you"
   "How can I use your help?"
+  "Hi"
+  "Hello"
+  "How are you?"
+  "How are you doing?"
+  "What is Rising Brain?"
 
-def user ask on topic
+define user ask on topic
   "read email"
   "send sms"
 
@@ -14,7 +19,7 @@ define flow
   bot inform capabilities
 
 define bot inform capabilities
-  '{"program": "message", "content": "I am an Rising AI assistant which helps answer questions based on a given knowledge base."}'
+  '{"program": "rails_off_topic", "content": "I am an Rising AI assistant which helps answer questions based on a given knowledge base."}'
 
 define flow
   user ask on topic
