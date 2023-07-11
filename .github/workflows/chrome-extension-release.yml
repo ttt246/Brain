@@ -54,7 +54,7 @@ jobs:
 
       - name: Compress with zip
         run: |
-          cd ./build
+          cd Extension/build
           mkdir ../release
           zip -r ../release/chrome-extension.zip ./
 
