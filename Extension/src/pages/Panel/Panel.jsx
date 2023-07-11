@@ -6,7 +6,6 @@ import { getDatabase, onValue, ref } from "firebase/database";
 import Message from './Message'
 import './Panel.css';
 import app from './FirebaseApp/firebase-app'
-import * as confs from '../../configs/rising-config.json'
 
 const {Footer, Content} = Layout;
 const URL_BASE = 'https://ttt246-brain.hf.space/'
@@ -16,7 +15,17 @@ const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
 const URL_DELETE_RTD = URL_BASE + 'auto_task/delete'
 
 let prompt = ""
-
+const confs = {
+    "openai_key": "",
+    "pinecone_key": "",
+    "pinecone_env": "",
+    "firebase_key": "",
+    "token": "",
+    "uuid": "extension-uuid",
+    "settings": {
+        "temperature": 0.6
+    }
+}
 const Panel = () => {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState([]);
@@ -173,7 +182,8 @@ const Panel = () => {
         }
         sendRequest(params, URL_BROWSER_ITEM).then(data => {
             window.open(data.result.content, '_blank', 'noreferrer')
-        }).catch(err => {       
+        }).catch(err => {
+            console.error((err))
         })
     }
 
@@ -185,7 +195,8 @@ const Panel = () => {
         }
         sendRequest(params, URL_ASK_WEBSITE).then(data => {
             addMessage(data.result.content, false)            
-        }).catch(err => {            
+        }).catch(err => {
+            console.error((err))
         })
     }
 
