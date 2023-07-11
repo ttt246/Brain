@@ -54,7 +54,7 @@ jobs:
 
       - name: Compress with zip
         run: |
-          cd Extension/build
+          cd /home/runner/work/Brain/Brain/Extension/build
           mkdir ../release
           zip -r ../release/chrome-extension.zip ./
 
@@ -76,6 +76,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_extension_release.outputs.upload_url }}
-          asset_path: ./build/chrome-extension.zip
+          asset_path: ./release/chrome-extension.zip
           asset_name: chrome-extension.zip
           asset_content_type: application/zip
