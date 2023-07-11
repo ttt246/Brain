@@ -29,17 +29,15 @@ struct ContactRow: View {
             Text(contact.displayName)
                 .italic()
                 .font(.system(size: 15))
-                .foregroundColor(.black)
+                .foregroundColor(.white)
                 .padding(5)
             Spacer()
             Image(systemName: "phone.fill")
                     .resizable()
                     .frame(width: 17, height: 17)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
         }
-        .listRowBackground(Color.red)
-        .padding(5)
-        .background(Color.white)
+        .background(Color.clear)
         .clipShape(ContactBubble())
     }
 }

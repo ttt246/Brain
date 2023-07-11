@@ -30,8 +30,7 @@ struct ChatView: View {
                             .font(.system(size: 20))
                             .frame(maxWidth: .infinity)
                     }
-                }.frame(width: 45, height: 45).foregroundColor(.green)
-                    .background(Color.green.opacity(0.3))
+                }.frame(width: 45, height: 45)
                     .cornerRadius(5).buttonStyle(PlainButtonStyle())
                 
                 TextField("", text: $newMessage, onEditingChanged: { (isChanged) in
@@ -42,7 +41,7 @@ struct ChatView: View {
                 }).frame(height: 45)
                     .overlay(
                         RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color.green, lineWidth: 1)
+                            .stroke(Color.white, lineWidth: 1)
                     )
                 Button(action: {
                     
@@ -51,9 +50,8 @@ struct ChatView: View {
                     Image(systemName: "paperplane.fill")
                         .font(.system(size: 20))
                         .frame(maxWidth: .infinity)
-                }.frame(width: 45, height: 45).foregroundColor(.green)
-                    .background(Color.green.opacity(0.3))
-                    .cornerRadius(5).buttonStyle(PlainButtonStyle())
+                }.frame(width: 45, height: 45)
+                    .cornerRadius(5)
             }
         }.edgesIgnoringSafeArea(.bottom)
     }
