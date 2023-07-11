@@ -53,6 +53,7 @@ import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_SEND
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_MESSAGE
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeResponseConstants.TYPE_RESPONSE_SMS
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter
 import com.matthaigh27.chatgptwrapper.utils.helpers.Converter.responseToHelpPromptList
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.CommandHelper.getHelpCommandFromStr
@@ -390,6 +391,7 @@ class ChatMainFragment : Fragment(), OnClickListener {
                             TYPE_CHAT_RECEIVE, apiResponse.result.content.asString
                         )
 
+                        TYPE_RESPONSE_SMS -> addMessage(TYPE_CHAT_WIDGET, TYPE_WIDGET_SMS)
                         TYPE_RESPONSE_BROWSER -> fetchResponseBrowser(apiResponse)
                         TYPE_RESPONSE_CONTACT -> fetchResponseContact(apiResponse)
                         TYPE_RESPONSE_IMAGE -> fetchResponseImage(apiResponse)
