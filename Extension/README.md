@@ -1,74 +1,62 @@
-<p align="center">
-    <img src="./src/logo1.png">
-</p>
+# 🌍 RisingBrain-Extension: Surfing the AI wave on your Browser 🚀
 
-<h1 align="center">Rising Browser(Extension)</h1>
+Welcome to the browser extension of **RisingBrain** - an exciting piece of innovation bringing smart, AI-powered functionality right into your browser. 
 
-<div align="center">
-
-
-All complex software including operating systems will need to be rewritten from the ground up to take advantage of machine learning. It will manipulate the browser automatically. Our plugins can run as an openai plugin, or in our backend.
-</div>
-
-### Achievement
+Compatible with all major browsers – think ***Chrome, Safari, Firefox***, and more!
 <p align='center'>
-  <img align='center' src='src/assets/desc.png' width='100%' />
+  <img align='center' src='../Brain/assets/img/extension-diagram.png' width='88%' />
 </p>
 
-- 📱 Support for mobile devices to manage browser.
-- 🌍 Support all web browsers to manipulate it automatically as its extension.
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
+## Salient Features 🌟
 
-###  ✨ Features
+With **RisingBrain** Extension, your browser does more than just surf the web. Here's what you're in for:
+<p align='center'>
+  <img align='center' src='../Brain/assets/img/extension-functionality.png' width='88%' />
+</p>
 
-- 🌈 Call up the chat dialog box on any page at any time. (<kbd>Ctrl</kbd>+<kbd>B</kbd>)
-- 📱 Support for mobile devices.
-- 📓 Summarize any page with right-click menu. (<kbd>Alt</kbd>+<kbd>B</kbd>)
-- 📖 Independent conversation page. (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>H</kbd>)
-- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, New Bing, Self-Hosted, Azure, Poe etc.).
-- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
-- 🧰 Selection tool and right-click menu to perform various tasks, such as translation, summarization, polishing,
-  sentiment analysis, paragraph division, code explain and queries.
-- 🗂️ Static cards support floating chat boxes for multi-branch conversations.
-- 🖨️ Easily save your complete chat records or copy them partially.
-- 🎨 Powerful rendering support, whether for code highlighting or complex mathematical formulas.
-- 🌍 Language preference support.
-- 📝 Custom API address support.
-- ⚙️ All site adaptations and selection tools(bubble) can be freely switched on or off, disable modules you don't need.
-- 💡 Selection tools and site adaptation are easy to develop and extend, see the [Development&Contributing][dev-url]
-  section.
-- 😉 Chat to improve the answer quality.
+- **Converse Freely**: Enjoy casual, yet interactive chat experiences with Rising AI, even while you browser surf.
+- **Browser Control**: Execute a host of browser functions like opening a new tab, scrolling, switching tabs, or clicking items on the webpage, all through simple prompts.
+- **Seamless Automation**: RisingBrain Extension goes further to automate routine tasks such as sending emails, booking tables, making appointments, or scheduling calendars.
 
-###  ✨ How to install
+## Quick Installation Guide 🔧
 
-#####  install node_modules
-  ``` bash
+Ready to experience smarter browsing with **RisingBrain** Extension? Here's how to get started:
+
+- Clone the <a href="https://github.com/ttt246/Brain/tree/main/Extension">RisingBrain Extension repository</a> to your local machine.
+- Using terminal, navigate to its directory and run this command to install all required node modules:
+
+  ``` bach 
   npm install
   ```
+- Once the installation is complete, simply build the project using:
 
-##### build and install extention
+  ``` bach 
+  npm run build
   ```
-  npm run dev --development
+  
+- The build will create a new directory named ***'build'*** inside the Extension directory.
+
+  You should now see this directory with built files as your directory location:
+  ``` bash
+  [project directory]/Brain/Extension/build
   ```
 
-##### Enter this into your Chrome search bar:
+## Compatibility and Beyond 🎓
 
-    chrome://extensions/
+**RisingBrain** Extension is designed to foster compatibility across all browsers, ensuring no user feels left out.
 
-##### In the top-right corner, turn on developer mode.
+With the power of AI transforming your everyday browsing, you'll experience comfort, ease, and innovation like never before. 
 
-    This will then render two buttons in the top-left corner.
-    Load the unpacked extension and the packed extension.
-    Click on “Load unpacked extension,” and select your build folder.
+The future is here with the **RisingBrain** Extension!
+***Ride*** the ***wave*** of the future with us 🚀.
 
-### Contributing
-Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
+## Contributing 💪
+We appreciate your interest in enhancing our work! Please respect the style and contribution guidelines of every project when submitting patches and additions. Our general Git workflow of choice is "fork-and-pull".
 
-1. **Fork** the repo on GitHub
-2. **Clone** the project to your own machine
-3. **Commit** changes to your own branch
-4. **Push** your work back up to your fork
-5. Submit a **Pull request** so that we can review your changes
+ 1. **Fork** the repository on GitHub
+ 2. **Clone** your fork to your machine
+ 3. **Commit** the changes to your personal branch
+ 4. **Push** these updates back to your fork
+ 5. Don't forget to submit a **Pull Request** for us to study your contributions.
 
-NOTE: Be sure to merge the latest from "upstream" before making a pull request!
+NOTE: Sync with "upstream" to have the latest updates before you make a pull request!

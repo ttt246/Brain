@@ -43,23 +43,35 @@ This aims to isolate your Python/system install from the application's project p
 
 - On Windows:
 
-  `python -m venv [virtualenv name]\`
+  ``` bach 
+  python -m venv [virtualenv name]
+  ```
 
-  `venv\Scripts\activate.bat\`
+  ``` bash
+    venv\Scripts\activate.bat\
+  ```
 
 - On Linux:
 
-  `python3 -m venv [virtualenv name]`
+  ``` bash
+  python3 -m venv [virtualenv name]
+  ```
 
-  `source [virtualenv name]/bin/activate`
+  ``` bash
+  source [virtualenv name]/bin/activate
+  ```
 
 
 ### Step 2: Install all required packages using the provided requirements.txt file.
 
-`pip install -r requirements.txt`
+  ``` bash
+  pip install -r requirements.txt
+  ```
 
 ### Step 3: Start the FastAPI application with hot reloads enabled using Uvicorn.
-`uvicorn app:app --reload`
+  ``` bash
+  uvicorn app:app --reload
+  ```
 
 Bravo!👏 You should now see your **Brain Backend** is alive and ready for action, empowering your AI interactions in **RisingBrain**.
 
