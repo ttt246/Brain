@@ -1,16 +1,8 @@
-//
-//  SettingView.swift
-//  WatchApp Watch App
-//
-//  Created by DarkHorse on 7/1/23.
-//
-
 import SwiftUI
 import KeychainSwift
 
 struct SettingView: View {
-    @Binding var isPresented: Bool
-    @State private var uuid: String = "956a11be45cba4a4"
+    @State private var uuid: String = Constants.DEFAULT_UUID
     
     var body: some View {
         VStack {
@@ -23,15 +15,12 @@ struct SettingView: View {
                 Button(action: {
                     let keychain = KeychainSwift()
                     keychain.set("\($uuid)", forKey: "uuid")
-                    self.isPresented = false
                 }) {
-                    Text("Yes")
+                    Text("Save")
                 }
                 Spacer()
-                Button(action: {
-                    self.isPresented = false
-                }) {
-                    Text("No")
+                Button(action: {}) {
+                    Text("Cancel")
                 }
                 Spacer()
             }
@@ -41,6 +30,6 @@ struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView(isPresented: .constant(true))
+        SettingView()
     }
 }
