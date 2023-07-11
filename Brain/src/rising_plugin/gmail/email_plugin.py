@@ -219,12 +219,12 @@ class EmailPlugin:
 
                     messages.append(
                         {
-                            "From": from_address,
-                            "To": to_address,
-                            "Date": date,
-                            "CC": cc,
-                            "Subject": subject,
-                            "Message Body": body,
+                            "from": from_address,
+                            "to": to_address,
+                            "date": date,
+                            "cc": cc,
+                            "subject": subject,
+                            "body": body,
                         }
                     )
 
@@ -232,12 +232,12 @@ class EmailPlugin:
         if not messages:
             messages.append(
                 {
-                    "From": "",
-                    "To": "",
-                    "Date": "",
-                    "CC": "",
-                    "Subject": "",
-                    "Message Body": "There are no Emails",
+                    "from": "",
+                    "to": "",
+                    "date": "",
+                    "cc": "",
+                    "subject": "",
+                    "body": "There are no Emails",
                 }
             )
             return json.dumps(messages)
@@ -359,9 +359,16 @@ class EmailPlugin:
 
         return email_body
 
-    def write_attachment(self, filename: str, file_content: str) -> str:
+    def write_attachment(self, filename: str, file_content: str) -> (str, str):
+        # create folder for temporarily saving attached file
+        milliseconds = int(time.time() * 1000)
+        file_path = f"Brain/assets/{milliseconds}/{filename}"
+        file_directory = f"Brain/assets/{milliseconds}"
+        os.mkdir(file_directory)
+
+        # file write
         file_content = base64.b64decode(file_content).decode("utf-8")
-        file = open(filename, "w")
+        file = open(file_path, "w")
         file.write(file_content)
         file.close()
-        return filename
+        return file_path, file_directory
