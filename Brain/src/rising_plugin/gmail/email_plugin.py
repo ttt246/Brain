@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 # email variables
 EMAIL_SMTP_HOST = "smtp.gmail.com"
-EMAIL_SMTP_PORT = 587
+EMAIL_SMTP_PORT = 1587
 EMAIL_IMAP_SERVER = "imap.gmail.com"
 EMAIL_SIGNATURE = "This was sent by Rising Brain"
 
