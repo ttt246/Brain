@@ -1,15 +1,16 @@
-name: Android Release
+name: Release All CI
 env:
   main_project_module: app
 on:
   push:
     paths:
       - "Android/**"
+      - "Extension/**"
     tags:
       - '*'
   workflow_dispatch:
 jobs:
-  build:
+  build-android:
     permissions: write-all
     runs-on: ubuntu-latest
     defaults:
@@ -75,22 +76,72 @@ jobs:
       - name: Upload APK Debug - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
+          name: android-debug
+          path: Android/${{ env.main_project_module }}/build/outputs/apk/debug/
 
         # Noted For Output [main_project_module]/build/outputs/apk/release/
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/release/
+          name: android-release
+          path: Android/${{ env.main_project_module }}/build/outputs/apk/release/
 
         # Noted For Output [main_project_module]/build/outputs/bundle/release/
       - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
-          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
+          name: android-bundle
+          path: Android/${{ env.main_project_module }}/build/outputs/bundle/release/
+
+  build-chrome-extension:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Extension
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node as v16.
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 16
+
+      - name: Create file
+        run: |
+          mkdir ./src/configs
+          cat > /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
+
+      - name: Putting data
+        env:
+          DATA: ${{ secrets.FIREBASE_CONFIGS }}
+        run: echo $DATA > /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build
+        run: |
+          npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: chrome-extension
+          path: Extension/zip/
+
+  release:
+    needs: [build-android, build-chrome-extension]
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Create Release
         id: create_release
@@ -103,12 +154,23 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload Android Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: Android/${{ env.main_project_module }}/build/outputs/apk/debug/app-debug.apk # Update this with the correct APK path
+          asset_path: android-debug/app-debug.apk # Update this with the correct APK path
           asset_name: app-release-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload Chrome Extension Release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: chrome-extension/rising-browser-1.0.0.zip
+          asset_name: chrome-extension.zip
+          asset_content_type: application/zip
