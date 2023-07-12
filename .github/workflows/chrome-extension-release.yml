@@ -42,13 +42,16 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          ll
+          ll zip/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: chrome-extension.zip
-          path: zip
+          path: zip/
 
   release:
     needs: build
