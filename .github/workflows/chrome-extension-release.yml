@@ -28,23 +28,27 @@ jobs:
         with:
           node-version: 16
 
+      - name: Create file
+        run: |
+          mkdir ./src/configs
+          cat /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
+
+      - name: Putting data
+        env:
+          DATA: ${{ secrets.FIREBASE_CONFIGS }}
+        run: echo $DATA > /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
+
       - name: Install Dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
 
-      - name: Compress with zip
-        run: |
-          ls
-          pwd
-          zip -r chrome-extension.zip ./build/*
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: chrome-extension.zip
-          path: ./chrome-extension.zip
+          path: ./zip
 
   release:
     needs: build
@@ -74,6 +78,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_extension_release.outputs.upload_url }}
-          asset_path: ./chrome-extension.zip
+          asset_path: ./zip/rising-browser-1.0.0.zip
           asset_name: chrome-extension.zip
           asset_content_type: application/zip
