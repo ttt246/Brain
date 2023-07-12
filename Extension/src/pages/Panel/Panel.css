@@ -69,6 +69,7 @@
   border: 0;
   color: grey;
   height: 25px;
+  cursor: pointer;
 }
 
 .footer-btn:hover {
