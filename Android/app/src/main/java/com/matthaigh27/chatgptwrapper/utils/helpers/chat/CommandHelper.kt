@@ -8,10 +8,16 @@ import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMA
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ERROR_NO_MAIN
 
 object CommandHelper {
+    /**
+     * This function is used to identify whether helpcommand model is main help command.
+     */
     fun isMainHelpCommand(model: HelpCommandModel): Boolean {
         return model.main != HELP_COMMAND
     }
 
+    /**
+     * This function is used to convert user's help prompt to HelpCommandModel.
+     */
     fun getHelpCommandFromStr(strCommand: String): HelpCommandModel {
         val commandModel = HelpCommandModel()
         if (strCommand == "/$HELP_COMMAND") {
@@ -39,6 +45,9 @@ object CommandHelper {
         return commandModel
     }
 
+    /**
+     * This function is used to make usage of all prompts to be showed to users with a list of Help Prompt Models.
+     */
     fun makePromptUsage(list: ArrayList<HelpPromptModel>) : String {
         val usage = "usage:\n" +
                 "- help command: /help [command name]\n" +
@@ -51,6 +60,9 @@ object CommandHelper {
         return strHelpList
     }
 
+    /**
+     * This function is used to make usage of given prompt.
+     */
     fun makePromptItemUsage(list: ArrayList<HelpPromptModel>, assistName: String): String {
         var strHelpDesc = ""
         list.forEach { model ->

@@ -1,6 +1,5 @@
 package com.matthaigh27.chatgptwrapper.data.local.dao
 
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.matthaigh27.chatgptwrapper.data.local.entity.ContactEntity
 

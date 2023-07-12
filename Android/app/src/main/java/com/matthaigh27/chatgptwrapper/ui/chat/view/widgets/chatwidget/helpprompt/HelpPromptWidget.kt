@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +20,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
     private lateinit var llPromptKeys: LinearLayout
     private lateinit var txtKeysTitle: TextView
 
-    private var promptEditTextList: ArrayList<EditText>? = null
+    private var promptEditTextList: ArrayList<HelpPromptKeyItem>? = null
     private val promptModel: HelpPromptModel
     var callback: ChatMessageInterface? = null
     var hideListener: OnHideListener? = null
@@ -41,8 +42,8 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
         txtKeysTitle = findViewById(R.id.txt_keys_title)
         txtKeysTitle.text = promptModel.name
 
-        findViewById<Button>(R.id.btn_ok).setOnClickListener(this)
-        findViewById<Button>(R.id.btn_cancel).setOnClickListener(this)
+        findViewById<ImageView>(R.id.btn_ok).setOnClickListener(this)
+        findViewById<ImageView>(R.id.btn_cancel).setOnClickListener(this)
 
         initPromptList()
 
@@ -54,7 +55,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
             promptEditTextList = ArrayList()
 
             for (i in 0 until promptModel.tags.size) {
-                val edtKey = HelpPromptKeyEditText(context)
+                val edtKey = HelpPromptKeyItem(context)
                 edtKey.initView(promptModel.tags[i])
                 llPromptKeys.addView(edtKey)
                 promptEditTextList?.add(edtKey)
@@ -78,7 +79,7 @@ class HelpPromptWidget(context: Context, model: HelpPromptModel) : ConstraintLay
         var promptTemplate = promptModel.prompt
         if(promptModel.tags.size > 0) {
             promptEditTextList?.forEach { edtKeyPrompt ->
-                val prompt = edtKeyPrompt.text.toString()
+                val prompt = edtKeyPrompt.getText()
                 if(prompt.isEmpty()) return
                 promptTemplate = promptTemplate.replace(edtKeyPrompt.tag.toString(), prompt)
             }

@@ -10,7 +10,7 @@ object TypeResponseConstants {
     val TYPE_RESPONSE_SMS = "sms"
     val TYPE_RESPONSE_ALARM = "alarm"
     val TYPE_RESPONSE_CONTACT = "contact"
-    val TYPE_RESPONSE_MAIL_READ = "reademail"
+    val TYPE_RESPONSE_MAIL_READ = "reademails"
     val TYPE_RESPONSE_MAIL_WRITE = "writeemail"
     val TYPE_RESPONSE_MAIL_SEND = "sendemail"
     val TYPE_RESPONSE_AUTO_TASK = "autotask"

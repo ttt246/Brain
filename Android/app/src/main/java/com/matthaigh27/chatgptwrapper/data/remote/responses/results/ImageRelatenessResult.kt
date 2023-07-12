@@ -5,7 +5,7 @@ data class ImageRelatenessResult(
     val content: ImageRelatenessContent
 )
 
-data class ImageRelatenessContent (
+data class ImageRelatenessContent(
     val image_name: String,
     val image_desc: String
 )

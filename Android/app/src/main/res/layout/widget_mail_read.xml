@@ -2,30 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_sms"
-        android:layout_width="0dp"
+        android:id="@+id/cv_mail_compose"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/radius_big"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_normal"
-            android:paddingBottom="@dimen/spacing_tiny">
+            android:padding="@dimen/spacing_tiny">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -33,7 +28,7 @@
                     android:id="@+id/txt_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_chat_widget_set_alarm"
+                    android:text="@string/title_mail_read"
                     android:textColor="@color/color_accent"
                     android:textSize="@dimen/font_big"
                     android:textStyle="bold"
@@ -42,7 +37,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/btn_ok"
+                    android:id="@+id/btn_send"
                     android:layout_width="@dimen/size_button_normal"
                     android:layout_height="@dimen/size_button_normal"
                     android:padding="@dimen/spacing_tiny"
@@ -53,13 +48,13 @@
                     app:tint="@color/color_accent" />
 
                 <ImageView
-                    android:id="@+id/btn_cancel"
+                    android:id="@+id/btn_send_cancel"
                     android:layout_width="@dimen/size_button_normal"
                     android:layout_height="@dimen/size_button_normal"
                     android:padding="@dimen/spacing_tiny"
                     android:src="@drawable/ic_cancel_schedule_send"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_title"
-                    app:layout_constraintEnd_toStartOf="@+id/btn_ok"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_send"
                     app:layout_constraintTop_toTopOf="@+id/txt_title"
                     app:tint="@color/color_accent" />
 
@@ -69,51 +64,47 @@
                 style="@style/HorizontalDividerStyle"
                 android:layout_marginVertical="@dimen/spacing_tiny" />
 
-            <LinearLayout
-                android:id="@+id/cl_main"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_mail_from"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/text_mail_compose_from">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="@dimen/height_edittext_normal"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_normal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edt_mail_password"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/text_mail_compose_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="@dimen/height_edittext_normal"
+                    android:singleLine="true"
+                    android:textSize="@dimen/font_normal" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/swh_mail_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/ll_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_tiny"
-                    android:orientation="vertical">
-
-                    <TimePicker
-                        android:id="@+id/time_picker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:timePickerMode="clock" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_repeat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_tiny"
-                    android:orientation="horizontal"
-                    android:visibility="gone" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txt_label"
-                    style="@style/CommonEditText"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:layout_marginBottom="@dimen/spacing_tiny"
-                    android:hint="label">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
+                android:textColor="@color/color_primary_dark"
+                android:paddingHorizontal="@dimen/spacing_normal"
+                android:checked="true"
+                android:text="@string/text_mail_inbox"/>
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

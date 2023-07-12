@@ -13,11 +13,7 @@ object CommonConstants {
 
     val ERROR_MSG_JSON = "Json Parsing Error"
     val ERROR_MSG_NOEXIST_COMMAND = "No such command name exists."
+    val ERROR_MSG_UNKNOWN_ERROR = "Unknown Error happened"
 
     val PROPS_WIDGET_DESC = "widget description"
-
-    val TIME_OUT_CALL = 60L
-    val TIME_OUT_CONNECT = 60L
-    val TIME_OUT_READ = 60L
-    val TIME_OUT_WRITE = 60L
 }

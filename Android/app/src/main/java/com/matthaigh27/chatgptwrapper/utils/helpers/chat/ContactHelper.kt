@@ -12,6 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
 object ContactHelper {
+    /**
+     * This function is used to get contacts from user's phone.
+     */
     @SuppressLint("Range")
     fun getContacts(context: Context): ArrayList<ContactModel> {
         val resolver: ContentResolver = context.contentResolver;
@@ -61,6 +64,11 @@ object ContactHelper {
         return contacts
     }
 
+    /**
+     * This function is used to get changed contacts by comparing images from user's contacts and
+     * ones from room database. After comparing, contacts table in room database is updated with the changed
+     * contacts.
+     */
     suspend fun getChangedContacts(
         contacts: ArrayList<ContactModel>
     ): ArrayList<ContactModel> {
@@ -133,6 +141,9 @@ object ContactHelper {
         }.await()
     }
 
+    /**
+     * This function is used to get contact model by id from user's current contacts.
+     */
     fun getContactModelById(contactId: String, contacts: ArrayList<ContactModel>): ContactModel {
         var contactModel = ContactModel()
         val searchResults = contacts.filter { contact ->

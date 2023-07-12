@@ -1,12 +1,15 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
+import com.matthaigh27.chatgptwrapper.data.models.chat.MailModel
 import com.matthaigh27.chatgptwrapper.data.models.setting.SettingModel
 import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.requests.BaseApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ComposeMailApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.ImageRelatednessApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ReadMailApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.common.Keys
@@ -45,7 +48,8 @@ object RemoteRepository {
     }
 
     fun getAllHelpCommands(
-        onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>, onFailure: OnFailure<String>
+        onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>,
+        onFailure: OnFailure<String>
     ) {
         val call = apiService.getAllHelpCommands(BaseApiRequest(getKeys()))
 
@@ -150,6 +154,54 @@ object RemoteRepository {
             }
 
             override fun onFailure(call: Call<ApiResponse<ImageRelatenessResult>>, t: Throwable) {
+                onFailure(t.message.toString())
+            }
+        })
+    }
+
+    fun readEmails(
+        request: ReadMailApiRequest,
+        onSuccess: OnSuccess<ApiResponse<ArrayList<MailModel>>>,
+        onFailure: OnFailure<String>
+    ) {
+        val call = apiService.readEmails(request)
+
+        call.enqueue(object : Callback<ApiResponse<ArrayList<MailModel>>> {
+            override fun onResponse(
+                call: Call<ApiResponse<ArrayList<MailModel>>>, response: Response<ApiResponse<ArrayList<MailModel>>>
+            ) {
+                response.body()?.let { data ->
+                    onSuccess(data)
+                } ?: run {
+                    onFailure(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<ArrayList<MailModel>>>, t: Throwable) {
+                onFailure(t.message.toString())
+            }
+        })
+    }
+
+    fun sendEmail(
+        request: ComposeMailApiRequest,
+        onSuccess: OnSuccess<ApiResponse<String>>,
+        onFailure: OnFailure<String>
+    ) {
+        val call = apiService.sendEmail(request)
+
+        call.enqueue(object : Callback<ApiResponse<String>> {
+            override fun onResponse(
+                call: Call<ApiResponse<String>>, response: Response<ApiResponse<String>>
+            ) {
+                response.body()?.let { data ->
+                    onSuccess(data)
+                } ?: run {
+                    onFailure(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse<String>>, t: Throwable) {
                 onFailure(t.message.toString())
             }
         })

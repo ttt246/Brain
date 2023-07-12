@@ -12,6 +12,9 @@ import android.widget.Button
 import android.widget.TextView
 import com.matthaigh27.chatgptwrapper.R
 
+/**
+ * This dialog is used to show confirm message to users.
+ */
 class ConfirmDialog(context: Context) : Dialog(context), View.OnClickListener {
 
     private var txtMessage: TextView? = null

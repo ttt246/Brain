@@ -1,7 +1,6 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.models.setting.SettingModel
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.SettingHelper.emptySettingModel
@@ -18,7 +17,7 @@ object SharedPreferencesRepository {
     fun getConfig(): SettingModel {
         val sharedPreferences = appContext.getSharedPreferences("prefs", Context.MODE_PRIVATE)
         val jsonString = sharedPreferences.getString("config", "")
-        if(jsonString == "" || jsonString == null) {
+        if (jsonString == "" || jsonString == null) {
             return emptySettingModel()
         } else {
             return SettingModel.init(jsonString)

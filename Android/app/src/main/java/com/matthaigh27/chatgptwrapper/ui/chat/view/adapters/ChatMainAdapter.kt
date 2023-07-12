@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.matthaigh27.chatgptwrapper.R
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
+import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.MailsProps
 import com.matthaigh27.chatgptwrapper.data.models.chatwidgetprops.ScheduleAlarmProps
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
@@ -21,10 +22,12 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.SendSmsWid
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.ScheduleAlarmWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.ContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ComposeMailWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.MailWidget
-import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.compose.ComposeMailWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ReadMailWidget
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
+import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAILS
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_READ
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAIL_WRITE
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_SCHEDULE_ALARM
@@ -35,18 +38,28 @@ import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContac
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
 import org.json.JSONArray
 
+/**
+ * This adapter class is used to display a list of chat messages on a recycler view.
+ */
 class ChatMainAdapter(
     context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    /**
+     * These variables are used to presents the type of messages
+     */
     private val VIEW_TYPE_MSG_SENT = 0
     private val VIEW_TYPE_MSG_RECEIVED = 1
     private val VIEW_TYPE_CHAT_WIDGET = 2
     private val VIEW_TYPE_CHAT_ERROR = 3
 
     private var context: Context
-    private var callbacks: ChatMessageInterface
     private var chatMessageList: ArrayList<ChatMessageModel> = ArrayList()
+
+    /**
+     * This is a callback that retrieves result from chat widgets.
+     */
+    private var callbacks: ChatMessageInterface
 
     init {
         this.context = context
@@ -114,7 +127,13 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * This function is used to set data for common messages.
+     */
     private fun setMessageData(holder: MessageViewHolder, data: ChatMessageModel) {
+        /**
+         * If an image is included into a message, the image is displayed by below code.
+         */
         if (data.hasImage) {
             data.image?.let { image ->
                 val originBitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
@@ -140,12 +159,18 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * This function is used to display chat widgets on a recycler view.
+     */
     private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
         holder.itemLayout.visibility = View.VISIBLE
         holder.llHorizontalScroll.removeAllViews()
         holder.itemLayout.removeAllViews()
         val index = holder.adapterPosition
 
+        /**
+         * Depending on type of widget, the proper widget is displayed.
+         */
         when (data.content) {
             TYPE_WIDGET_SMS -> {
                 val sendSmsWidget = SendSmsWidget(context).apply {
@@ -222,19 +247,46 @@ class ChatMainAdapter(
                 holder.itemLayout.addView(scheduleAlarmWidget)
             }
 
-            TYPE_WIDGET_MAIL_READ -> {
+            TYPE_WIDGET_MAILS -> {
                 holder.llHorizontalScroll.visibility = View.VISIBLE
+                val props = data.data?.run {
+                    val widgetDesc = data.data.asJsonObject[PROPS_WIDGET_DESC].asString
+                    MailsProps.init(widgetDesc)
+                }
 
-                for (i in 0 until 10) {
-                    val mailWidget = MailWidget(context).apply {
+                props?.mails?.forEach { mail ->
+                    val mailWidget = MailWidget(context, mail).apply {
                         this.callback = callbacks
                     }
                     holder.llHorizontalScroll.addView(mailWidget)
                 }
             }
 
+            TYPE_WIDGET_MAIL_READ -> {
+                val readMailWidget = ReadMailWidget(context).apply {
+                    this.callback = callbacks
+                    this.hideListener = object : OnHideListener {
+                        override fun hide() {
+                            holder.itemLayout.visibility = View.GONE
+                            chatMessageList.removeAt(index)
+                            notifyItemRemoved(index)
+                        }
+                    }
+                }
+                holder.itemLayout.addView(readMailWidget)
+            }
+
             TYPE_WIDGET_MAIL_WRITE -> {
-                val composeMailWIdget = ComposeMailWidget(context)
+                val composeMailWIdget = ComposeMailWidget(context).apply {
+                    this.callback = callbacks
+                    this.hideListener = object : OnHideListener {
+                        override fun hide() {
+                            holder.itemLayout.visibility = View.GONE
+                            chatMessageList.removeAt(index)
+                            notifyItemRemoved(index)
+                        }
+                    }
+                }
                 holder.itemLayout.addView(composeMailWIdget)
             }
 
@@ -244,6 +296,9 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * ViewHolder for common messages with message and image
+     */
     inner class MessageViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var txtMessage: TextView
@@ -257,6 +312,9 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * ViewHolder for chat widgets
+     */
     inner class ChatWidgetViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var itemLayout: FrameLayout

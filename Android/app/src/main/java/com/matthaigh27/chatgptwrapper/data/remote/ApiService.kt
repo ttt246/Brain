@@ -1,8 +1,11 @@
 package com.matthaigh27.chatgptwrapper.data.remote
 
+import com.matthaigh27.chatgptwrapper.data.models.chat.MailModel
 import com.matthaigh27.chatgptwrapper.data.remote.requests.BaseApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ComposeMailApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.ImageRelatednessApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.NotificationApiRequest
+import com.matthaigh27.chatgptwrapper.data.remote.requests.ReadMailApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainContactsApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.requests.TrainImageApiRequest
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
@@ -16,13 +19,23 @@ import retrofit2.http.POST
 
 interface ApiService {
     @POST("commands")
-    fun getAllHelpCommands(@Body request: BaseApiRequest) : Call<ApiResponse<HelpCommandResult>>
+    fun getAllHelpCommands(@Body request: BaseApiRequest): Call<ApiResponse<HelpCommandResult>>
+
     @POST("sendNotification")
-    fun sendNotification(@Body request: NotificationApiRequest) : Call<ApiResponse<CommonResult>>
+    fun sendNotification(@Body request: NotificationApiRequest): Call<ApiResponse<CommonResult>>
+
     @POST("train/contacts")
-    fun trainContacts(@Body request: TrainContactsApiRequest) : Call<ApiResponse<String>>
+    fun trainContacts(@Body request: TrainContactsApiRequest): Call<ApiResponse<String>>
+
     @POST("image_relatedness")
-    fun getImageRelatedness(@Body request: ImageRelatednessApiRequest) : Call<ApiResponse<ImageRelatenessResult>>
+    fun getImageRelatedness(@Body request: ImageRelatednessApiRequest): Call<ApiResponse<ImageRelatenessResult>>
+
     @POST("uploadImage")
-    fun trainImage(@Body request: TrainImageApiRequest) : Call<ApiResponse<TrainImageResult>>
+    fun trainImage(@Body request: TrainImageApiRequest): Call<ApiResponse<TrainImageResult>>
+
+    @POST("email/read_emails")
+    fun readEmails(@Body request: ReadMailApiRequest): Call<ApiResponse<ArrayList<MailModel>>>
+
+    @POST("email/send_email")
+    fun sendEmail(@Body request: ComposeMailApiRequest): Call<ApiResponse<String>>
 }

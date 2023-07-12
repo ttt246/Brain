@@ -21,4 +21,6 @@
     <color name="color_header_title">@color/white</color>
     <color name="color_header_app_info">@color/white</color>
 
+    <color name="bg_color_splash_screen">#0c7c73</color>
+
 </resources>
