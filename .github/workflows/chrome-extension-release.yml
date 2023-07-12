@@ -7,7 +7,7 @@ on:
       - '*'
   workflow_dispatch:
 jobs:
-  build:
+  chrome-extension-release:
     permissions: write-all
     runs-on: ubuntu-latest
     defaults:
@@ -49,18 +49,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: chrome-extension.zip
+          name: ${{ env.date_today }} - ${{ env.repository_name }} - Chrome Extension release generated
           path: Extension/zip/
-
-  release:
-    needs: build
-    permissions: write-all
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Extension
-
-    steps:
 
       - name: Create Release
         id: create_extension_release
