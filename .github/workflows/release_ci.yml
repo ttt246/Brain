@@ -76,21 +76,21 @@ jobs:
       - name: Upload APK Debug - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) debug generated
+          name: android-debug.apk
           path: Android/${{ env.main_project_module }}/build/outputs/apk/debug/
 
         # Noted For Output [main_project_module]/build/outputs/apk/release/
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) release generated
+          name: android-release.apk
           path: Android/${{ env.main_project_module }}/build/outputs/apk/release/
 
         # Noted For Output [main_project_module]/build/outputs/bundle/release/
       - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
+          name: android-bundle.apk
           path: Android/${{ env.main_project_module }}/build/outputs/bundle/release/
 
   build-chrome-extension:
@@ -134,7 +134,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - Chrome Extension release generated
+          name: chrome-extension.zip
           path: Extension/zip/
 
   release:
@@ -162,7 +162,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: Android/${{ env.main_project_module }}/build/outputs/apk/debug/app-debug.apk # Update this with the correct APK path
+          asset_path: /home/runner/work/Brain/Brain/android-debug.apk # Update this with the correct APK path
           asset_name: app-release-unsigned.apk
           asset_content_type: application/vnd.android.package-archive
 
@@ -173,6 +173,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: Extension/zip/rising-browser-1.0.0.zip
+          asset_path: /home/runner/work/Brain/Brain/chrome-extension.zip
           asset_name: chrome-extension.zip
           asset_content_type: application/zip
