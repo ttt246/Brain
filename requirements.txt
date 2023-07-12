@@ -76,3 +76,4 @@ tiktoken==0.4.0
 tiktoken==0.4.0
 gradio-client==0.2.7
 gradio==3.14.0
+PySocks==1.7.1

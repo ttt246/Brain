@@ -69,7 +69,11 @@ def construct_blueprint_email_api() -> APIRouter:
         except Exception as e:
             if isinstance(e, BrainException):
                 return e.get_response_exp()
-            return assembler.to_response(400, "Failed to read emails", "")
+            return assembler.to_response(
+                400,
+                "Failed to read emails",
+                "ConnectionResetError occurred for IMAP Server",
+            )
         return assembler.to_response(200, "", result)
 
     """@generator.request_body(

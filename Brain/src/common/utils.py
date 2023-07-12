@@ -9,6 +9,10 @@ PINECONE_KEY = os.getenv("PINECONE_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 FIREBASE_ENV = os.getenv("FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC")
 
+# proxy for imap access from hugging face.
+PROXY_IP = os.getenv("PROXY_IP")
+PROXY_PORT = os.getenv("PROXY_PORT")
+
 # swagger
 swagger_destination_path = "./src/static/swagger.json"
 SWAGGER_URL = "/api/docs"  # URL for exposing Swagger UI (without trailing '/')
