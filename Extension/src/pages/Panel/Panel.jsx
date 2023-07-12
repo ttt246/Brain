@@ -6,6 +6,7 @@ import { getDatabase, onValue, ref } from "firebase/database";
 import Message from './Message'
 import './Panel.css';
 import app from './FirebaseApp/firebase-app'
+import Browser from 'webextension-polyfill'
 
 const {Footer, Content} = Layout;
 const URL_BASE = 'https://ttt246-brain.hf.space/'
@@ -26,6 +27,8 @@ const confs = {
         "temperature": 0.6
     }
 }
+const logoUrl = Browser.runtime.getURL('logo_panel.png')
+
 const Panel = () => {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState([]);
@@ -315,7 +318,7 @@ const Panel = () => {
     return (
         <Layout className="main-layout" data-theme={isDarkMode ? 'dark': 'light'}>
             <div className="header">
-                <h4>RisingBrowser</h4>
+                <img src={logoUrl} height="48px" alt="no image" />
             </div>
             <Divider className="divider"/>
             <Content className="content" ref={chat_box}>

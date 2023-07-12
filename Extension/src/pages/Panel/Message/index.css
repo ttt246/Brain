@@ -1,10 +1,10 @@
 [data-theme='light'] {
-    --send-theme-color: #0a164d;
+    --send-theme-color: #8753e9;
     --receive-theme-color: #0d0c0d;
   }
   
   [data-theme='dark'] {
-    --send-theme-color: #0a164d;
+    --send-theme-color: #8753e9;
     --receive-theme-color: #333333;
   }
 

@@ -23,8 +23,9 @@
 }
 
 .header {
-  padding-left: 10px;
+  height: 55px;
   text-align: left;
+  padding-top: 5px;
 }
 
 .footer {
