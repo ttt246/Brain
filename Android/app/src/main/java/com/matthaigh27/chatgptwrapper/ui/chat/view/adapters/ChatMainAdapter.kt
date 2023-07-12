@@ -277,7 +277,7 @@ class ChatMainAdapter(
             }
 
             TYPE_WIDGET_MAIL_WRITE -> {
-                val composeMailWIdget = ComposeMailWidget(context).apply {
+                val composeMailWidget = ComposeMailWidget(context).apply {
                     this.callback = callbacks
                     this.hideListener = object : OnHideListener {
                         override fun hide() {
@@ -287,7 +287,7 @@ class ChatMainAdapter(
                         }
                     }
                 }
-                holder.itemLayout.addView(composeMailWIdget)
+                holder.itemLayout.addView(composeMailWidget)
             }
 
             else -> {

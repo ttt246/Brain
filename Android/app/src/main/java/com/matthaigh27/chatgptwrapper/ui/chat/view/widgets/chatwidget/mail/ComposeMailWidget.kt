@@ -20,6 +20,9 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterfa
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.OnHideListener
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.MailHelper.isGmail
 
+/**
+ * This ComposeMaiWidget, which is embed to the chat list, is used to send mail
+ */
 class ComposeMailWidget(
     context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs), View.OnClickListener {
@@ -52,7 +55,6 @@ class ComposeMailWidget(
         this.setOnClickListener(this)
         findViewById<ImageView>(R.id.btn_send).setOnClickListener(this)
         findViewById<ImageView>(R.id.btn_send_cancel).setOnClickListener(this)
-        findViewById<ImageView>(R.id.btn_attachment).setOnClickListener(this)
 
         mailChipGroup = findViewById(R.id.mail_chip_group)
         attachmentChipGroup = findViewById(R.id.attachment_chip_group)
@@ -102,52 +104,12 @@ class ComposeMailWidget(
                     filename = "",
                     fileContent = "",
                 )
-            }
-
-            R.id.btn_cancel -> {
                 hideListener?.hide()
             }
 
-            R.id.btn_attachment -> {
-//                val choice = arrayOf("Local Storage", "Google Drive")
-//                val builder = AlertDialog.Builder(context)
-//                builder.setItems(choice) { dialog, which ->
-//                    when (which) {
-//                        0 -> selectFileFromLocalStorage()
-//                        1 -> selectFileFromGoogleDrive()
-//                    }
-//                }
-//                builder.show()
+            R.id.btn_send_cancel -> {
+                hideListener?.hide()
             }
         }
     }
-
-//    fun selectFileFromLocalStorage() {
-//        val intent = Intent(Intent.ACTION_GET_CONTENT)
-//        intent.type = "*/*"
-//        startActivityForResult(intent, REQUEST_CODE_LOCAL_STORAGE)
-//    }
-//
-//    fun selectFileFromGoogleDrive() {
-//        val intent = driveClient.newOpenFileActivityIntentBuilder()
-//            .setMimeType(new String[] {"text/plain"})
-//            .build();
-//        startActivityForResult(intent, REQUEST_CODE_GOOGLE_DRIVE);
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_CODE_LOCAL_STORAGE && resultCode == Activity.RESULT_OK && data != null) {
-//            fileName = data.data
-//        }
-//    }
-//
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        // handle onActivityResult for local storage
-//        if (requestCode == REQUEST_CODE_GOOGLE_DRIVE && resultCode == Activity.RESULT_OK && data != null) {
-//            val driveId = data.getParcelableExtra<DriveId>(OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID);
-//            // use this driveId to handle file
-//        }
-//    }
 }
