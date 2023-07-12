@@ -44,7 +44,7 @@ jobs:
       - name: Build
         run: |
           npm run build
-          ll
+          ls
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
