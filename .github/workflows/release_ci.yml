@@ -144,6 +144,11 @@ jobs:
     steps:
       - name: Download All Artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: ./
+
+      - name: Display structure of downloaded files
+        run: ls -R
 
       - name: Create Release
         id: create_release
