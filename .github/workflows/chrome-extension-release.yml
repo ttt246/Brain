@@ -45,7 +45,6 @@ jobs:
         run: |
           npm run build
           ll
-          ll zip/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
