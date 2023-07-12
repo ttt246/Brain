@@ -32,7 +32,7 @@
   padding: 10px;
   background-color: var(--theme-color);
   display: flex;
-  gap: 5px;
+  gap: 3px;
   align-items: center;
   color: grey;
 }
@@ -64,7 +64,7 @@
 }
 
 .footer-btn {
-  padding: 3px;
+  padding: 5px;
   background-color: inherit;
   border: 0;
   color: grey;
