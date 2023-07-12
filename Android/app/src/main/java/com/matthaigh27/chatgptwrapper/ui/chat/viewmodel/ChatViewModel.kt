@@ -45,6 +45,9 @@ import kotlinx.coroutines.withContext
 
 class ChatViewModel : ViewModel() {
 
+    /**
+     * This function is used to fetch all help commands from Brain.
+     */
     fun getAllHelpCommands(): MutableLiveData<ApiResource<ApiResponse<HelpCommandResult>>> {
         val resource: MutableLiveData<ApiResource<ApiResponse<HelpCommandResult>>> =
             MutableLiveData()
@@ -59,6 +62,9 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to send user's message to Brain to analyze the user's query.
+     */
     fun sendNotification(message: String): MutableLiveData<ApiResource<ApiResponse<CommonResult>>> {
         val request = NotificationApiRequest(
             message = message, confs = RemoteRepository.getKeys()
@@ -76,6 +82,11 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to download image from Firebase Storage.
+     *
+     * @param name An image name that is stored in Firebase storage
+     */
     fun downloadImageFromFirebase(name: String): MutableLiveData<ApiResource<ByteArray>> {
         val resource: MutableLiveData<ApiResource<ByteArray>> = MutableLiveData()
         resource.value = ApiResource.Loading()
@@ -89,6 +100,12 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to upload image to Firebase storage and return uuid of uploaded image name.
+     *
+     * @param imageByteArray A bytearray of image to upload
+     * @return A uuid that is generated to keep unique when the image is uploaded.
+     */
     fun uploadImageToFirebase(imageByteArray: ByteArray): MutableLiveData<ApiResource<String>> {
         val resource: MutableLiveData<ApiResource<String>> = MutableLiveData()
         resource.value = ApiResource.Loading()
@@ -102,11 +119,22 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to train changed images in user's mobile local storage.
+     */
     fun trainImages(): MutableLiveData<ApiResource<Int>> {
         val state: MutableLiveData<ApiResource<Int>> = MutableLiveData()
         state.value = ApiResource.Loading()
         CoroutineScope(Dispatchers.IO).launch {
+            /**
+             * Get images from external storage
+             */
             val images = getImagesFromExternalStorage(appContext.contentResolver)
+
+            /**
+             * Get images from room database, in which previous images are stores so we can find changed
+             * images by comparing the two image array data.
+             */
             val originalImages = RoomRepository.getAllImages().value
 
             val existImageStatus = BooleanArray(originalImages!!.size) { false }
@@ -118,6 +146,10 @@ class ChatViewModel : ViewModel() {
                 for (i in originalImages.indices) {
                     val entity: ImageEntity = originalImages[i]
                     if (entity.path == path) {
+                        /**
+                         * If path of images is same and modified date of images is different,
+                         * update the image in Room database and send update request to Brain.
+                         */
                         if (entity.dataModified != image.modifiedDate) {
                             val byteArray = getBytesFromPath(path)
                             val task = async {
@@ -141,10 +173,18 @@ class ChatViewModel : ViewModel() {
                             tasks.add(task)
                         }
                         isExist = true
+                        /**
+                         * Indexes of existed images are stored in below BooleanArray variable so that
+                         * after this loop, it is possible to search for new images that created in local storage.
+                         */
                         existImageStatus[i] = true
                         break
                     }
                 }
+
+                /**
+                 * New images are inserted into Room database and send create request to Brain.
+                 */
                 if (!isExist) {
                     path?.let {
                         val byteArray = getBytesFromPath(it)
@@ -171,6 +211,9 @@ class ChatViewModel : ViewModel() {
                 }
             }
 
+            /**
+             * Images that doesn't exist in existImageStatus BooleanArray are deleted from database.
+             */
             for (i in existImageStatus.indices) {
                 if (!existImageStatus[i]) {
                     val task = async {
@@ -190,7 +233,6 @@ class ChatViewModel : ViewModel() {
             }
 
             tasks.awaitAll()
-            Log.d("Brain", "Finish")
             withContext(Dispatchers.Main) {
                 state.value = ApiResource.Success(0)
             }
@@ -198,13 +240,28 @@ class ChatViewModel : ViewModel() {
         return state
     }
 
+    /**
+     * This function is used to train changed contacts.
+     */
     fun trainContacts(): MutableLiveData<ApiResource<ApiResponse<String>>> {
         val state: MutableLiveData<ApiResource<ApiResponse<String>>> = MutableLiveData()
         state.value = ApiResource.Loading()
+        /**
+         * Get current contacts from user's phone
+         */
         val contacts = getContacts(appContext)
         CoroutineScope(Dispatchers.Main).launch {
             val resource: MutableLiveData<Boolean> = MutableLiveData()
+
+            /**
+             * Get changed contacts
+             */
             val changedContacts = getChangedContacts(contacts)
+
+            /**
+             * Send request to Server
+             *
+             */
             val request = TrainContactsApiRequest(changedContacts, RemoteRepository.getKeys())
             withContext(Dispatchers.Main) {
                 RemoteRepository.trainContacts(request, onSuccess = { apiResponse ->
@@ -217,6 +274,9 @@ class ChatViewModel : ViewModel() {
         return state
     }
 
+    /**
+     * This function is used to get similar image to one that a user uploaded.
+     */
     fun getImageRelatedness(
         imageName: String,
         message: String
@@ -228,16 +288,23 @@ class ChatViewModel : ViewModel() {
         )
         resource.value = ApiResource.Loading()
 
+        /**
+         * Get the uuid of the similar image
+         */
         RemoteRepository.getImageRelatedness(request, onSuccess = { apiResponse ->
             val resultImageName = apiResponse.result.content.image_name
             val resultImageDesc = apiResponse.result.content.image_desc
 
+            /**
+             * With the uuid of the image, download the image data from Firebase Storage
+             */
             FirebaseRepository.downloadImageWithName(
                 name = resultImageName,
                 onSuccess = { response ->
                     resource.value =
                         ApiResource.Success(ImageRelatenessModel(response, resultImageDesc))
-                }, onFailure = { throwable ->
+                },
+                onFailure = { throwable ->
                     resource.value = ApiResource.Error(throwable)
                 }
             )
@@ -248,6 +315,9 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * This function is used to read mails
+     */
     fun readMails(
         from: String,
         password: String,
@@ -274,6 +344,9 @@ class ChatViewModel : ViewModel() {
         return resource
     }
 
+    /**
+     * this function is used to send mails
+     */
     fun sendMail(
         sender: String,
         pwd: String,

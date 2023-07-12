@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "images")
-data class ImageEntity (
+data class ImageEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val path: String,
     val name: String,

@@ -2,6 +2,9 @@ package com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces
 
 import com.matthaigh27.chatgptwrapper.data.models.chat.MailModel
 
+/**
+ * This interface is a callback function that retrieves the results of chat widgets.
+ */
 interface ChatMessageInterface {
     fun sentSms(phoneNumber: String, message: String)
     fun canceledSms()

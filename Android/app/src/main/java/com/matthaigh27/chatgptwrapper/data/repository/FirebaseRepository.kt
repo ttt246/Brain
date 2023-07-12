@@ -1,21 +1,15 @@
 package com.matthaigh27.chatgptwrapper.data.repository
 
 import com.google.firebase.storage.FirebaseStorage
-import com.google.protobuf.Empty
-import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
-import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnFailure
 import com.matthaigh27.chatgptwrapper.utils.helpers.OnSuccess
-import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 object FirebaseRepository {
     fun downloadImageWithName(
-        name: String,
-        onSuccess: OnSuccess<ByteArray>,
-        onFailure: OnFailure<String>
+        name: String, onSuccess: OnSuccess<ByteArray>, onFailure: OnFailure<String>
     ) {
         val reference = "images/$name"
 
@@ -29,9 +23,7 @@ object FirebaseRepository {
     }
 
     fun uploadImageAsync(
-        imageByteArray: ByteArray,
-        onSuccess: OnSuccess<String>,
-        onFailure: OnFailure<String>
+        imageByteArray: ByteArray, onSuccess: OnSuccess<String>, onFailure: OnFailure<String>
     ) {
         val storageRef = FirebaseStorage.getInstance().reference
         val uuid = UUID.randomUUID()

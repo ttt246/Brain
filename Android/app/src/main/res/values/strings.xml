@@ -37,4 +37,5 @@
     <string name="text_mail_inbox">Inbox</string>
     <string name="text_mail_draft">Draft</string>
 
+    <string name="message_confirm_permission">This app requires SMS, Contacts and Phone permissions to function properly. Please grant the necessary permissions.</string>
 </resources>

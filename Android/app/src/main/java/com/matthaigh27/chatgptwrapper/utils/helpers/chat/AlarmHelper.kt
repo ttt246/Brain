@@ -11,6 +11,10 @@ import java.util.Calendar
 
 
 object AlarmHelper {
+
+    /**
+     * This function is used to set an alarm with time and label
+     */
     fun createAlarm(context: Context, hour: Int, minute: Int, label: String) {
         val calendar = Calendar.getInstance()
 

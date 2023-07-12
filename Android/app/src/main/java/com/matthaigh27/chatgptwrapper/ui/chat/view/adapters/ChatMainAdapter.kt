@@ -22,9 +22,9 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.SendSmsWid
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.alarm.ScheduleAlarmWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.contact.ContactWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.helpprompt.HelpPromptWidget
+import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ComposeMailWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.MailWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ReadMailWidget
-import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.chatwidget.mail.ComposeMailWidget
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.PROPS_WIDGET_DESC
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_HELP_PROMPT
 import com.matthaigh27.chatgptwrapper.utils.constants.TypeChatWidgetConstants.TYPE_WIDGET_MAILS
@@ -38,18 +38,28 @@ import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ContactHelper.getContac
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.ImageHelper
 import org.json.JSONArray
 
+/**
+ * This adapter class is used to display a list of chat messages on a recycler view.
+ */
 class ChatMainAdapter(
     context: Context, list: ArrayList<ChatMessageModel>, callbacks: ChatMessageInterface
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    /**
+     * These variables are used to presents the type of messages
+     */
     private val VIEW_TYPE_MSG_SENT = 0
     private val VIEW_TYPE_MSG_RECEIVED = 1
     private val VIEW_TYPE_CHAT_WIDGET = 2
     private val VIEW_TYPE_CHAT_ERROR = 3
 
     private var context: Context
-    private var callbacks: ChatMessageInterface
     private var chatMessageList: ArrayList<ChatMessageModel> = ArrayList()
+
+    /**
+     * This is a callback that retrieves result from chat widgets.
+     */
+    private var callbacks: ChatMessageInterface
 
     init {
         this.context = context
@@ -117,7 +127,13 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * This function is used to set data for common messages.
+     */
     private fun setMessageData(holder: MessageViewHolder, data: ChatMessageModel) {
+        /**
+         * If an image is included into a message, the image is displayed by below code.
+         */
         if (data.hasImage) {
             data.image?.let { image ->
                 val originBitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
@@ -143,12 +159,18 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * This function is used to display chat widgets on a recycler view.
+     */
     private fun setMessageData(holder: ChatWidgetViewHolder, data: ChatMessageModel) {
         holder.itemLayout.visibility = View.VISIBLE
         holder.llHorizontalScroll.removeAllViews()
         holder.itemLayout.removeAllViews()
         val index = holder.adapterPosition
 
+        /**
+         * Depending on type of widget, the proper widget is displayed.
+         */
         when (data.content) {
             TYPE_WIDGET_SMS -> {
                 val sendSmsWidget = SendSmsWidget(context).apply {
@@ -232,7 +254,7 @@ class ChatMainAdapter(
                     MailsProps.init(widgetDesc)
                 }
 
-                props?.mails?.forEach { mail->
+                props?.mails?.forEach { mail ->
                     val mailWidget = MailWidget(context, mail).apply {
                         this.callback = callbacks
                     }
@@ -274,6 +296,9 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * ViewHolder for common messages with message and image
+     */
     inner class MessageViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var txtMessage: TextView
@@ -287,6 +312,9 @@ class ChatMainAdapter(
         }
     }
 
+    /**
+     * ViewHolder for chat widgets
+     */
     inner class ChatWidgetViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
         var itemLayout: FrameLayout

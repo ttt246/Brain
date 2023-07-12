@@ -14,21 +14,40 @@ import com.matthaigh27.chatgptwrapper.ui.chat.view.ChatActivity
 import com.matthaigh27.chatgptwrapper.ui.chat.view.dialogs.ConfirmDialog
 import com.matthaigh27.chatgptwrapper.ui.chat.view.fragments.ChatMainFragment
 
+/**
+ * An Activity class for splash screen
+ *
+ * This class not only shows splash screen, but send permission requests to users.
+ */
 class SplashActivity : BaseActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 1
+    private val SPLASH_DELAY_TIME = 3500L
+    /**
+     * This is string array variable to store a list of permissions to send to users.
+     */
     private lateinit var permissions: Array<String>
-    private val CONFIRM_MESSAGE =
-        "This app requires SMS, Contacts and Phone " +
-                "permissions to function properly. " +
-                "Please grant the necessary permissions."
+    /**
+     * This is string variable to present warning when users didn't accept all given permissions.
+     */
+    private lateinit var confirmMessage: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
         requestPermissions()
+        confirmMessage = getString(R.string.message_confirm_permission)
     }
 
+    /**
+     * Send permission requests to users.
+     *
+     * This function is used to send permission requests to users for the normal operation of our app.
+     * If you refuse even one request, confirm dialog that recommend users to accept the refused requests again
+     * are showed.
+     */
     private fun requestPermissions() {
         /**
          * In mobile phones that use Google API 33 or higher, the permission for reading external storage
@@ -52,7 +71,11 @@ class SplashActivity : BaseActivity() {
             checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
         }
 
+
         if (notGrantedPermissions.isNotEmpty()) {
+            /**
+             * If some permissions that users didn't accept exist, this code block are executed.
+             */
             if (shouldShowRequestPermissionRationale(notGrantedPermissions[0])) {
                 // show custom permission rationale
                 val confirmDialog = ConfirmDialog(this@SplashActivity)
@@ -70,13 +93,15 @@ class SplashActivity : BaseActivity() {
                 })
 
                 confirmDialog.show()
-                confirmDialog.setMessage(CONFIRM_MESSAGE)
+                confirmDialog.setMessage(confirmMessage)
 
             } else {
                 requestPermissions(notGrantedPermissions.toTypedArray(), PERMISSIONS_REQUEST_CODE)
             }
         } else {
-            // Permissions already granted, navigate to your desired fragment
+            /**
+             * Permissions already granted, navigate to your desired activity
+             */
             moveToChatActivity()
         }
     }
@@ -88,7 +113,9 @@ class SplashActivity : BaseActivity() {
         when (requestCode) {
             PERMISSIONS_REQUEST_CODE -> {
                 if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                    // Permissions granted, navigate to your desired fragment
+                    /**
+                     * Permissions granted, navigate to your desired activity
+                     */
                     moveToChatActivity()
                 } else {
                     requestPermissions()
@@ -101,6 +128,6 @@ class SplashActivity : BaseActivity() {
     private fun moveToChatActivity() {
         Handler().postDelayed({
             startActivity(Intent(this@SplashActivity, ChatActivity::class.java))
-        }, 2000)
+        }, SPLASH_DELAY_TIME)
     }
 }

@@ -48,7 +48,8 @@ object RemoteRepository {
     }
 
     fun getAllHelpCommands(
-        onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>, onFailure: OnFailure<String>
+        onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>,
+        onFailure: OnFailure<String>
     ) {
         val call = apiService.getAllHelpCommands(BaseApiRequest(getKeys()))
 
