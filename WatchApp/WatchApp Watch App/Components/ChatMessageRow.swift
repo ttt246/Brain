@@ -1,57 +1,92 @@
-//
-//  MessageView.swift
-//  WatchApp Watch App
-//
-//  Created by DarkHorse on 7/1/23.
-//
-
 import SwiftUI
 
+public enum TypeChat: String {
+    case SEND = "SEND"
+    case RECEIVE = "RECEIVE"
+    case WIDGET = "WIDGET"
+}
+
+public enum TypeWidget: String {
+    case EMPTY = "EMPTY"
+    case CONTACT = "CONTACT"
+    case IMAGE = "IMAGE"
+}
+
 struct ChatMessage: Hashable {
+    let type: TypeChat
     let message: String
-    let isUser: Bool
+    let widgetType: TypeWidget
+    let widgetDesc: String
 }
 
 struct ChatBubble: Shape {
-    let isUser: Bool
-
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect,
-                                byRoundingCorners: [.topLeft, .topRight, isUser ? .bottomLeft : .bottomRight],
-                                cornerRadii: CGSize(width: 3, height: 3))
+                                byRoundingCorners: [.allCorners],
+                                cornerRadii: CGSize(width: 9, height: 9))
         return Path(path.cgPath)
     }
 }
 
 struct ChatMessageRow: View {
-    let message: ChatMessage
+    let chatItem: ChatMessage
 
     var body: some View {
         HStack {
-            if message.isUser {
+            switch chatItem.type {
+            case TypeChat.SEND:
                 Spacer()
-                Text(message.message)
+                Text(chatItem.message)
                     .font(.system(size: 15))
                     .foregroundColor(.white)
                     .padding(5)
-                    .background(Color.blue)
-                    .clipShape(ChatBubble(isUser: message.isUser))
-            } else {
-                Text(message.message)
-                    .italic()
+                    .background(Color.green)
+                    .clipShape(ChatBubble())
+            case TypeChat.RECEIVE:
+                Text(chatItem.message)
                     .font(.system(size: 15))
                     .foregroundColor(.black)
                     .padding(5)
                     .background(Color.primary)
-                    .clipShape(ChatBubble(isUser: message.isUser))
+                    .clipShape(ChatBubble())
                 Spacer()
+            case TypeChat.WIDGET:
+                switch chatItem.widgetType {
+                case TypeWidget.CONTACT:
+                    let contact = convertStringToContact(jsonData: chatItem.widgetDesc)
+                    NavigationLink(destination: ContactView(contact: contact)){
+                        ContactRow(contact: contact)
+                    }
+                case TypeWidget.IMAGE:
+                    ImageRow()
+                default:
+                    EmptyView()
+                }
             }
-        }.listRowBackground(Color.clear)
+        }.padding(5)
     }
+}
+
+func convertStringToContact(jsonData: String) -> Contact {
+    do {
+        let jsonData = jsonData.data(using: .utf8)!
+        let contact = try JSONDecoder().decode(Contact.self, from: jsonData)
+
+        return contact
+    } catch {
+        print("Error converting JSON string to object: \(error)")
+    }
+    return Contact(contactId: "", displayName: "Empty", phoneNumbers: [])
 }
 
 struct ChatMessageRow_Previews: PreviewProvider {
     static var previews: some View {
-        ChatMessageRow(message: ChatMessage(message: "Hello!", isUser: false))
+        ChatMessageRow(chatItem:ChatMessage(
+                type: TypeChat.WIDGET,
+                message: "Hello!",
+                widgetType: TypeWidget.IMAGE,
+                widgetDesc: "Nothing"
+            )
+        )
     }
 }
