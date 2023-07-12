@@ -31,7 +31,7 @@ jobs:
       - name: Create file
         run: |
           mkdir ./src/configs
-          cat /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
+          cat > /home/runner/work/Brain/Brain/Extension/src/configs/firebase-config.json
 
       - name: Putting data
         env:
