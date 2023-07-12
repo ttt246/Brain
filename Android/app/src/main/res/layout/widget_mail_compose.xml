@@ -52,6 +52,7 @@
                     android:layout_width="@dimen/size_button_normal"
                     android:layout_height="@dimen/size_button_normal"
                     android:padding="@dimen/spacing_tiny"
+                    android:visibility="gone"
                     android:src="@drawable/ic_attachment"
                     app:layout_constraintBottom_toBottomOf="@+id/txt_title"
                     app:layout_constraintEnd_toStartOf="@+id/btn_send"
