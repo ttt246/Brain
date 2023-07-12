@@ -19,7 +19,7 @@ from firebase_admin import storage
 
 from .csv_embed import get_embed
 from .llm.falcon_llm import FalconLLM
-from .llm.llms import get_llm, GPT_4, FALCON_7B, get_llm_chain, CATEGORY_PROMPT
+from .llm.llms import get_llm, GPT_4, FALCON_7B, get_llm_chain, MOBILE_PROMPT
 from .pinecone_engine import init_pinecone
 from .rails_validate import validate_rails
 from ..common.brain_exception import BrainException
@@ -351,7 +351,7 @@ def ask_question(
     docs = []
 
     if ACTION_FLAG:
-        docs.append(Document(page_content=CATEGORY_PROMPT, metadata=""))
+        docs.append(Document(page_content=MOBILE_PROMPT, metadata=""))
         # temperature shouldbe 0.
         chain_data = get_llm_chain(
             model=DEFAULT_GPT_MODEL, setting=setting, temperature=0.0
