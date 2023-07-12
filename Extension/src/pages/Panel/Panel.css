@@ -30,8 +30,11 @@
 
 .footer {
   padding: 10px;
-  justify-self: end;
   background-color: var(--theme-color);
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: grey;
 }
 
 .content {
@@ -58,4 +61,18 @@
 .divider {
   margin: 0;
   background-color: grey;
+}
+
+.footer-btn {
+  padding: 3px;
+  background-color: inherit;
+  border: 0;
+  color: grey;
+  height: 25px;
+}
+
+.footer-btn:hover {
+  background-color: #8753e9;
+  border: 1px solid inherit;
+  border-radius: 10px;
 }
