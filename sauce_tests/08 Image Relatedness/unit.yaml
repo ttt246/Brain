@@ -11,15 +11,15 @@ assertions:
               "image_name": "0ddffe51-3763-48d9-ab74-2086de529217",
               "message": "This is the text about the image",
               "confs": {
-                "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
-                "uuid": "test-uuid",
                 "openai_key": "",
                 "pinecone_key": "",
                 "pinecone_env": "",
                 "firebase_key": "",
                 "settings": {
                     "temperature": 0.6
-                }
+                },
+                "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
+                "uuid": "c40a09075d11940f"
               }
           }
     url: ${protocol}${domain}${endpoint}
