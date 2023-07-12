@@ -27,9 +27,9 @@ suites:
     testMatch:
       - 01 Send Notification
       - 02 Upload Image
-      - 03 Image Relatedness
-      - 04 Add Feedback
-      - 05 Get Feedback
-      - 06 Get Commands
-      - 07 Rising Chat
-      - 08 Train Contacts
+      - 03 Add Feedback
+      - 04 Get Feedback
+      - 05 Get Commands
+      - 06 Rising Chat
+      - 07 Train Contacts
+      - 08 Image Relatedness
