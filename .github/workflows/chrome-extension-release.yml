@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: chrome-extension.zip
-          path: ./zip
+          path: zip
 
   release:
     needs: build
@@ -78,6 +78,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_extension_release.outputs.upload_url }}
-          asset_path: ./zip/rising-browser-1.0.0.zip
+          asset_path: Extension/zip/rising-browser-1.0.0.zip
           asset_name: chrome-extension.zip
           asset_content_type: application/zip
