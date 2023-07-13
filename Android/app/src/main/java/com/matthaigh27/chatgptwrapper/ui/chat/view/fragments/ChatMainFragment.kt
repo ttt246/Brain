@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.matthaigh27.chatgptwrapper.R
+import com.matthaigh27.chatgptwrapper.RisingApplication
+import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.models.chat.ChatMessageModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpCommandModel
 import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
@@ -30,10 +32,12 @@ import com.matthaigh27.chatgptwrapper.data.models.common.Time
 import com.matthaigh27.chatgptwrapper.data.remote.ApiResource
 import com.matthaigh27.chatgptwrapper.data.remote.responses.ApiResponse
 import com.matthaigh27.chatgptwrapper.data.remote.responses.results.CommonResult
+import com.matthaigh27.chatgptwrapper.data.repository.RemoteRepository
 import com.matthaigh27.chatgptwrapper.ui.chat.view.adapters.ChatMainAdapter
 import com.matthaigh27.chatgptwrapper.ui.chat.view.interfaces.ChatMessageInterface
 import com.matthaigh27.chatgptwrapper.ui.chat.view.widgets.toolbar.ChatToolsWidget
 import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModel
+import com.matthaigh27.chatgptwrapper.ui.chat.viewmodel.ChatViewModelFactory
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.ERROR_MSG_NOEXIST_COMMAND
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.ERROR_MSG_UNKNOWN_ERROR
 import com.matthaigh27.chatgptwrapper.utils.constants.CommonConstants.HELP_COMMAND_ALL
@@ -136,7 +140,10 @@ class ChatMainFragment : Fragment(), OnClickListener {
      * This function is used to init viewmodel.
      */
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
+        val repository = RemoteRepository(appContext)
+        val viewModelFactory = ChatViewModelFactory(repository)
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[ChatViewModel::class.java]
     }
 
     /**

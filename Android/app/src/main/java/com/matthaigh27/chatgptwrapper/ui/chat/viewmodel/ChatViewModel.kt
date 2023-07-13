@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import com.matthaigh27.chatgptwrapper.RisingApplication
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.local.entity.ImageEntity
 import com.matthaigh27.chatgptwrapper.data.models.chat.AutoTaskModel
@@ -43,7 +44,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ChatViewModel : ViewModel() {
+class ChatViewModel(private val remoteRepository: RemoteRepository) : ViewModel() {
 
     /**
      * This function is used to fetch all help commands from Brain.
@@ -53,7 +54,7 @@ class ChatViewModel : ViewModel() {
             MutableLiveData()
         resource.value = ApiResource.Loading()
 
-        RemoteRepository.getAllHelpCommands(onSuccess = { apiResponse ->
+        remoteRepository.getAllHelpCommands(onSuccess = { apiResponse ->
             resource.value = ApiResource.Success(apiResponse)
         }, onFailure = { throwable ->
             resource.value = ApiResource.Error(throwable)
@@ -67,13 +68,13 @@ class ChatViewModel : ViewModel() {
      */
     fun sendNotification(message: String): MutableLiveData<ApiResource<ApiResponse<CommonResult>>> {
         val request = NotificationApiRequest(
-            message = message, confs = RemoteRepository.getKeys()
+            message = message, confs = remoteRepository.getKeys()
         )
 
         val resource: MutableLiveData<ApiResource<ApiResponse<CommonResult>>> = MutableLiveData()
         resource.value = ApiResource.Loading()
 
-        RemoteRepository.sendNotification(request, onSuccess = { apiResponse ->
+        remoteRepository.sendNotification(request, onSuccess = { apiResponse ->
             resource.value = ApiResource.Success(apiResponse)
         }, onFailure = { throwable ->
             resource.value = ApiResource.Error(throwable)
@@ -163,9 +164,9 @@ class ChatViewModel : ViewModel() {
                                             dataModified = image.modifiedDate
                                         )
                                     )
-                                    RemoteRepository.trainImage(
+                                    remoteRepository.trainImage(
                                         TrainImageApiRequest(
-                                            uuid, "updated", RemoteRepository.getKeys()
+                                            uuid, "updated", remoteRepository.getKeys()
                                         )
                                     )
                                 }
@@ -199,9 +200,9 @@ class ChatViewModel : ViewModel() {
                                         dataModified = image.modifiedDate
                                     )
                                 )
-                                RemoteRepository.trainImage(
+                                remoteRepository.trainImage(
                                     TrainImageApiRequest(
-                                        uuid, "created", RemoteRepository.getKeys()
+                                        uuid, "created", remoteRepository.getKeys()
                                     )
                                 )
                             }
@@ -222,9 +223,9 @@ class ChatViewModel : ViewModel() {
                                 originalImages[i].id, "", "", 0L
                             )
                         )
-                        val result = RemoteRepository.trainImage(
+                        val result = remoteRepository.trainImage(
                             TrainImageApiRequest(
-                                originalImages[i].name, "deleted", RemoteRepository.getKeys()
+                                originalImages[i].name, "deleted", remoteRepository.getKeys()
                             )
                         )
                     }
@@ -262,9 +263,9 @@ class ChatViewModel : ViewModel() {
              * Send request to Server
              *
              */
-            val request = TrainContactsApiRequest(changedContacts, RemoteRepository.getKeys())
+            val request = TrainContactsApiRequest(changedContacts, remoteRepository.getKeys())
             withContext(Dispatchers.Main) {
-                RemoteRepository.trainContacts(request, onSuccess = { apiResponse ->
+                remoteRepository.trainContacts(request, onSuccess = { apiResponse ->
                     state.value = ApiResource.Success(apiResponse)
                 }, onFailure = { throwable ->
                     state.value = ApiResource.Error(throwable)
@@ -284,14 +285,14 @@ class ChatViewModel : ViewModel() {
         val resource: MutableLiveData<ApiResource<ImageRelatenessModel>> =
             MutableLiveData()
         val request = ImageRelatednessApiRequest(
-            image_name = imageName, message = message, confs = RemoteRepository.getKeys()
+            image_name = imageName, message = message, confs = remoteRepository.getKeys()
         )
         resource.value = ApiResource.Loading()
 
         /**
          * Get the uuid of the similar image
          */
-        RemoteRepository.getImageRelatedness(request, onSuccess = { apiResponse ->
+        remoteRepository.getImageRelatedness(request, onSuccess = { apiResponse ->
             val resultImageName = apiResponse.result.content.image_name
             val resultImageDesc = apiResponse.result.content.image_desc
 
@@ -330,11 +331,11 @@ class ChatViewModel : ViewModel() {
                 sender = from,
                 pwd = password,
                 imap_folder = imapFolder
-            ), confs = RemoteRepository.getKeys()
+            ), confs = remoteRepository.getKeys()
         )
         resource.value = ApiResource.Loading()
 
-        RemoteRepository.readEmails(request, onSuccess = { apiResponse ->
+        remoteRepository.readEmails(request, onSuccess = { apiResponse ->
             resource.value =
                 ApiResource.Success(apiResponse.result)
         }, onFailure = { throwable ->
@@ -369,11 +370,11 @@ class ChatViewModel : ViewModel() {
                 to_send = to_send,
                 filename = filename,
                 file_content = file_content
-            ), confs = RemoteRepository.getKeys()
+            ), confs = remoteRepository.getKeys()
         )
         resource.value = ApiResource.Loading()
 
-        RemoteRepository.sendEmail(request, onSuccess = { apiResponse ->
+        remoteRepository.sendEmail(request, onSuccess = { apiResponse ->
             resource.value =
                 ApiResource.Success(apiResponse.result)
         }, onFailure = { throwable ->
