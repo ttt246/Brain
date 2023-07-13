@@ -68,7 +68,6 @@ dependencies {
     testImplementation 'org.testng:testng:6.9.6'
 
     // Testing-only dependencies
-    androidTestImplementation "androidx.test:core:$rootProject.coreVersion"
     androidTestImplementation "androidx.test.ext:junit:$rootProject.extJUnitVersion"
     androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"
 

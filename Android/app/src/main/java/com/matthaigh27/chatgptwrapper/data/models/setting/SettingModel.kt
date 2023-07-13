@@ -5,6 +5,7 @@ import com.matthaigh27.chatgptwrapper.data.models.chat.HelpPromptModel
 import com.matthaigh27.chatgptwrapper.data.remote.requests.common.OpenAISetting
 
 data class SettingModel(
+    val serverUrl: String,
     val openaiKey: String,
     val pineconeEnv: String,
     val pineconeKey: String,
