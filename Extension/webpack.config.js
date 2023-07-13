@@ -144,7 +144,7 @@ var options = {
           from: 'src/manifest.json',
           to: path.join(__dirname, 'build'),
           force: true,
-          transform: function (content, path) {
+          transform: function (content) {
             // generates the manifest file using the package.json informations
             return Buffer.from(
               JSON.stringify({
@@ -179,6 +179,24 @@ var options = {
       patterns: [
         {
           from: 'src/assets/img/icon-34.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/img/logo_panel.png',
+          to: path.join(__dirname, 'build'),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/assets/img/logo.png',
           to: path.join(__dirname, 'build'),
           force: true,
         },

@@ -1,11 +1,23 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Divider, Input, Layout} from 'antd';
-import {SendOutlined} from '@ant-design/icons';
+import {
+    Divider,
+    Input,
+    Layout,
+    Tooltip
+} from 'antd';
 import { getDatabase, onValue, ref } from "firebase/database";
 
 import Message from './Message'
 import './Panel.css';
 import app from './FirebaseApp/firebase-app'
+import Browser from 'webextension-polyfill'
+import {
+    SettingOutlined,
+    SyncOutlined,
+    SoundOutlined,
+    CopyOutlined,
+    MessageOutlined
+} from '@ant-design/icons'
 
 const {Footer, Content} = Layout;
 const URL_BASE = 'https://ttt246-brain.hf.space/'
@@ -26,12 +38,14 @@ const confs = {
         "temperature": 0.6
     }
 }
+const logoUrl = Browser.runtime.getURL('logo_panel.png')
+
 const Panel = () => {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState([]);
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
-
+   
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
             addMessage(question, true);
@@ -315,7 +329,7 @@ const Panel = () => {
     return (
         <Layout className="main-layout" data-theme={isDarkMode ? 'dark': 'light'}>
             <div className="header">
-                <h4>RisingBrowser</h4>
+                <img src={logoUrl} height="50px" alt="no image" />
             </div>
             <Divider className="divider"/>
             <Content className="content" ref={chat_box}>
@@ -328,11 +342,36 @@ const Panel = () => {
             </Content>
             <Divider className="divider"/>
             <Footer className="footer">
+                <Tooltip title="Settings" arrow="show" placement="bottom">
+                    <div className="footer-btn">
+                        <SettingOutlined />
+                    </div>
+                </Tooltip>
                 <Input
-                    addonAfter={<SendOutlined/>}
                     value={question}
                     onChange={handleQuestionChange}
-                    onKeyDown={handleQuestionUpdated}/>
+                    onKeyDown={handleQuestionUpdated}
+                />
+                <Tooltip title="re-send" arrow="show" placement="bottom">
+                    <div className="footer-btn">
+                        <SyncOutlined />
+                    </div>
+                </Tooltip>
+                <Tooltip title="voice recognition" arrow="show" placement="bottom">
+                    <div className="footer-btn">
+                        <SoundOutlined />
+                    </div>
+                </Tooltip>
+                <Tooltip title="copy" arrow="show" placement="bottom">
+                    <div className="footer-btn">
+                        <CopyOutlined />
+                    </div>
+                </Tooltip>
+                <Tooltip title="message" arrow="show" placement="bottom">
+                    <div className="footer-btn">
+                        <MessageOutlined />
+                    </div>
+                </Tooltip>
             </Footer>
         </Layout>
     );
