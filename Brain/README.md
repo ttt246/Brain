@@ -20,55 +20,16 @@ Welcome to the heartbeat of **RisingBrain**, our main backend component. ⚽ Kic
 
 ## Getting Started 🏁
 
-The first step involves setting up the necessary environment. You'll need two files:
-
-1. **Firebase Credential JSON file**: Place your firebase_credential.json in the following directory:
-
-<p align="center">
-  <img src="assets/img/firebase_credential.png" width="88%"/>
-  <p align="center">[Project Directory]/Brain/firebase_credential.json</p>
-</p>
-
-2. **Environment Variable file**: The .env file is essential for any application configuration. Make sure to have it at the location:
-<p align="center">
-  <img src="assets/img/dotenv.png" width="88%"/>
-  <p align="center">[Project Directory]/.env</p>
-</p>
-
 ## Running FastAPI Application 🚀
 Our backend runs on a <a href="https://fastapi.tiangolo.com/">FastAPI</a> application. Here's a quick guide to get it up and running:
 
-### Step 1: Create the virtual environment.
-This aims to isolate your Python/system install from the application's project packages.
-
-- On Windows:
-
-  ``` bach 
-  python -m venv [virtualenv name]
-  ```
-
-  ``` bash
-    venv\Scripts\activate.bat\
-  ```
-
-- On Linux:
-
-  ``` bash
-  python3 -m venv [virtualenv name]
-  ```
-
-  ``` bash
-  source [virtualenv name]/bin/activate
-  ```
-
-
-### Step 2: Install all required packages using the provided requirements.txt file.
+### Step 1: Install all required packages using the provided requirements.txt file.
 
   ``` bash
   pip install -r requirements.txt
   ```
 
-### Step 3: Start the FastAPI application with hot reloads enabled using Uvicorn.
+### Step 2: Start the FastAPI application with hot reloads enabled using Uvicorn.
   ``` bash
   uvicorn app:app --reload
   ```
