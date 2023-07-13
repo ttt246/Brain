@@ -47,6 +47,7 @@ from .image_embedding import (
     get_prompt_image_with_message,
 )
 from ..model.req_model import ReqModel
+from ..model.basic_model import ImageTypes
 from ..model.requests.request_model import BasicReq
 from ..service.auto_task_service import AutoTaskService
 from ..service.train_service import TrainService
@@ -248,10 +249,16 @@ def query_image_ask(image_content, message, setting: ReqModel):
     return False
 
 
-def getTextFromImage(filename: str, firebase_app: firebase_admin.App) -> str:
+def getTextFromImage(
+    filename: str,
+    firebase_app: firebase_admin.App,
+    image_type: str = ImageTypes.APP,
+) -> str:
     # Create a reference to the image file you want to download
     bucket = storage.bucket(app=firebase_app)
-    blob = bucket.blob(FIREBASE_STORAGE_ROOT.__add__(filename))
+    blob = bucket.blob(f"{ImageTypes.APP}/".__add__(filename))
+    if image_type == ImageTypes.PHOTOS:
+        blob = bucket.blob(f"{ImageTypes.PHOTOS}/".__add__(filename))
     download_url = ""
 
     try:
@@ -267,7 +274,6 @@ def getTextFromImage(filename: str, firebase_app: firebase_admin.App) -> str:
 
     except Exception as e:
         output = str("Error happend while analyzing your prompt. Please ask me again :")
-
     return str(output)
 
 
@@ -415,3 +421,8 @@ def handle_chat_completion(
     #     response["choices"][0]["message"]["content"] = result
     #     return response
     return response
+
+
+"""
+    def upload_images(data: object, firebase_app: firebase.App, uuid: str):
+"""

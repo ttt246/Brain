@@ -1,6 +1,8 @@
 import json
 import os
 import re
+import time
+import base64
 
 
 # env variables
@@ -105,3 +107,28 @@ def parseUrlFromStr(text: str) -> str:
         return link.group(0)
     else:
         return ""
+
+
+"""
+    Usage:
+    write file to specific folder 
+    Notes:
+    Args:
+    filename - the name of file to save
+    file_content - base64 encoded file from app
+"""
+
+
+def write_file(filename: str, file_content: str) -> (str, str):
+    # create folder to save file
+    milliseconds = int(time.time() * 1000)
+    file_path = f"Brain/assets/{milliseconds}/{filename}"
+    file_directory = f"Brain/assets/{milliseconds}"
+    os.mkdir(file_directory)
+
+    # file write
+    file_content = base64.b64decode(file_content).decode("utf-8")
+    file = open(file_path, "w")
+    file.write(file_content)
+    file.close()
+    return file_path, file_directory

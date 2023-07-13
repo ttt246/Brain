@@ -104,8 +104,13 @@ class Notification(BasicReq):
 
 
 class UploadImage(BasicReq):
-    image_name: str
-    status: str
+    class ImageReq(BaseModel):
+        image_name: str
+        image_content: str
+        status: str
+        type: str
+
+    data: list[ImageReq]
 
 
 """endpoint: /image_relatedness"""
@@ -114,6 +119,7 @@ class UploadImage(BasicReq):
 class ImageRelatedness(BasicReq):
     image_name: str
     message: str
+    type: str
 
 
 """endpoint: /feedback"""
