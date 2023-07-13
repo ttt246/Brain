@@ -1,4 +1,5 @@
 import json
+import shutil
 
 from Brain.src.common.assembler import Assembler
 from Brain.src.common.brain_exception import BrainException
@@ -28,7 +29,7 @@ from Brain.src.rising_plugin.risingplugin import (
     query_image_ask,
 )
 from Brain.src.firebase.cloudmessage import CloudMessage
-from Brain.src.rising_plugin.image_embedding import embed_image_text, query_image_text
+from Brain.src.rising_plugin.image_embedding import query_image_text
 
 from Brain.src.logs import logger
 from Brain.src.model.basic_model import BasicModel
@@ -40,6 +41,7 @@ from Brain.src.service.contact_service import ContactsService
 from Brain.src.service.feedback_service import FeedbackService
 from Brain.src.service.llm.chat_service import ChatService
 from Brain.src.service.twilio_service import TwilioService
+from Brain.src.service.image_service import ImagesService
 
 from fastapi import APIRouter, Depends
 
@@ -126,10 +128,14 @@ def construct_blueprint_api() -> APIRouter:
     )
     @generator.request_body(
         {
-            "image_name": "this is test image path",
             "token": "test_token",
             "uuid": "test_uuid",
-            "status": "created | updated | deleted",
+            "data": [{
+                "image_name": "this is test image path",
+                "image_content": "this is the content of image",
+                "status": "created | updated | deleted",
+                "type": "app | photos"
+            }]
         }
     )"""
 
@@ -140,29 +146,28 @@ def construct_blueprint_api() -> APIRouter:
             setting, firebase_app = firebase_admin_with_setting(data)
         except BrainException as ex:
             return ex.get_response_exp()
-        # cloud message
+
         try:
-            cloud_message = CloudMessage(firebase_app=firebase_app)
-
-            image_model = ImageModel()
             token = setting.token
+            uuid = setting.uuid
 
-            image_model.image_name = data.image_name
-            image_model.uuid = setting.uuid
-            image_model.status = data.status
+            # parsing data
+            images = []
+            for image in data.data:
+                images.append(assembler.to_image_model(image))
 
-            image_model.image_text = getTextFromImage(
-                filename=image_model.image_name, firebase_app=firebase_app
-            )
+            # train image
+            image_service = ImagesService(firebase_app=firebase_app, setting=setting)
+            image_service.train(uuid, images)
 
-            embed_result = embed_image_text(image=image_model, setting=setting)
-
-            notification = {"title": "alert", "content": embed_result}
-
-            state, value = cloud_message.send_message(notification, [token])
-            return assembler.to_response(200, value, image_model.to_json())
-        except BrainException as ex:
-            return ex.get_response_exp()
+            # remove image files from server
+            for image in images:
+                shutil.rmtree(image.base_directory)
+        except Exception as e:
+            if isinstance(e, BrainException):
+                return e.get_response_exp()
+            return assembler.to_response(400, "Failed to upload images", "")
+        return assembler.to_response(200, "Successfully uploaded images", "")
 
     """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -171,6 +176,7 @@ def construct_blueprint_api() -> APIRouter:
         {
             "image_name": "this is test image path",
             "message": "this is a test message",
+            "type": "app | photos"
             "token": "test_token",
             "uuid": "test_uuid",
         }
@@ -189,10 +195,13 @@ def construct_blueprint_api() -> APIRouter:
         # parsing params
         image_name = data.image_name
         message = data.message
+        image_type = data.type
         token = setting.token
         uuid = setting.uuid
 
-        image_content = getTextFromImage(filename=image_name, firebase_app=firebase_app)
+        image_content = getTextFromImage(
+            filename=image_name, firebase_app=firebase_app, image_type=image_type
+        )
         # check message type
         image_response = {}
         try:
