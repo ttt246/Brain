@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "Brain/**"
+      - "requirements.txt"
   workflow_dispatch:
 
 jobs:
