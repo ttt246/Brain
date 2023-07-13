@@ -3,7 +3,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# from Brain.src.gradio_debug import debug_send_notification
 from Brain.src.router.browser_router import construct_blueprint_browser_api
 from Brain.src.router.train_router import construct_blueprint_train_api
 from Brain.src.router.email_router import construct_blueprint_email_api
@@ -30,14 +29,6 @@ app.include_router(
 )
 app.include_router(construct_blueprint_train_api(), prefix="/train", tags=["ai_train"])
 app.include_router(construct_blueprint_email_api(), prefix="/email", tags=["ai_email"])
-
-# gradio
-
-# CUSTOM_PATH = "/gradio"
-#
-# app = gr.mount_gradio_app(
-#     app, debug_send_notification, path=f"{CUSTOM_PATH}/sendNotification"
-# )
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=7860)

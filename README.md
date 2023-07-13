@@ -6,7 +6,7 @@ colorTo: indigo
 app_file: app.py
 sdk: gradio
 sdk_version: 2.9.1
-python_version: 3.10.4
+python_version: 3.11.2
 pinned: false
 license: other
 ---
