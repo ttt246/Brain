@@ -18,7 +18,7 @@ from Brain.src.common.utils import PROXY_IP, PROXY_PORT
 
 # email variables
 EMAIL_SMTP_HOST = "smtp.gmail.com"
-EMAIL_SMTP_PORT = 1587
+EMAIL_SMTP_PORT = 587
 EMAIL_IMAP_SERVER = "imap.gmail.com"
 EMAIL_SIGNATURE = "This was sent by Rising Brain"
 
@@ -284,8 +284,8 @@ class EmailPlugin:
         self, imap_folder: str, email_sender: str, email_password: str
     ) -> imaplib.IMAP4_SSL:
         # Create a new socket object for later connections as a proxy
-        socks.set_default_proxy(socks.SOCKS5, PROXY_IP, PROXY_PORT)
-        socket.socket = socks.socksocket
+        # socks.set_default_proxy(socks.SOCKS5, PROXY_IP, PROXY_PORT)
+        # socket.socket = socks.socksocket
 
         # IMAP Server Connect
         imap_server = EMAIL_IMAP_SERVER
