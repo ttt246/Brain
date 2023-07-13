@@ -11,6 +11,7 @@ from email.header import decode_header
 from email.message import EmailMessage
 from socket import socket
 
+import socks
 from bs4 import BeautifulSoup
 
 from Brain.src.common.utils import PROXY_IP, PROXY_PORT
@@ -283,6 +284,8 @@ class EmailPlugin:
         self, imap_folder: str, email_sender: str, email_password: str
     ) -> imaplib.IMAP4_SSL:
         # Create a new socket object for later connections as a proxy
+        # socks.set_default_proxy(socks.SOCKS5, PROXY_IP, PROXY_PORT)
+        # socket.socket = socks.socksocket
 
         # IMAP Server Connect
         imap_server = EMAIL_IMAP_SERVER
