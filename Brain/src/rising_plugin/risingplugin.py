@@ -373,9 +373,10 @@ def ask_question(
         # check image query with only its text
         if result["program"] == ProgramType.IMAGE:
             if image_search:
-                result["content"] = {
-                    "image_name": query_image_text(result["content"], "", setting)
-                }
+                image_name, image_type = query_image_text(
+                    result["content"], "", setting
+                )
+                result["content"] = {"image_name": image_name, "type": image_type}
         """ 2. check program is message to handle it with falcon llm """
         if result["program"] == ProgramType.MESSAGE:
             if is_browser:

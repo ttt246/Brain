@@ -33,7 +33,13 @@ def embed_image_text(image: ImageModel, setting: ReqModel) -> str:
         if image.status == DataStatus.CREATED:
             """add a data in pinecone"""
             upsert_response = index.upsert(
-                vectors=[{"id": image.image_name, "values": embed_image}],
+                vectors=[
+                    {
+                        "id": image.image_name,
+                        "values": embed_image,
+                        "metadata": {"type": image.type},
+                    }
+                ],
                 namespace=pinecone_namespace,
             )
         elif image.status == DataStatus.DELETED:
@@ -59,8 +65,11 @@ def query_image_text(image_content, message, setting: ReqModel):
         namespace=get_pinecone_index_namespace(setting.uuid),
     )
     if len(relatedness_data["matches"]) > 0:
-        return relatedness_data["matches"][0]["id"]
-    return ""
+        return (
+            relatedness_data["matches"][0]["id"],
+            relatedness_data["matches"][0]["metadata"]["type"],
+        )
+    return "", ""
 
 
 def get_prompt_image_with_message(image_content, message):
