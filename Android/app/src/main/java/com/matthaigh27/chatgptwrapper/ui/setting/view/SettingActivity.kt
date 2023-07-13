@@ -20,6 +20,7 @@ class SettingActivity : BaseActivity() {
     private val CONFIRM_MESSAGE = "Are you sure you want to set?"
 
     private lateinit var txtPineconeKey: TextInputLayout
+    private lateinit var txtServerUrl: TextInputLayout
     private lateinit var txtPineconeEnv: TextInputLayout
     private lateinit var txtFirebaseKey: TextInputLayout
     private lateinit var txtTemperature: TextInputLayout
@@ -37,6 +38,7 @@ class SettingActivity : BaseActivity() {
 
     private fun init() {
         txtPineconeKey = findViewById(R.id.txt_pinecone_key)
+        txtServerUrl = findViewById(R.id.txt_server_url)
         txtPineconeEnv = findViewById(R.id.txt_pinecone_env)
         txtFirebaseKey = findViewById(R.id.txt_firebase_key)
         txtTemperature = findViewById(R.id.txt_temperature)
@@ -63,6 +65,7 @@ class SettingActivity : BaseActivity() {
                 is ApiResource.Success -> {
                     resource.data?.let { data ->
                         txtPineconeKey.editText?.setText(data.pineconeKey)
+                        txtServerUrl.editText?.setText(data.serverUrl)
                         txtPineconeEnv.editText?.setText(data.pineconeEnv)
                         txtFirebaseKey.editText?.setText(data.firebaseKey)
                         txtTemperature.editText?.setText(data.setting.temperature.toString())
@@ -100,17 +103,13 @@ class SettingActivity : BaseActivity() {
         val firebaseKey = txtFirebaseKey.editText?.text.toString()
         val temperature = txtTemperature.editText?.text.toString().toFloat()
         val openaiKey = txtOpenAIKey.editText?.text.toString()
-
-        if (pineconeEnv == "" || pineconeKey == "" || firebaseKey == "" || openaiKey == ""){
-            showToast("Please fill out all the inputs")
-            return
-        }
-
+        val serverUrl: String = txtServerUrl.editText?.text.toString()
 
         val confirmDialog = ConfirmDialog(this)
         confirmDialog.setOnClickListener(object : ConfirmDialog.OnDialogButtonClickListener {
             override fun onPositiveButtonClick() {
                 val setting = SettingModel(
+                    serverUrl = serverUrl,
                     openaiKey = openaiKey,
                     pineconeEnv = pineconeEnv,
                     pineconeKey = pineconeKey,

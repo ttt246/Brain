@@ -30,8 +30,11 @@ import kotlin.coroutines.suspendCoroutine
 
 
 object RemoteRepository {
-    private val apiService = ApiClient.apiService
+    private val apiService = ApiClient.instance.apiService
 
+    /**
+     * This function is used to get keys to manage backend.
+     */
     fun getKeys(): Keys{
         RoomRepository
         val settingModel = SharedPreferencesRepository.getConfig()
