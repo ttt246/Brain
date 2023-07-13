@@ -11,8 +11,10 @@ from Brain.src.model.requests.request_model import (
     SendSMS,
     TrainContacts,
     BasicReq,
+    UploadImage,
 )
 from Brain.src.model.sms_model import SMSModel
+from Brain.src.model.image_model import ImageModel
 
 
 class Assembler:
@@ -84,3 +86,10 @@ class Assembler:
             "displayName": contact.display_name,
             "phoneNumbers": contact.phone_numbers,
         }
+
+    """mapping data to a ImageModel"""
+
+    def to_image_model(self, data: UploadImage.ImageReq) -> ImageModel:
+        image_model = ImageModel()
+        image_model.get_image_model(data)
+        return image_model

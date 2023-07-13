@@ -12,3 +12,19 @@ class DataStatus:
     CREATED = "created"
     UPDATED = "updated"
     DELETED = "deleted"
+
+
+"""
+    Usage:
+    check where images is from 
+    Notes:
+    app - is from android app
+    photos - is from google photos
+    Args:
+    
+"""
+
+
+class ImageTypes:
+    APP = "app"
+    PHOTOS = "photos"
