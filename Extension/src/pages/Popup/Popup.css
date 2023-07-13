@@ -1,3 +1,72 @@
-.popup {
-    text-align: center;
+[data-theme='light'] {
+    --font-color: #c9d1d9;
+    --theme-color: #333333;
+}
+
+[data-theme='dark'] {
+    --font-color: #e3e3e3;
+    --theme-color: #141414;
+}
+
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    height: 490px; /* Set the height of the layout to be 100% of the viewport */
+    width: 400px;
+    background-color: var(--theme-color);
+    color: var(--font-color);
+}
+
+.header {
+    height: 55px;
+    text-align: left;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.divider {
+    margin: 0;
+    background-color: grey;
+}
+
+.content {
+    padding: 10px;
+}
+
+.footer {
+    padding: 10px;
+    background-color: var(--theme-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    align-items: center;
+    color: grey;
+}
+
+.custom-input {
+    margin-bottom: 15px;
+    background-color: #202020;
+    color: white;
+}
+
+.ant-input-group-addon {
+    color: var(--font-color) !important;
+    width: 120px !important;
+}
+
+.ant-input {
+    background-color: #202020;
+    color: var(--font-color) !important;
+}
+
+.footer-btn {
+    background-color: inherit;
+    color: var(--font-color);
+    border: 0;
+}
+
+.footer-btn:hover {
+    border: 1px solid white !important;
+    color: var(--font-color) !important;
+    border-radius: 10px !important;
 }

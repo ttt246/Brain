@@ -27,17 +27,7 @@ const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
 const URL_DELETE_RTD = URL_BASE + 'auto_task/delete'
 
 let prompt = ""
-const confs = {
-    "openai_key": "",
-    "pinecone_key": "",
-    "pinecone_env": "",
-    "firebase_key": "",
-    "token": "",
-    "uuid": "extension-uuid",
-    "settings": {
-        "temperature": 0.6
-    }
-}
+
 const logoUrl = Browser.runtime.getURL('logo_panel.png')
 
 const Panel = () => {
@@ -45,6 +35,14 @@ const Panel = () => {
     const [messages, setMessages] = useState([]);
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
+    const [confs, setConfs] = useState(null);
+
+    useEffect(() => {
+        // Send a message to background script to get the storage value
+        chrome.runtime.sendMessage({ method: 'getLocalStorage' }, (response) => {
+            setConfs(response.data);
+        });
+    }, []);
    
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
