@@ -15,6 +15,7 @@ import com.matthaigh27.chatgptwrapper.ui.base.BaseActivity
 import com.matthaigh27.chatgptwrapper.ui.chat.view.ChatActivity
 import com.matthaigh27.chatgptwrapper.ui.chat.view.dialogs.ConfirmDialog
 import com.matthaigh27.chatgptwrapper.ui.setting.viewmodel.SettingViewModel
+import java.util.Base64
 
 class SettingActivity : BaseActivity() {
     private val CONFIRM_MESSAGE = "Are you sure you want to set?"
@@ -67,9 +68,16 @@ class SettingActivity : BaseActivity() {
                         txtPineconeKey.editText?.setText(data.pineconeKey)
                         txtServerUrl.editText?.setText(data.serverUrl)
                         txtPineconeEnv.editText?.setText(data.pineconeEnv)
-                        txtFirebaseKey.editText?.setText(data.firebaseKey)
                         txtTemperature.editText?.setText(data.setting.temperature.toString())
                         txtOpenAIKey.editText?.setText(data.openaiKey)
+
+
+                        /**
+                         * Decode firebase credential file
+                         */
+                        val decoder: Base64.Decoder = Base64.getDecoder()
+                        val decoded = String(decoder.decode(data.firebaseKey))
+                        txtFirebaseKey.editText?.setText(decoded)
                     }
                 }
 
@@ -100,10 +108,17 @@ class SettingActivity : BaseActivity() {
     private fun saveSettingData() {
         val pineconeKey = txtPineconeKey.editText?.text.toString()
         val pineconeEnv = txtPineconeEnv.editText?.text.toString()
-        val firebaseKey = txtFirebaseKey.editText?.text.toString()
         val temperature = txtTemperature.editText?.text.toString().toFloat()
         val openaiKey = txtOpenAIKey.editText?.text.toString()
         val serverUrl: String = txtServerUrl.editText?.text.toString()
+
+        /**
+         * Encode firebase credential file to base64
+         */
+        var firebaseKey = txtFirebaseKey.editText?.text.toString()
+        val encoder: Base64.Encoder = Base64.getEncoder()
+        val encoded: String = encoder.encodeToString(firebaseKey.toByteArray())
+        firebaseKey = encoded
 
         val confirmDialog = ConfirmDialog(this)
         confirmDialog.setOnClickListener(object : ConfirmDialog.OnDialogButtonClickListener {
