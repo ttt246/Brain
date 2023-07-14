@@ -37,11 +37,10 @@ class ImagesService:
     """create a image into app/photos which name is uuid in storage of firebase"""
 
     def save_image(self, image: ImageModel, firebase_app: firebase_admin.App) -> None:
-        data = image.to_json()
         image_folder = "app/{}"
-        if data.type == ImageTypes.PHOTOS:
+        if image.type == ImageTypes.PHOTOS:
             image_folder = "photos/{}"
 
         bucket = storage.bucket(app=firebase_app)
-        blob = bucket.blob(image_folder.format(data.image_path))
-        blob.upload_from_filename(data.image_path)
+        blob = bucket.blob(image_folder.format(image.image_path))
+        blob.upload_from_filename(image.image_path)
