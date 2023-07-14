@@ -43,104 +43,112 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="@dimen/spacing_small"
         app:layout_constraintBottom_toTopOf="@+id/ll_action"
-        app:layout_constraintTop_toBottomOf="@+id/cl_header">
+        app:layout_constraintTop_toBottomOf="@+id/cl_header"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_uuid"
-            style="@style/CommonEditText"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:enabled="false"
-            android:hint="@string/label_setting_uuid">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_server_url"
-            style="@style/CommonEditText"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:hint="@string/label_setting_server_url">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_openai_key"
-            style="@style/CommonEditText"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:hint="@string/label_setting_openai_key">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_pinecone_key"
-            style="@style/CommonEditText"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:hint="@string/label_setting_pinecone_key">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_pinecone_env"
-            style="@style/CommonEditText"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            android:hint="@string/label_setting_pinecone_env">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_firebase_key"
-            style="@style/CommonEditText"
-            android:hint="@string/label_setting_firebase_key"
-            android:layout_marginBottom="@dimen/spacing_small">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            style="@style/HorizontalDividerStyle"
-            android:layout_marginBottom="@dimen/spacing_small" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txt_temperature"
-            style="@style/CommonEditText"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/label_setting_temperature">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_uuid"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:enabled="false"
+                android:hint="@string/label_setting_uuid">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_server_url"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/label_setting_server_url">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_openai_key"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/label_setting_openai_key">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_pinecone_key"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/label_setting_pinecone_key">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_pinecone_env"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:hint="@string/label_setting_pinecone_env">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_firebase_key"
+                style="@style/CommonEditText"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:hint="@string/label_setting_firebase_key">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <View
+                style="@style/HorizontalDividerStyle"
+                android:layout_marginBottom="@dimen/spacing_small" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txt_temperature"
+                style="@style/CommonEditText"
+                android:layout_height="match_parent"
+                android:hint="@string/label_setting_temperature">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/ll_action"
