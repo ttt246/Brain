@@ -24,6 +24,13 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Install Git LFS
+        run: sudo apt-get install git-lfs
+      - name: Set up Git LFS
+        run: git lfs install
+      - name: Pull LFS Objects
+        run: git lfs pull
+
       - name: Create file
         run: cat /home/runner/work/Brain/Brain/Android/app/google-services.json | base64
 
