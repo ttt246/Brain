@@ -14,10 +14,10 @@ assertions:
               "confs": {
                 "token": "test_token",
                 "uuid": "test-uuid",
-                "openai_key": "",
-                "pinecone_key": "",
-                "pinecone_env": "",
-                "firebase_key": "",
+                "openai_key": "${OPENAI_API_KEY}",
+                "pinecone_key": "${PINECONE_KEY}",
+                "pinecone_env": "${PINECONE_ENV}",
+                "firebase_key": "${FIREBASE_ENV}",
                 "settings": {
                     "temperature": 0.6
                 }

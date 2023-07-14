@@ -9,10 +9,10 @@ assertions:
               "confs": {
                 "token": "eSyP3i7ITZuq8hWn2qutTl:APA91bH1FtWkaTSJwuX4WKWAl3Q-ZFyrOw4UtMP4IfwuvNrHOThH7EvEGIhtguilLRyQNlLiXatEN0xntHAc8bbKobSGjge3wxIHlspbIWY_855CzONqaVdl3y3zOmgKZNnuhYi4gwbh",
                 "uuid": "test-uuid",
-                "openai_key": "",
-                "pinecone_key": "",
-                "pinecone_env": "",
-                "firebase_key": "",
+                "openai_key": "${OPENAI_API_KEY}",
+                "pinecone_key": "${PINECONE_KEY}",
+                "pinecone_env": "${PINECONE_ENV}",
+                "firebase_key": "${FIREBASE_ENV}",
                 "settings": {
                     "temperature": 0.6
                 }

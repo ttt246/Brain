@@ -4,6 +4,7 @@ import time
 from openai.error import RateLimitError
 
 from Brain.src.common.utils import AGENT_NAME, DEFAULT_GPT_MODEL
+from Brain.src.model.req_model import ReqModel
 from Brain.src.rising_plugin.risingplugin import handle_chat_completion
 from Brain.src.logs import logger
 from Brain.src.model.chat_response_model import ChatResponseModel
@@ -38,6 +39,7 @@ class ChatService:
         user_input,
         full_message_history,
         permanent_memory,
+        setting: ReqModel,
     ) -> ChatResponseModel:
         """Interact with the OpenAI API, sending the prompt, user input, message history,
         and permanent memory."""
@@ -127,7 +129,9 @@ class ChatService:
                 # TODO: use a model defined elsewhere, so that model can contain
                 # temperature and other settings we care about
                 return ChatResponseModel(
-                    handle_chat_completion(model=model, messages=current_context)
+                    handle_chat_completion(
+                        model=model, messages=current_context, setting=setting
+                    )
                 )
             except Exception as e:
                 # TODO: When we switch to langchain, this is built in

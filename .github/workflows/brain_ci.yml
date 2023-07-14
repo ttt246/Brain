@@ -36,3 +36,8 @@ jobs:
           # Sauce Labs Credentials.
           sauce-username: ${{ secrets.SAUCE_USERNAME }}
           sauce-access-key: ${{ secrets.SAUCE_ACCESS_KEY }}
+          env: |
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            PINECONE_ENV=${{ secrets.PINECONE_ENV }}
+            PINECONE_KEY=${{ secrets.PINECONE_KEY }}
+            FIREBASE_ENV=${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC }}
