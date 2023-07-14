@@ -127,8 +127,8 @@ def write_file(filename: str, file_content: str) -> (str, str):
     os.mkdir(file_directory)
 
     # file write
-    file_content = base64.b64decode(file_content).decode("utf-8")
-    file = open(file_path, "w")
+    file_content = base64.b64decode(file_content)
+    file = open(file_path, "wb")
     file.write(file_content)
     file.close()
     return file_path, file_directory
