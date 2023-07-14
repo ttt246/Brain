@@ -41,7 +41,7 @@ const Panel = () => {
                 openai_key: response.data.openai_key,
                 pinecone_key: response.data.pinecone_key,
                 pinecone_env: response.data.pinecone_env,
-                firebase_key: response.data.firebase_key,
+                firebase_key: btoa(response.data.firebase_key),
                 token: response.data.token,
                 uuid: response.data.uuid,
                 settings: {

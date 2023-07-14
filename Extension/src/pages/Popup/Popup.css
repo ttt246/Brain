@@ -70,28 +70,3 @@
     color: var(--font-color) !important;
     border-radius: 10px !important;
 }
-
-.custom-label {
-    width: 120px;
-    background-color: #202020 !important;
-    height: 33px;
-}
-
-.upload-file {
-    display: flex;
-    gap: 10px;
-}
-
-.ant-btn {
-    background-color: inherit;
-    border: 0;
-    color: var(--font-color);
-}
-
-.ant-upload-list-item-name {
-    color: var(--font-color);
-}
-
-.anticon {
-    color: var(--font-color) !important;
-}

@@ -4,13 +4,11 @@ import {
     Input,
     Layout,
     Button,
-    Upload,
-    message
 } from 'antd';
-import  { UploadOutlined } from '@ant-design/icons'
 import './Popup.css';
 
 const {Footer, Content} = Layout;
+
 const Popup = () => {
     const [hostName,setHostName] = useState("")
     const [openaiKey,setOpenaiKey] = useState("")
@@ -20,7 +18,6 @@ const Popup = () => {
     const [token,setToken] = useState("")
     const [uuid,setUuid] = useState("")
     const [temperature,setTemperature] = useState(0)
-    const [firebaseCred, setFirebaseCred] = useState([])
 
     /// Check if the user's system is in dark mode
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -39,38 +36,6 @@ const Popup = () => {
             setHostName(response.data.host_name)
         });
     }, []);
-
-    const getBase64 = (file, callback) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => callback(reader.result);
-        reader.onerror = error => {
-            message.error('File reading was failed.', error);
-        };
-    };
-
-    const handleUploadChange = (info) => {
-        let fileList = [...info.fileList];
-
-        // Remove non-json and old files
-        fileList = fileList.filter(file => {
-            if (file.type.includes('json')) {
-                if (file.originFileObj) {
-                    getBase64(file.originFileObj, result =>{
-                        const firebaseCredInfo = result.split(',')
-                        setFirebaseKey(firebaseCredInfo[1])
-                    });
-                }
-                return true;
-            } else {
-                message.error(`${file.name} is not an json file.`);
-                return false;
-            }
-        });
-        fileList = fileList.slice(-1);
-
-        setFirebaseCred([...fileList]);
-    };
 
 
     const handleThemeChange = (e) => {
@@ -135,6 +100,13 @@ const Popup = () => {
                     onChange={(e) => setPineconeEnv(e.target.value)}
                 />
                 <Input
+                    name="firebaseKey"
+                    addonBefore="Firebase Key"
+                    value={firebaseKey}
+                    className="custom-input"
+                    onChange={(e) => setFirebaseKey(e.target.value)}
+                />
+                <Input
                     name="token"
                     addonBefore="Token"
                     value={token}
@@ -159,12 +131,6 @@ const Popup = () => {
                     className="custom-input"
                     onChange={(e) => setTemperature(e.target.value)}
                 />
-                <div className="upload-file">
-                    <Input className="custom-label" value="Firebase Key" disabled />
-                    <Upload fileList={firebaseCred} onChange={(info) =>handleUploadChange(info)}>
-                        <Button icon={<UploadOutlined />}>Upload</Button>
-                    </Upload>
-                </div>
             </Content>
             <Divider className="divider"/>
             <Footer className="footer">
