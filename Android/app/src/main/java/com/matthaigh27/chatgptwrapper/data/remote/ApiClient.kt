@@ -15,13 +15,17 @@ class ApiClient {
     val TIME_OUT_READ = 60L
     val TIME_OUT_WRITE = 60L
 
-    var apiService: ApiService
+    lateinit var apiService: ApiService
 
-    private var serverUrl: String
-    private var client: OkHttpClient
-    private var retrofit: Retrofit
+    private lateinit var serverUrl: String
+    private lateinit var client: OkHttpClient
+    private lateinit var retrofit: Retrofit
 
     init {
+        initClient()
+    }
+
+    fun initClient() {
         /**
          * The server url is set to url that a user stored before.
          * If the user run this app at first, server url is set to default url.

@@ -3,6 +3,7 @@ package com.matthaigh27.chatgptwrapper.data.repository
 import android.content.Context
 import com.matthaigh27.chatgptwrapper.RisingApplication.Companion.appContext
 import com.matthaigh27.chatgptwrapper.data.models.setting.SettingModel
+import com.matthaigh27.chatgptwrapper.data.remote.ApiClient
 import com.matthaigh27.chatgptwrapper.utils.helpers.chat.SettingHelper.emptySettingModel
 
 object SharedPreferencesRepository {
@@ -12,6 +13,7 @@ object SharedPreferencesRepository {
         val jsonString = config.toString()
         editor.putString("config", jsonString)
         editor.apply()
+        ApiClient.instance.initClient()
     }
 
     fun getConfig(): SettingModel {

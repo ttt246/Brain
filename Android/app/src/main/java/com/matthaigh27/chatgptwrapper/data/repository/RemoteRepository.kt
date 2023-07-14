@@ -30,8 +30,6 @@ import kotlin.coroutines.suspendCoroutine
 
 
 object RemoteRepository {
-    private val apiService = ApiClient.instance.apiService
-
     /**
      * This function is used to get keys to manage backend.
      */
@@ -54,7 +52,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<HelpCommandResult>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.getAllHelpCommands(BaseApiRequest(getKeys()))
+        val call = ApiClient.instance.apiService.getAllHelpCommands(BaseApiRequest(getKeys()))
 
         call.enqueue(object : Callback<ApiResponse<HelpCommandResult>> {
             override fun onResponse(call: Call<ApiResponse<HelpCommandResult>>, response: Response<ApiResponse<HelpCommandResult>>) {
@@ -76,7 +74,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<CommonResult>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.sendNotification(request)
+        val call = ApiClient.instance.apiService.sendNotification(request)
 
         call.enqueue(object : Callback<ApiResponse<CommonResult>> {
             override fun onResponse(call: Call<ApiResponse<CommonResult>>, response: Response<ApiResponse<CommonResult>>) {
@@ -98,7 +96,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<String>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.trainContacts(request)
+        val call = ApiClient.instance.apiService.trainContacts(request)
 
         call.enqueue(object : Callback<ApiResponse<String>> {
             override fun onResponse(
@@ -119,7 +117,7 @@ object RemoteRepository {
 
     suspend fun trainImage(request: TrainImageApiRequest) : ApiResource<ApiResponse<TrainImageResult>> = suspendCoroutine { continuation ->
 
-        val call = apiService.trainImage(request)
+        val call = ApiClient.instance.apiService.trainImage(request)
 
         call.enqueue(object : Callback<ApiResponse<TrainImageResult>> {
             override fun onResponse(
@@ -143,7 +141,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<ImageRelatenessResult>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.getImageRelatedness(request)
+        val call = ApiClient.instance.apiService.getImageRelatedness(request)
 
         call.enqueue(object : Callback<ApiResponse<ImageRelatenessResult>> {
             override fun onResponse(
@@ -167,7 +165,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<ArrayList<MailModel>>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.readEmails(request)
+        val call = ApiClient.instance.apiService.readEmails(request)
 
         call.enqueue(object : Callback<ApiResponse<ArrayList<MailModel>>> {
             override fun onResponse(
@@ -191,7 +189,7 @@ object RemoteRepository {
         onSuccess: OnSuccess<ApiResponse<String>>,
         onFailure: OnFailure<String>
     ) {
-        val call = apiService.sendEmail(request)
+        val call = ApiClient.instance.apiService.sendEmail(request)
 
         call.enqueue(object : Callback<ApiResponse<String>> {
             override fun onResponse(
