@@ -20,24 +20,9 @@ import {
 } from '@ant-design/icons'
 
 const {Footer, Content} = Layout;
-const URL_BASE = 'https://ttt246-brain.hf.space/'
-const URL_SEND_NOTIFICATION = URL_BASE + 'sendNotification'
-const URL_BROWSER_ITEM = URL_BASE + 'browser/item'
-const URL_ASK_WEBSITE = URL_BASE + 'browser/ask'
-const URL_DELETE_RTD = URL_BASE + 'auto_task/delete'
 
 let prompt = ""
-const confs = {
-    "openai_key": "",
-    "pinecone_key": "",
-    "pinecone_env": "",
-    "firebase_key": "",
-    "token": "",
-    "uuid": "extension-uuid",
-    "settings": {
-        "temperature": 0.6
-    }
-}
+
 const logoUrl = Browser.runtime.getURL('logo_panel.png')
 
 const Panel = () => {
@@ -45,6 +30,26 @@ const Panel = () => {
     const [messages, setMessages] = useState([]);
     const [isLoading, setLoadingStatus] = useState(false);
     const chat_box = useRef(null);
+    const [confs, setConfs] = useState({});
+    const [hostname, setHostname] = useState("")
+
+    useEffect(() => {
+        // Send a message to background script to get the storage value
+        chrome.runtime.sendMessage({ method: 'getLocalStorage' }, (response) => {
+            setHostname(response.data.host_name)
+            setConfs({
+                openai_key: response.data.openai_key,
+                pinecone_key: response.data.pinecone_key,
+                pinecone_env: response.data.pinecone_env,
+                firebase_key: btoa(response.data.firebase_key),
+                token: response.data.token,
+                uuid: response.data.uuid,
+                settings: {
+                    temperature: response.data.temperature
+                }
+            });
+        });
+    }, []);
    
     const handleQuestionUpdated = (event) => {
         if (event.key === "Enter" && !isLoading) {
@@ -103,7 +108,7 @@ const Panel = () => {
         }
         setQuestion("")
 
-        sendRequest(params, URL_SEND_NOTIFICATION).then(data => {            
+        sendRequest(params, `${hostname}/sendNotification`).then(data => {
             if (data.result === undefined || data.result == null) {
                 return
             }
@@ -194,7 +199,7 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeATags()
         }
-        sendRequest(params, URL_BROWSER_ITEM).then(data => {
+        sendRequest(params, `${hostname}/browser/item`).then(data => {
             window.open(data.result.content, '_blank', 'noreferrer')
         }).catch(err => {
             console.error((err))
@@ -207,7 +212,7 @@ const Panel = () => {
             "prompt": prompt,
             "items": scrapeWebsites()
         }
-        sendRequest(params, URL_ASK_WEBSITE).then(data => {
+        sendRequest(params, `${hostname}/browser/ask`).then(data => {
             addMessage(data.result.content, false)            
         }).catch(err => {
             console.error((err))
@@ -222,7 +227,7 @@ const Panel = () => {
             }
         }
 
-        sendRequest(params, URL_DELETE_RTD).then(data => {
+        sendRequest(params, `${hostname}/auto_task/delete`).then(data => {
             console.log(data.result)
         }).catch(err => {   
             console.error(err)         
