@@ -1,5 +1,11 @@
 import re
 
+from Brain.src.common.utils import (
+    OPENAI_API_KEY,
+    PINECONE_KEY,
+    PINECONE_ENV,
+    FIREBASE_ENV,
+)
 from Brain.src.firebase.cloudmessage import CloudMessage
 from Brain.src.firebase.firebase import initialize_app
 from Brain.src.model.req_model import ReqModel
@@ -12,10 +18,10 @@ test_setting = ReqModel(
     data={
         "token": "test-token",
         "uuid": TEST_UUID,
-        "openai_key": "",
-        "pinecone_key": "",
-        "pinecone_env": "",
-        "firebase_key": "",
+        "openai_key": OPENAI_API_KEY,
+        "pinecone_key": PINECONE_KEY,
+        "pinecone_env": PINECONE_ENV,
+        "firebase_key": FIREBASE_ENV,
         "settings": {"temperature": 0.6},
     }
 )
