@@ -334,6 +334,7 @@ def construct_blueprint_api() -> APIRouter:
                 user_input=user_input,
                 full_message_history=histories,
                 permanent_memory=None,
+                setting=setting,
             )
         except Exception as e:
             return assembler.to_response(

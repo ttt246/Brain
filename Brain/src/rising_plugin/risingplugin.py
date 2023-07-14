@@ -396,8 +396,10 @@ def ask_question(
         return {"program": ProgramType.MESSAGE, "content": chain_data}
 
 
-def handle_chat_completion(messages: Any, model: str = "gpt-3.5-turbo") -> Any:
-    openai.api_key = OPENAI_API_KEY
+def handle_chat_completion(
+    messages: Any, setting: ReqModel, model: str = "gpt-3.5-turbo"
+) -> Any:
+    openai.api_key = setting.openai_key
 
     response = openai.ChatCompletion.create(
         model=model,
