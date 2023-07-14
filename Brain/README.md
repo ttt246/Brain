@@ -18,8 +18,6 @@ Welcome to the heartbeat of **RisingBrain**, our main backend component. ⚽ Kic
   <img align="center" src="assets/img/brain-diagram.png" width="100%">
 </p>
 
-## Getting Started 🏁
-
 ## Running FastAPI Application 🚀
 Our backend runs on a <a href="https://fastapi.tiangolo.com/">FastAPI</a> application. Here's a quick guide to get it up and running:
 
