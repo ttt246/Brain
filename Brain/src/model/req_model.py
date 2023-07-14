@@ -1,3 +1,4 @@
+import base64
 from typing import Any
 
 from Brain.src.common.utils import (
@@ -31,9 +32,7 @@ class ReqModel:
         self.pinecone_env = (
             PINECONE_ENV if data["pinecone_env"] == "" else data["pinecone_env"]
         )
-        self.firebase_key = (
-            FIREBASE_ENV if data["firebase_key"] == "" else data["firebase_key"]
-        )
+        self.firebase_key = self.decode_firebase_key(data["firebase_key"])
         self.token = data["token"]
         self.uuid = data["uuid"]
         self.settings = self.Settings()
@@ -49,3 +48,9 @@ class ReqModel:
             "token": self.token,
             "uuid": self.uuid,
         }
+
+    def decode_firebase_key(self, data: str) -> Any:
+        decoded_data = base64.b64decode(data)
+
+        # Printing the decoded string
+        return decoded_data.decode("utf-8")
