@@ -20,7 +20,6 @@ chrome.contextMenus.onClicked.addListener(function(info) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.method === 'getLocalStorage') {
         chrome.storage.local.get(function(result) {
-            console.log('background result--------->', result)
             sendResponse({ data: result });
         });
     }

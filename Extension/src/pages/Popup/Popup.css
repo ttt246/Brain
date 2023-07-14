@@ -11,7 +11,7 @@
 .main-layout {
     display: flex;
     flex-direction: column;
-    height: 490px; /* Set the height of the layout to be 100% of the viewport */
+    height: 520px; /* Set the height of the layout to be 100% of the viewport */
     width: 400px;
     background-color: var(--theme-color);
     color: var(--font-color);
@@ -69,4 +69,29 @@
     border: 1px solid white !important;
     color: var(--font-color) !important;
     border-radius: 10px !important;
+}
+
+.custom-label {
+    width: 120px;
+    background-color: #202020 !important;
+    height: 33px;
+}
+
+.upload-file {
+    display: flex;
+    gap: 10px;
+}
+
+.ant-btn {
+    background-color: inherit;
+    border: 0;
+    color: var(--font-color);
+}
+
+.ant-upload-list-item-name {
+    color: var(--font-color);
+}
+
+.anticon {
+    color: var(--font-color) !important;
 }
