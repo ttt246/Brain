@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FE3C767D2A5F107A00E99C6F /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3C767C2A5F107A00E99C6F /* ChatViewModel.swift */; };
+		FE3C767F2A5F11EF00E99C6F /*  NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3C767E2A5F11EF00E99C6F /*  NetworkService.swift */; };
+		FE3C76812A5F12A600E99C6F /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3C76802A5F12A600E99C6F /* Contact.swift */; };
+		FE3C76832A5F2BAE00E99C6F /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE3C76822A5F2BAE00E99C6F /* Command.swift */; };
 		FE56FAE22A4C5810008410B4 /* WatchApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */; };
 		FE56FAF82A4C5814008410B4 /* WatchApp_Watch_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE56FAF72A4C5814008410B4 /* WatchApp_Watch_AppTests.swift */; };
@@ -62,6 +66,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FE3C767C2A5F107A00E99C6F /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		FE3C767E2A5F11EF00E99C6F /*  NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " NetworkService.swift"; sourceTree = "<group>"; };
+		FE3C76802A5F12A600E99C6F /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		FE3C76822A5F2BAE00E99C6F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		FE56FADB2A4C5810008410B4 /* WatchApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WatchApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FAE12A4C5810008410B4 /* WatchApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAppApp.swift; sourceTree = "<group>"; };
@@ -106,6 +114,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FE3C76772A5F0C5B00E99C6F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FE673FCC2A502280003EF230 /* Components */,
+				FE673FD12A504913003EF230 /* Pages */,
+				FE673FD22A504EAF003EF230 /* MainView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FE3C76792A5F0D1000E99C6F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FE3C76802A5F12A600E99C6F /* Contact.swift */,
+				FE3C76822A5F2BAE00E99C6F /* Command.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FE3C767A2A5F0D2B00E99C6F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FE3C767C2A5F107A00E99C6F /* ChatViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		FE3C767B2A5F0DB800E99C6F /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FE3C767E2A5F11EF00E99C6F /*  NetworkService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		FE56FAD42A4C580F008410B4 = {
 			isa = PBXGroup;
 			children = (
@@ -130,10 +173,11 @@
 		FE56FAE52A4C5810008410B4 /* WatchApp Watch App */ = {
 			isa = PBXGroup;
 			children = (
+				FE3C767B2A5F0DB800E99C6F /* Services */,
+				FE3C767A2A5F0D2B00E99C6F /* ViewModels */,
+				FE3C76792A5F0D1000E99C6F /* Models */,
+				FE3C76772A5F0C5B00E99C6F /* Views */,
 				FE8CB8EB2A5AFFCF002CBC44 /* Values */,
-				FE673FCC2A502280003EF230 /* Components */,
-				FE673FD12A504913003EF230 /* Pages */,
-				FE673FD22A504EAF003EF230 /* MainView.swift */,
 				FE56FAE62A4C5810008410B4 /* WatchAppApp.swift */,
 			);
 			path = "WatchApp Watch App";
@@ -348,12 +392,16 @@
 			files = (
 				FE8CB8F52A5B0F5F002CBC44 /* ImageRow.swift in Sources */,
 				FE8CB8F72A5BD51A002CBC44 /* Constants.swift in Sources */,
+				FE3C767F2A5F11EF00E99C6F /*  NetworkService.swift in Sources */,
 				FE673FCE2A5022C9003EF230 /* ChatMessageRow.swift in Sources */,
 				FE673FD52A5413F5003EF230 /* ContactView.swift in Sources */,
 				FE673FD02A504903003EF230 /* SettingView.swift in Sources */,
 				FE56FB142A4C80A5008410B4 /* ChatView.swift in Sources */,
+				FE3C76832A5F2BAE00E99C6F /* Command.swift in Sources */,
 				FE673FD32A504EAF003EF230 /* MainView.swift in Sources */,
+				FE3C76812A5F12A600E99C6F /* Contact.swift in Sources */,
 				FED5B74B2A5833E30040DF09 /* ContactRow.swift in Sources */,
+				FE3C767D2A5F107A00E99C6F /* ChatViewModel.swift in Sources */,
 				FE56FAE72A4C5810008410B4 /* WatchAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

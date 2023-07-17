@@ -71,12 +71,11 @@ func convertStringToContact(jsonData: String) -> Contact {
     do {
         let jsonData = jsonData.data(using: .utf8)!
         let contact = try JSONDecoder().decode(Contact.self, from: jsonData)
-
         return contact
     } catch {
         print("Error converting JSON string to object: \(error)")
+        return Contact(contactId: "", displayName: "Empty", phoneNumbers: [])
     }
-    return Contact(contactId: "", displayName: "Empty", phoneNumbers: [])
 }
 
 struct ChatMessageRow_Previews: PreviewProvider {

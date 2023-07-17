@@ -12,8 +12,6 @@ struct ImageRow: View {
     }
 }
 
-
-
 struct ImageRow_Previews: PreviewProvider {
     static var previews: some View {
         ImageRow()

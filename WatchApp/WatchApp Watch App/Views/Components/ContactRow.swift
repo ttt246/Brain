@@ -1,17 +1,5 @@
 import SwiftUI
 
-class Contact : Codable {
-    var contactId: String
-    var displayName: String
-    var phoneNumbers: [String]
-
-    init(contactId: String, displayName: String, phoneNumbers: [String]) {
-        self.contactId = contactId
-        self.displayName = displayName
-        self.phoneNumbers = phoneNumbers
-    }
-}
-
 struct ContactBubble: Shape {
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(roundedRect: rect,
