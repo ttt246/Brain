@@ -85,3 +85,16 @@ We appreciate your interest in enhancing our work! Please respect the style and 
  5. Don't forget to submit a **Pull Request** for us to study your contributions.
 
 NOTE: Sync with "upstream" to have the latest updates before you make a pull request!
+
+
+## Contact Us
+
+For any questions or concerns, you can reach us at:
+
+**Email:** [thomasr37oss@gmail.com](mailto:thomasr37oss@gmail.com)
+
+**Phone:** [+1 217 374 8105]
+
+We will do our best to respond to your messages as soon as possible.
+
+Thank you!
